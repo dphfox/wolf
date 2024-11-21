@@ -2,46 +2,35 @@
 
 Function expressions define an expression to be applied on a piece of data.
 
-Functions start with the `fn` keyword, followed by `of`, an input type
+Functions start with the `fn` keyword, followed by an input type
 matcher, an arrow `->` and an output type matcher.
-
-```
-fn of bool -> num
-```
 
 The function body is then assigned after an `=`.
 
 ```
-fn of bool -> num = 42
+fn _ -> num = 42
 ```
 
-If the output type is directly inferable and doesn't need a name, it can be
-omitted:
+If the output type matcher can be inferred with `_`, then it may be omitted.
 
 ```
-fn of bool = 42
+fn _ = 42
 ```
 
 The type matchers may be given names to make them into accessible locations.
 This is especially useful when working with composite types.
 
 ```
-fn of is_awesome: bool = if is_awesome { 42 } else { 0 }
-
-fn of (
+fn (
 	from: num
 	to: num
 	ratio: num
 ) = (to - from) * ratio + to
 
-fn of pair: (num; num) -> (
-	sum: num
-	difference: num
-) =	{
+fn pair: (num; num) -> (sum: num; difference: num) = {
 	sum = pair[0] + pair[1]
 	difference = pair[0] - pair[1]
 }
-
 ```
 
 ## Running a function
