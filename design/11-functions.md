@@ -4,32 +4,52 @@ In Wolf, functions unpack a piece of data, transforms it with expressions, and
 returns a new piece of data.
 
 Functions start with the `fn` keyword, followed by an input type
-matcher, an arrow `->` and an output type matcher.
+matcher, an arrow `->` and an output type annotation.
 
 Then, a block is given to act as the function body.
 
 ```
-fn _ -> num
-{
-	42
-}
+fn of _ -> num { 42 }
 ```
 
-The type matchers may be given names to make them into accessible locations.
+If the output type can be inferred, then it may be omitted.
+
+```
+fn of _ { 42 }
+```
+
+The input type matcher may be given names to access parts of the incoming data.
 This is especially useful when working with composite types.
 
 ```
-fn (from: num, to: num, ratio: num) -> num
-{
+fn of (from: num, to: num, ratio: num) {
 	(to - from) * ratio + to
 }
 
-fn pair: (num, num) -> (sum: num, diff: num)
-{
-	sum = pair[0] + pair[1]
-	diff = pair[0] - pair[1]
+fn of pair: (num, num) {
+	(
+		sum: pair[0] + pair[1]
+		diff: pair[0] - pair[1]
+	)
 }
 ```
+
+The function itself may be given a name so it may be called.
+
+Functions can be called with parentheses `()` after the identifier, housing the
+input data.
+
+```
+fn factorial of x: num {
+	if x == 1 {
+		x
+	} else {
+		x + factorial(x - 1)
+	}
+}
+```
+
+
 
 ## Running a function
 
