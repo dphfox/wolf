@@ -1,39 +1,31 @@
 # Blocks
 
-Blocks are expressions that evaluate a series of sub-expressions in order.
+Blocks are a group of expressions that are evaluated in order. Blocks themselves
+are expressions, so can wrap any expression anywhere in the program.
 
-Blocks are defined with the `do` keyword, and span until a matching `end`
-keyword is found.
-
-```
-fn do_something = do 2 + 2 end
-```
-
-Multiple expressions can be run by separating them with semicolons `;`. The last
-expression becomes the returned value.
+Blocks are defined with curly braces `{}`, containing at least one expression.
 
 ```
-fn do_something = do 2 + 2; 4 + 4; 6 + 6 end
+{ 2 + 2 }
 ```
 
-Blocks can span multiple lines; if they do, then semicolons may be automatically
-inserted by Wolf before lines that could start new expressions.
+Multiple expressions can be evaluated by separating them with commas `,`.
+
+The last expression becomes the returned value.
 
 ```
-fn do_something = do
+{
+	2 + 2, 4 + 4, 6 + 6
+}
+```
+
+Blocks can span multiple lines; if they do, then commas will be automatically
+inserted if the next line looks like the start of a new expression.
+
+```
+{
 	2 + 2
 	4 + 4
 	6 + 6
-end
-```
-
-Because blocks are commonly associated with functions, the `=` can be omitted.
-This will apply to other structures down the line too.
-
-```
-fn do_something do
-	2 + 2
-	4 + 4
-	6 + 6
-end
+}
 ```

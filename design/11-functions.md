@@ -1,35 +1,33 @@
 # Functions
 
-Function expressions define an expression to be applied on a piece of data.
+In Wolf, functions unpack a piece of data, transforms it with expressions, and
+returns a new piece of data.
 
 Functions start with the `fn` keyword, followed by an input type
 matcher, an arrow `->` and an output type matcher.
 
-The function body is then assigned after an `=`.
+Then, a block is given to act as the function body.
 
 ```
-fn _ -> num = 42
-```
-
-If the output type matcher can be inferred with `_`, then it may be omitted.
-
-```
-fn _ = 42
+fn _ -> num
+{
+	42
+}
 ```
 
 The type matchers may be given names to make them into accessible locations.
 This is especially useful when working with composite types.
 
 ```
-fn (
-	from: num
-	to: num
-	ratio: num
-) = (to - from) * ratio + to
+fn (from: num, to: num, ratio: num) -> num
+{
+	(to - from) * ratio + to
+}
 
-fn pair: (num; num) -> (sum: num; difference: num) = {
+fn pair: (num, num) -> (sum: num, diff: num)
+{
 	sum = pair[0] + pair[1]
-	difference = pair[0] - pair[1]
+	diff = pair[0] - pair[1]
 }
 ```
 
