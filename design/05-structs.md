@@ -56,11 +56,11 @@ cool_date := {
 }
 ```
 
-Data can be extracted using square brackets `[]`. The brackets must host an
-expression that returns a `num`.
+Data can be extracted using a dot `.`, followed by the index given as a number
+literal.
 
 ```
-cool_year := cool_date[1]
+cool_year := cool_date.1
 ```
 
 ## Explicit struct types
