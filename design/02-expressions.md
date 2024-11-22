@@ -23,6 +23,7 @@ Operations are left associative, except for exponentiation.
 | Not                | `!A`       | 6
 | Negate             | `-A`       | 6
 | Double negate      | `+A`       | 6
+| Count              | `#`        | 6
 | Exponent           | `A ^ B`    | 7
 
 Not all types implement all operations. For example, `num` does not implement
