@@ -1,6 +1,7 @@
 # Strings
 
-Wolf uses UTF-8 strings with LF line endings.
+The second basic data type in Wolf is `str` - a UTF-8 string of text with LF
+line endings.
 
 ## String literals
 
@@ -28,11 +29,15 @@ Strings can span multiple lines."
 	and it will work fine."
 ```
 
-String literals can contain expressions by including curly braces `{}` at any
-point.
+String literals can contain a block expression by adding `=()`, with the block
+contents inside.
+
+An equals `=` not directly before a `(` is interpreted literally.
 
 ```
-"The answer is {2 + 2}"
+"The answer is =(2 + 2)"
+
+"I can still write = normally in strings"
 ```
 
 Escape sequences can be inserted with `\`:
@@ -41,6 +46,7 @@ Escape sequences can be inserted with `\`:
 - `\t` for tabs
 - `\"` for double quotes
 - `\\` for backslashes
+- `\=` for equals
 
 ```
 "This is a \"perfectly normal\" string."

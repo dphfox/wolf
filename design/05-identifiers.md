@@ -33,17 +33,6 @@ refer to.
 sixteen := (four := 2 + 2) ^ 2
 ```
 
-## Explicitly typed identifiers
-
-All identifiers are required to have a data type that's known at compile time.
-
-By default, the data type of the identifier is inferred from the expression.
-However, an explicit type can be named between the `:` and `=`.
-
-```
-four: num = 2 + 2
-```
-
 ## Identifiers in blocks
 
 Identifiers are scoped to the current block, if any. Otherwise, they're added
