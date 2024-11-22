@@ -22,16 +22,16 @@ The input type matcher may be given names to access parts of the incoming data.
 This is especially useful when working with composite types.
 
 ```
-fn of (from: num, to: num, ratio: num) {
+fn of {from: num, to: num, ratio: num} (
 	(to - from) * ratio + to
-}
+)
 
-fn of pair: (num, num) {
-	(
-		sum: pair[0] + pair[1]
-		diff: pair[0] - pair[1]
-	)
-}
+fn of pair: {num, num} (
+	{
+		sum: pair.0 + pair.1
+		diff: pair.0 - pair.1
+	}
+)
 ```
 
 The function itself may be given a name so it may be called.
@@ -40,12 +40,8 @@ Functions can be called with parentheses `()` after the identifier, housing the
 input data.
 
 ```
-fn factorial of x: num {
-	if x == 1 {
-		x
-	} else {
-		x + factorial(x - 1)
-	}
+fn factorial of x: num (
+	if x == 1 ( x ) else ( factorial x - 1 )
 }
 ```
 
