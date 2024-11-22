@@ -1,3 +1,10 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./docs/assets/logo-dark.svg">
+  <img alt="Wolf logo" src="./docs/assets/logo-light.svg">
+</picture>
+
+<br>
+
 # The Wolf Scripting Language
 
 Wolf is an experimental design for a static scripting language that transpiles
