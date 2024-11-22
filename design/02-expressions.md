@@ -25,6 +25,8 @@ Operations are left associative, except for exponentiation.
 | Double negate      | `+A`       | 6
 | Exponent           | `A ^ B`    | 7
 
+Not all types implement all operations. For example, `num` does not implement
+the boolean "or", "and", or "not" operations.
 
 ## Running an expression
 

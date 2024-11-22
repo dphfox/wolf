@@ -2,6 +2,8 @@
 
 Blocks evaluate expressions inside of them to produce a value.
 
+## Basic usage
+
 Blocks are declared with parentheses `()`.
 
 ```
@@ -14,6 +16,8 @@ evaluated independently of the other expression.
 ```
 2 * (13 - 5)
 ```
+
+## Multiple expressions
 
 Blocks can contain more than one expression, separated by commas `,`.
 

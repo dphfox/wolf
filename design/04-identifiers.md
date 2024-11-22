@@ -2,50 +2,13 @@
 
 Identifiers allow the value of an expression to be referred to.
 
+## Basic usage
+
 Identifiers are written as an alphanumeric ASCII string (+ underscores),
 followed by `:=` and the expression.
 
-Identifiers are scoped to the current block, if any. Otherwise, they're added
-to the top-level namespace.
-
-Identifiers do not care about the order of appearance.
-
 ```
-(
-	sixteen := four * four
-	four := 2 + 2
-	sixteen - four
-)
-```
-
-Identifiers are not mutable or reusable - duplicates are not allowed in the same
-block.
-
-However, they may be overshadowed by identifiers inside of a nested block.
-
-```
-(
-	foo := 5
-	(
-		two_thousand := foo * 2
-		foo := 1000
-	)
-	ten := foo * 2
-)
-```
-
-Identifier expressions evaluate to the same value as the sub-expression they
-refer to.
-
-```
-sixteen := (four := 2 + 2) ^ 2
-```
-
-By default, the data type of the identifier is inferred from the expression.
-However, an explicit type can be named between the `:` and `=`.
-
-```
-four: num = 2 + 2
+four := 2 + 2
 ```
 
 Identifiers have the following limitations:
@@ -63,11 +26,78 @@ smallGroup
 3rd_Person
 ```
 
+Identifier expressions evaluate to the same value as the sub-expression they
+refer to.
+
+```
+sixteen := (four := 2 + 2) ^ 2
+```
+
+## Explicitly typed identifiers
+
+All identifiers are required to have a data type that's known at compile time.
+
+By default, the data type of the identifier is inferred from the expression.
+However, an explicit type can be named between the `:` and `=`.
+
+```
+four: num = 2 + 2
+```
+
+## Identifiers in blocks
+
+Identifiers are scoped to the current block, if any. Otherwise, they're added
+to the top-level namespace. Order of appearance is not considered.
+
+```
+(
+	sixteen := four * four
+	four := 2 + 2
+	sixteen - four
+)
+```
+
 Identifiers cannot form infinite cycles. The following would *not* be allowed:
 
 ```
 (
 	two := four / 2
 	four := two * 2
+)
+```
+
+## Shadowing
+
+Identifiers are not mutable or reusable - duplicates are not allowed in the same
+block.
+
+However, they may be overshadowed by identifiers inside of a nested block.
+
+```
+(
+	foo := 5
+	(
+		two_thousand := foo * 2
+		foo := 1000
+	)
+	ten := foo * 2
+)
+```
+
+Identifiers can be dropped with `:= _`, overshadowing any identifiers from
+outside of the block without giving it a new value.
+
+This ensures a block doesn't use a specific identifier, though nested blocks
+may overshadow it again.
+
+```
+(
+	foo := 5
+	(
+		foo := _
+		(
+			foo := 12
+		)
+	)
 )
 ```

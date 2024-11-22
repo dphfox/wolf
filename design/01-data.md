@@ -20,6 +20,8 @@ change the final value.
 6.21
 ```
 
+## Special bases
+
 Numbers can start with `0x` to use base 16, or `0b` to use base 2. Number bases
 are case insensitive, as are the digits.
 
@@ -28,6 +30,8 @@ are case insensitive, as are the digits.
 0xBeefDadd
 0b1001_0101
 ```
+
+## Number keywords
 
 The `inf` keyword is reserved to represent the largest possible number, and the
 `nan` keyword is reserved to represent the "not a number" state.
