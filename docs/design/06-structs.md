@@ -8,7 +8,6 @@ save data into a struct, but only one may be used per struct:
 
 - named data
 - numbered data
-- paired data
 
 ## Empty structs
 
