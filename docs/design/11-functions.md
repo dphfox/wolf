@@ -21,6 +21,8 @@ fn of _ ( 42 )
 The input type matcher may be given names to access parts of the incoming data.
 This is especially useful when working with composite types.
 
+TODO: update type matching to allow for matching args without naming them and vice versa
+
 ```
 fn of {from: num, to: num, ratio: num} (
 	(to - from) * ratio + to
