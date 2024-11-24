@@ -17,7 +17,7 @@ evaluated independently of the other expression.
 2 * (13 - 5)
 ```
 
-## Multiple expressions
+<!-- ## Multiple expressions
 
 Blocks can contain more than one expression, separated by commas `,`.
 
@@ -36,4 +36,4 @@ inserted if the next line looks like the start of a new expression.
 	4 + 4
 	6 + 6
 )
-```
+``` -->

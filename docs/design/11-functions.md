@@ -9,13 +9,13 @@ matcher, an arrow `->` and an output type annotation.
 Then, a block is given to act as the function body.
 
 ```
-fn of _ -> num { 42 }
+fn of _ -> num ( 42 )
 ```
 
 If the output type can be inferred, then it may be omitted.
 
 ```
-fn of _ { 42 }
+fn of _ ( 42 )
 ```
 
 The input type matcher may be given names to access parts of the incoming data.
@@ -34,15 +34,18 @@ fn of pair: {num, num} (
 )
 ```
 
-The function itself may be given a name so it may be called.
+The function itself may be given a name so it may be referenced elsewhere.
 
-Functions can be called with parentheses `()` after the identifier, housing the
-input data.
+A function can be applied to a piece of data by writing the identifier to the left of the operand.
+Function application takes precedence over other nearby operations, so a block `()` is
+needed to evaluate expression operands.
 
 ```
-fn factorial of x: num (
-	if x == 1 ( x ) else ( factorial x - 1 )
+factorial := fn of x: num (
+	if x == 1 ( x ) else ( factorial(x - 1) )
 }
+
+five_factorial := factorial 5
 ```
 
 
