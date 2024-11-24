@@ -37,3 +37,21 @@ inserted if the next line looks like the start of a new expression.
 	6 + 6
 )
 ``` -->
+
+TODO: sequential execution blocks?
+
+```
+seq (
+	x = 5 -- trey likes = as mutation
+	x += 1 -- good
+	x++ -- bad
+
+	loop 5 (
+
+	)
+
+	loop (
+
+	)
+)
+```

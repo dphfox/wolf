@@ -50,8 +50,6 @@ factorial := fn of x: num (
 five_factorial := factorial 5
 ```
 
-
-
 ## Running a function
 
 To run a function from the command line, pass in the name of the
