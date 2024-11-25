@@ -34,7 +34,7 @@ Strings can span multiple lines."
 ## Expressions in strings
 
 String literals can contain a block expression by adding `=()`, with the block
-contents inside.
+contents inside. (TODO: revise to something less common?)
 
 An equals `=` not directly before a `(` is interpreted literally.
 
