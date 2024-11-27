@@ -1,4 +1,7 @@
-# Block expressions
+---
+layout: page
+title: Blocks
+---
 
 Blocks evaluate expressions inside of them to produce a value.
 

@@ -1,4 +1,7 @@
-# Namespaces
+---
+layout: page
+title: Namespaces
+---
 
 Within a workspace, Wolf does not impose boundaries between scripts.
 

@@ -1,4 +1,7 @@
-# Structs
+---
+layout: page
+title: Structs
+---
 
 Wolf allows the basic types of data to be *composed* into structured data types,
 known as *structs*.

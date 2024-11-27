@@ -1,4 +1,7 @@
-# Strings
+---
+layout: page
+title: Strings
+---
 
 The second basic data type in Wolf is `str` - a UTF-8 string of text with LF
 line endings.

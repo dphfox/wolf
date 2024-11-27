@@ -1,9 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
+
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+	font-optical-sizing: auto;
+}
+
+:root {
+	--bg: #EEDCB7;
+	--bg-alt: #F9E8C4;
+	--fg: #493128;
+	--accent: #627546;
+	--accent-alt: #283910;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #1E252F;
+		--bg-alt: #151B24;
+		--fg: #A3A5A7;
+		--accent: #789980;
+		--accent-alt: #CBEAD3;
+	}
 }
 
 body {
-	color: red;
+	background-color: var(--bg);
+	color: var(--fg);
+	font: 1.25rem/1.5 "Playfair", "Cambria", serif;
+}
+
+body > * {
+	max-width: 120ch;
+	margin: 0 auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-variant-caps: small-caps;
+	letter-spacing: 0.04em;
+	margin-top: 1em;
+}
+
+h1 {
+	font-size: 2em;
+	margin-bottom: 1em;
+	border-bottom: 1px solid var(--fg);
+}
+
+h2 {
+	font-size: 1.5em;
+}
+
+a {
+	color: var(--accent);
+}
+
+a:hover {
+	color: var(--accent-alt);
+}
+
+body > header {
+	margin-top: 4rem;
+	margin-bottom: 2rem;
 }

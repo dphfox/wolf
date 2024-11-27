@@ -1,4 +1,7 @@
-# Functions
+---
+layout: page
+title: Functions
+---
 
 In Wolf, functions unpack a piece of data, transforms it with expressions, and
 returns a new piece of data.

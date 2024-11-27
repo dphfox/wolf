@@ -1,6 +1,9 @@
-# Operators
+---
+layout: page
+title: Expressions
+---
 
-Wolf provides a few built-in operator notations.
+Wolf provides a few built-in expression notations.
 
 Operations are left associative, except for exponentiation.
 
