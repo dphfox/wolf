@@ -54,7 +54,7 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
 	font-size: 2em;
 	margin-bottom: 1em;
-	border-bottom: 1px solid var(--fg);
+	border-bottom: 1px solid color-mix(in srgb, var(--fg) 40%, transparent);
 }
 
 h2 {
@@ -74,14 +74,46 @@ a {
 }
 
 a:hover {
-	color: var(--accent);
+	text-decoration: none;
 }
 
 hr {
 	width: 100%;
 	height: 1px;
 	border: none;
-	background: var(--fg);
+	background: color-mix(in srgb, var(--fg) 40%, transparent);
+}
+
+table {
+	position: relative;
+	display: block;
+	max-width: 100vw;
+	overflow-x: auto;
+	border-collapse: collapse;
+	margin: 1rem -2rem;
+	padding: 0 1.5rem;
+	white-space: nowrap;
+	
+	mask-image: linear-gradient(to right, transparent 0px, black 2rem, black calc(100% - 2rem), transparent 100%);
+}
+
+table * {
+	width: max-content;
+}
+
+th, td {
+	padding: 0.25rem 0.5rem;
+	text-align: left;
+	text-align: left;
+	padding-right: 2rem;
+}
+
+td {
+	border-top: 1px solid color-mix(in srgb, var(--fg) 40%, transparent);
+}
+
+th {
+	font-variant-caps: small-caps;
 }
 
 div.highlight {
