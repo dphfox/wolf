@@ -5,6 +5,7 @@
 	padding: 0;
 	box-sizing: border-box;
 	font-optical-sizing: auto;
+	tab-size: 4;
 }
 
 :root {

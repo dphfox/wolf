@@ -30,8 +30,8 @@ smallGroup
 3rd_Person
 ```
 
-Identifier expressions evaluate to the same value as the sub-expression they
-refer to.
+Identifiers can be specified partway through any expression. The sub-expression
+is allowed to pass through.
 
 ```
 sixteen := (four := 2 + 2) ^ 2
