@@ -93,7 +93,6 @@ table {
 	margin: 1rem -2rem;
 	padding: 0 1.5rem;
 	white-space: nowrap;
-	
 	mask-image: linear-gradient(to right, transparent 0px, black 2rem, black calc(100% - 2rem), transparent 100%);
 }
 
@@ -117,18 +116,22 @@ th {
 }
 
 div.highlight {
-	display: flex;
 	background-color: var(--bg-alt);
 	margin: 1rem -2rem;
-	overflow-x: auto;
 }
 
-div.highlight pre {
+div.highlight > pre {
+	display: flex;
+	overflow-x: auto;
+	mask-image: linear-gradient(to right, transparent 0px, black 2rem, black calc(100% - 2rem), transparent 100%);
+}
+
+div.highlight > pre > code {
 	margin: 1rem 2rem;
 }
 
 code {
-	font: 0.8em/1.0 "PT Mono", "Consolas", monospace;
+	font: 0.8em/1.25 "PT Mono", "Consolas", monospace;
 	color: var(--fg-alt);
 }
 
