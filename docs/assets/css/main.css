@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Mono&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
 
 * {
 	margin: 0;
@@ -11,6 +11,7 @@
 	--bg: #EEDCB7;
 	--bg-alt: #F9E8C4;
 	--fg: #493128;
+	--fg-alt: #291a15;
 	--accent: #627546;
 	--accent-alt: #283910;
 }
@@ -20,6 +21,7 @@
 		--bg: #1E252F;
 		--bg-alt: #151B24;
 		--fg: #A3A5A7;
+		--fg-alt: #ccced0;
 		--accent: #789980;
 		--accent-alt: #CBEAD3;
 	}
@@ -29,14 +31,21 @@ body {
 	background-color: var(--bg);
 	color: var(--fg);
 	font: 1.25rem/1.5 "Playfair", "Cambria", serif;
+	padding: 2rem;
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	gap: 1rem;
 }
 
 body > * {
+	width: 100%;
 	max-width: 120ch;
 	margin: 0 auto;
 }
 
 h1, h2, h3, h4, h5, h6 {
+	font-family: "Playfair Display", "Playfair", "Cambria", serif;
 	font-variant-caps: small-caps;
 	letter-spacing: 0.04em;
 	margin-top: 1em;
@@ -56,11 +65,53 @@ a {
 	color: var(--accent);
 }
 
+ul {
+	list-style-type: square;
+}
+
+li {
+	margin-left: 1em;
+}
+
 a:hover {
 	color: var(--accent-alt);
 }
 
-body > header {
-	margin-top: 4rem;
-	margin-bottom: 2rem;
+hr {
+	width: 100%;
+	height: 1px;
+	border: none;
+	background: var(--fg);
+}
+
+pre {
+	background-color: var(--bg-alt);
+	padding: 1rem 2rem;
+	margin: 1rem -2rem;
+}
+
+code {
+	font: 0.8em/1.0 "PT Mono", "Consolas", monospace;
+	color: var(--fg-alt);
+}
+
+nav {
+	font-variant-caps: small-caps;
+}
+
+main > nav {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 2rem;
+	margin-top: 2rem;
+}
+
+main > nav > a {
+	flex-shrink: 0;
+}
+
+main > nav > hr {
+	width: 1fr;
+	flex-shrink: 1;
 }

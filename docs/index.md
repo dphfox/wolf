@@ -8,7 +8,11 @@ performant Luau code.
 
 ## Design
 
-{% assign pages = site.pages | where_exp: 'page', 'page.dir == "/design/"' %}
-{% for page in pages %}
-- [{{page.title}}]({{page.url}})
-{% endfor %}
+<nav>
+	<ul>
+	{% assign pages = site.pages | where_exp: 'page', 'page.dir == "/design/"' %}
+	{% for page in pages %}
+		<li><a href="{{page.url}}">{{page.title}}</a></li>
+	{% endfor %}
+	</ul>
+</nav>
