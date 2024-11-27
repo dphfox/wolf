@@ -7,12 +7,8 @@
 
 # The Wolf Scripting Language
 
-Wolf is an experimental design for a static scripting language that transpiles
+An experimental design for a static declarative logic language that transpiles
 to Luau.
-
-The goal of Wolf is to create a language "from scratch", learning from what works in languages today, and drawing from inspiration about how they might possibly be improved beyond that.
-
-The end product should blend the benefits of Luau's fast, simple runtime, with the benefits of a modern, statically-checked, fully-analysed language.
 
 ## Goals
 

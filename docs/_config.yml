@@ -1,0 +1,13 @@
+title: Wolf Scripting Language
+description: A static declarative logic language.
+baseurl: ""
+url: "https://wolf.phfox.net/"
+
+personal_name: "Daniel P H Fox"
+personal_url: "https://phfox.net"
+
+copyright: Text is MIT licensed unless specified; use with attribution, links are appreciated.
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
