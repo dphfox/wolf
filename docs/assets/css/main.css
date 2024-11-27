@@ -8,10 +8,10 @@
 }
 
 :root {
-	--bg: #EEDCB7;
-	--bg-alt: #F9E8C4;
-	--fg: #493128;
-	--fg-alt: #291a15;
+	--bg: #f5e5c5;
+	--bg-alt: #fff4db;
+	--fg: #291a15;
+	--fg-alt: #1d0700;
 	--accent: #627546;
 	--accent-alt: #283910;
 }
@@ -20,8 +20,8 @@
 	:root {
 		--bg: #1E252F;
 		--bg-alt: #151B24;
-		--fg: #A3A5A7;
-		--fg-alt: #ccced0;
+		--fg: #ccced0;
+		--fg-alt: #f2f8ff;
 		--accent: #789980;
 		--accent-alt: #CBEAD3;
 	}
@@ -61,10 +61,6 @@ h2 {
 	font-size: 1.5em;
 }
 
-a {
-	color: var(--accent);
-}
-
 ul {
 	list-style-type: square;
 }
@@ -73,8 +69,12 @@ li {
 	margin-left: 1em;
 }
 
-a:hover {
+a {
 	color: var(--accent-alt);
+}
+
+a:hover {
+	color: var(--accent);
 }
 
 hr {
@@ -84,10 +84,15 @@ hr {
 	background: var(--fg);
 }
 
-pre {
+div.highlight {
+	display: flex;
 	background-color: var(--bg-alt);
-	padding: 1rem 2rem;
 	margin: 1rem -2rem;
+	overflow-x: auto;
+}
+
+div.highlight pre {
+	margin: 1rem 2rem;
 }
 
 code {
