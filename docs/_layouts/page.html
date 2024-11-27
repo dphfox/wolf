@@ -10,17 +10,28 @@ layout: bare
 	</a>
 </header>
 <main>
-  <article>
-	{% if page.title %}
-	<h1>{{page.title}}</h1>
-	{% else %}
-	<h1>The Wolf Scripting Language</h1>
-	{% endif %}
-    {{ content }}
-  </article>
-  <nav>
-	<a href="">Back: Foo</a>
-	<hr>
-	<a href="">Next: Foo</a>
-  </nav>
+  	<article>
+		{% if page.title %}
+			<h1>{{page.title}}</h1>
+		{% else %}
+			<h1>The Wolf Scripting Language</h1>
+		{% endif %}
+		{{ content }}
+  	</article>
+  {% if page.page_number %}
+  	<nav>
+		{% assign neighbours = site.pages | where: "dir", page.dir %}
+		{% assign last_page_number = page.page_number | minus: 1 %}
+		{% assign next_page_number = page.page_number | plus: 1 %}
+		{% assign last_page_info = neighbours | where: "page_number", last_page_number | first %}
+		{% assign next_page_info = neighbours | where: "page_number", next_page_number | first %}
+		{%if last_page_info %}
+			<a href="{{last_page_info.url}}">Back: {{last_page_info.title}}</a>
+		{% endif %}
+		<hr>
+		{% if next_page_info %}
+			<a href="{{next_page_info.url}}">Next: {{next_page_info.title}}</a>
+		{% endif %}
+  	</nav>
+  {% endif %}
 </main>

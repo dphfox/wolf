@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Numbers
+page_number: 1
 ---
 
 The first basic data type in Wolf is `num` - a 64-bit IEEE floating point

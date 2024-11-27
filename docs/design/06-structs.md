@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Structs
+page_number: 6
 ---
 
 Wolf allows the basic types of data to be *composed* into structured data types,

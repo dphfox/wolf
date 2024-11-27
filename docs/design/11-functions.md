@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Functions
+page_number: 11
 ---
 
 In Wolf, functions unpack a piece of data, transforms it with expressions, and

@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Blocks
+page_number: 3
 ---
 
 Blocks evaluate expressions inside of them to produce a value.

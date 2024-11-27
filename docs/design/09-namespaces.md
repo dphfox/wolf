@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Namespaces
+page_number: 9
 ---
 
 Within a workspace, Wolf does not impose boundaries between scripts.

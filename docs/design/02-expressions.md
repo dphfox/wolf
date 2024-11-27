@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Expressions
+page_number: 2
 ---
 
 Wolf provides a few built-in expression notations.
