@@ -9,7 +9,7 @@ Operations are left associative, except for exponentiation.
 
 | Operation          | Written as | Precedence | Notes |
 |--------------------|------------|------------|-------|
-| Or                 | `A \| B`    | 1
+| Or                 | `A | B`    | 1
 | And                | `A & B`    | 2
 | Less than          | `A < B`    | 3
 | More than          | `A > B`    | 3
