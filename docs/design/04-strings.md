@@ -35,31 +35,35 @@ Strings can span multiple lines."
 	and it will work fine."
 ```
 
-## Expressions in strings
+## Insert sequences
 
-String literals can contain a block expression by adding `=()`, with the block
-contents inside. (TODO: revise to something less common?)
-
-An equals `=` not directly before a `(` is interpreted literally.
-
-```
-"The answer is =(2 + 2)"
-
-"I can still write = normally in strings"
-```
-
-## Escaped characters
-
-Escape sequences can be inserted with `\`:
+Special sequences can be inserted with `\`:
 
 - `\n` for newlines
 - `\t` for tabs
 - `\"` for double quotes
 - `\\` for backslashes
-- `\=` for equals
+- `\()` for expressions
 
 ```
 "This is a \"perfectly normal\" string."
+
+"The answer is \(2 + 2)"
+```
+
+It isn't valid to use `\` without one of those special sequences, for forwards
+compatibility.
+
+The following would *not* be accepted:
+
+```
+"do \ re \ mi"
+```
+
+Instead, write it as:
+
+```
+do \\ re \\ mi
 ```
 
 ## Raw string literals
@@ -70,7 +74,7 @@ double quotes must be matched at the other end.
 Raw string literals insert the contents exactly as it appears in the file.
 
 ```
-"""None of "these" things will =(do) anything."""
+"""None of "these" things will \(do) anything."""
 """""""I can even """include""" this raw string!""""""
 ```
 
