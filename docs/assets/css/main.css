@@ -41,7 +41,7 @@ body {
 
 body > * {
 	width: 100%;
-	max-width: 120ch;
+	max-width: 100ch;
 	margin: 0 auto;
 }
 
