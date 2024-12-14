@@ -39,27 +39,27 @@ Execution can be passed to another algorithm, similarly to applying a function.
 This is only allowed inside of `algo` blocks.
 
 ```
-plus_two := algo x := num ( x + 2 )
+plus_two := algo fn x := num ( x + 2 )
 
-four := algo ( plus_two 2 )
+four := algo fn ( plus_two 2 )
 ```
 
 As with functions, the precedence of the operation allows for chaining:
 
 ```
-plus_two := algo x := num ( x + 2 )
-times_three := algo x := num ( x * 3 )
+plus_two := algo fn x := num ( x + 2 )
+times_three := algo fn x := num ( x * 3 )
 
-twelve := algo ( times_three plus_two 2 )
+twelve := algo fn ( times_three plus_two 2 )
 ```
 
 The apply operator `->` also works for algorithms.
 
 ```
-plus_two := algo x := num ( x + 2 )
-times_three := algo x := num ( x * 3 )
+plus_two := algo fn x := num ( x + 2 )
+times_three := algo fn x := num ( x * 3 )
 
-twelve := algo (2 -> plus_two -> times_three )
+twelve := algo fn (2 -> plus_two -> times_three )
 ```
 
 ## Joining expressions
