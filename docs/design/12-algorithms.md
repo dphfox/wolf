@@ -59,7 +59,7 @@ The apply operator `->` also works for algorithms.
 plus_two := algo fn x := num ( x + 2 )
 times_three := algo fn x := num ( x * 3 )
 
-twelve := algo fn (2 -> plus_two -> times_three )
+twelve := algo fn ( 2 -> plus_two -> times_three )
 ```
 
 ## Joining expressions
