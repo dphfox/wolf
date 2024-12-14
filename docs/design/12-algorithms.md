@@ -131,3 +131,17 @@ deterministic := algo fn (
 	do { foo, bar }
 )
 ```
+
+Note that regular functions are not subject to these rules, because they are
+order-independent by nature.
+
+```
+get_something := fn ( ... snip ... )
+get_something_else := fn ( ... snip ... )
+
+deterministic := algo fn (
+	foo := get_something ()
+	bar := get_something_else ()
+	{ foo, bar }
+)
+```
