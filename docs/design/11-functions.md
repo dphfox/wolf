@@ -57,7 +57,8 @@ five_factorial := factorial 5
 ## Running a function
 
 To run a function from the command line, pass in the name of the
-script, followed by a function identifier.
+script, followed by an identifier. If the identifier holds a function, it will
+be evaluated.
 
 Any returned values will be printed.
 
@@ -66,7 +67,7 @@ $ wf script_name.wf do_something
 ```
 
 Alternatively, you can shorten the command by just passing the script - it will
-default to looking for a function called `main`.
+default to looking for an identifier called `main`.
 
 ```
 $ wf script_name.wf
