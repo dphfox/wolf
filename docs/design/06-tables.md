@@ -45,7 +45,7 @@ cool_year := cool_date.year
 
 ## Numbered pairs
 
-Structs can contain *implicitly numbered* data instead. Each value is given a
+Tables can contain *implicitly numbered* data instead. Each value is given a
 key based on its position in the struct, starting at `0`.
 
 Expressions are listed directly, rather than with identifiers.
@@ -67,11 +67,9 @@ literal.
 cool_year := cool_date.0
 ```
 
-## 
-
 ## Select data via expression
 
-Expressions can be used to extract data from structs.
+Expressions can be used to extract data from tables.
 
 To access named data, use `.()`, with a `str` expression between the
 parentheses.
@@ -89,7 +87,7 @@ cool_date.(2)
 
 ## Count of data
 
-Use the count `#` operator on any struct to count the number of data fields it
+Use the count `#` operator on any table to count the number of data fields it
 contains.
 
 ```
