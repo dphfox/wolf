@@ -1,29 +1,25 @@
 ---
 layout: page
-title: Structs
+title: Tables
 page_number: 6
 ---
 
-Wolf allows the basic types of data to be *composed* into structured data types,
-known as *structs*.
+Wolf allows the basic types of data to be composed together using *tables*.
 
-Structs are static, immutable collections of data. There are multiple ways to
-save data into a struct, but only one may be used per struct:
+Tables are made of key/value pairs. The value can be retrieved if you know the
+key.
 
-- named data
-- numbered data
+## Empty tables
 
-## Empty structs
-
-An empty struct can be declared with curly braces `{}`.
+An empty table can be declared with curly braces `{}`.
 
 ```
 empty := {}
 ```
 
-## Named data
+## Named pairs
 
-Structs can contain identifier expressions to save named data inside them,
+Tables can contain identifier expressions to save named data inside them,
 separated by commas `,`.
 
 ```
@@ -47,14 +43,12 @@ Data can be extracted using a dot `.` followed by the name of the identifier.
 cool_year := cool_date.year
 ```
 
-## Numbered data
+## Numbered pairs
 
-Structs can contain *numbered* data
-instead. Each value is implicitly given an index based on its position in the
-struct, starting at `1`.
+Structs can contain *implicitly numbered* data instead. Each value is given a
+key based on its position in the struct, starting at `0`.
 
 Expressions are listed directly, rather than with identifiers.
-
 
 ```
 cool_date := { 2015, 05, 15 }
@@ -70,8 +64,10 @@ Data can be extracted using a dot `.`, followed by the index given as a number
 literal.
 
 ```
-cool_year := cool_date.1
+cool_year := cool_date.0
 ```
+
+## 
 
 ## Select data via expression
 
