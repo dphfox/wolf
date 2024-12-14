@@ -40,7 +40,10 @@ sixteen := (four := 2 + 2) ^ 2
 ## Identifiers in blocks
 
 Identifiers are scoped to the current block, if any. Otherwise, they're added
-to the top-level namespace. Order of appearance is not considered.
+to the top-level namespace. 
+
+Order of appearance is not considered, though the last entry in the block must
+always be an expression.
 
 ```
 (
