@@ -7,32 +7,26 @@ page_number: 11
 In Wolf, functions unpack a piece of data, transforms it with expressions, and
 returns a new piece of data.
 
-Functions start with the `fn` keyword, followed by an input type
-matcher, an arrow `->` and an output type annotation.
-
-Then, a block is given to act as the function body.
+Functions start with the `fn` keyword, followed by a block to act as the
+function body.
 
 ```
-fn of _ -> num ( 42 )
+fn ( 42 )
 ```
 
-If the output type can be inferred, then it may be omitted.
+## Input matching
 
-```
-fn of _ ( 42 )
-```
-
-The input type matcher may be given names to access parts of the incoming data.
-This is especially useful when working with composite types.
+Functions can accept a paramater by writing a type matcher to unpack the
+parameter. The unpacked data can then be used in the function body.
 
 TODO: update type matching to allow for matching args without naming them and vice versa
 
 ```
-fn of {from: num, to: num, ratio: num} (
+fn {from := num, to := num, ratio := num} (
 	(to - from) * ratio + to
 )
 
-fn of pair: {num, num} (
+fn pair: {num, num}  (
 	{
 		sum: pair.0 + pair.1
 		diff: pair.0 - pair.1
@@ -40,18 +34,41 @@ fn of pair: {num, num} (
 )
 ```
 
-The function itself may be given a name so it may be referenced elsewhere.
+## Function names
+
+The function itself may be assigned to an identifier so it may be referenced
+elsewhere.
+
+```
+lerp := fn {from := num, to := num, ratio := num} (
+	(to - from) * ratio + to
+)
+```
 
 A function can be applied to a piece of data by writing the identifier to the left of the operand.
 Function application takes precedence over other nearby operations, so a block `()` is
 needed to evaluate expression operands.
 
 ```
-factorial := fn of x: num (
+factorial := fn x := num (
 	if x == 1 ( x ) else ( factorial(x - 1) )
 }
 
 five_factorial := factorial 5
+```
+
+## Function chains
+
+Functions can naturally be chained due to their precedence.
+
+```
+foo := abs sin rad x
+```
+
+If desired for readability, order can be reversed with the apply operator `->`.
+
+```
+foo := x -> rad -> sin -> abs
 ```
 
 ## Running a function
