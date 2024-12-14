@@ -107,6 +107,7 @@ get_something := algo fn ( ... snip ... )
 get_something_else := algo fn ( ... snip ... )
 
 non_deterministic := algo fn (
+	-- which one runs first?
 	foo := get_something ()
 	bar := get_something_else ()
 	{ foo, bar }
@@ -119,7 +120,7 @@ Instead, use an explicit ordering:
 get_something := algo fn ( ... snip ... )
 get_something_else := algo fn ( ... snip ... )
 
-non_deterministic := algo fn (
+deterministic := algo fn (
 	do foo := get_something ()
 	do bar := get_something_else ()
 	do { foo, bar }
