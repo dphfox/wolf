@@ -32,6 +32,36 @@ my_algorithm := algo fn (
 )
 ```
 
+## Passing execution
+
+Execution can be passed to another algorithm, similarly to applying a function.
+
+This is only allowed inside of `algo` blocks.
+
+```
+plus_two := algo fn x := num ( x + 2 )
+
+four := algo fn ( plus_two 2 )
+```
+
+As with functions, the precedence of the operation allows for chaining:
+
+```
+plus_two := algo fn x := num ( x + 2 )
+times_three := algo fn x := num ( x * 3 )
+
+twelve := algo fn ( times_three plus_two 2 )
+```
+
+The apply operator `->` also works for algorithms.
+
+```
+plus_two := algo fn x := num ( x + 2 )
+times_three := algo fn x := num ( x * 3 )
+
+twelve := algo fn ( 2 -> plus_two -> times_three )
+```
+
 ## Joining expressions
 
 Expressions can be joined together by using the "do" operator; add the `do`
@@ -65,40 +95,15 @@ twelve := algo fn (
 )
 ```
 
-## Passing execution
+## Ambiguity
 
-Execution can be passed to another algorithm, similarly to applying a function.
+Execution must always be deterministic. The following operations are ordered:
 
-This is only allowed inside of `algo` blocks.
+- Chaining, e.g. `times_three plus_two 2` or `2 -> plus_two -> times_three`
+- `do` expressions, e.g. `do 2 + 2 do 4 + 4`
 
-```
-plus_two := algo fn x := num ( x + 2 )
-
-four := algo fn ( plus_two 2 )
-```
-
-As with functions, the precedence of the operation allows for chaining:
-
-```
-plus_two := algo fn x := num ( x + 2 )
-times_three := algo fn x := num ( x * 3 )
-
-twelve := algo fn ( times_three plus_two 2 )
-```
-
-The apply operator `->` also works for algorithms.
-
-```
-plus_two := algo fn x := num ( x + 2 )
-times_three := algo fn x := num ( x * 3 )
-
-twelve := algo fn ( 2 -> plus_two -> times_three )
-```
-
-### Ambiguity
-
-Execution may be passed at most once per `do` sub-expression. If it's possible
-for code to pass execution more than once without using `do`, it is rejected.
+Execution cannot be passed to more than one algorithm without using an ordered
+operation.
 
 The following would *not* be allowed:
 
@@ -114,7 +119,7 @@ non_deterministic := algo fn (
 )
 ```
 
-Instead, use an explicit ordering:
+Instead, use an explicitly ordered `do` expression:
 
 ```
 get_something := algo fn ( ... snip ... )
