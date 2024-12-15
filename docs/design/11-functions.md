@@ -57,6 +57,36 @@ factorial := fn x := num (
 five_factorial := factorial 5
 ```
 
+## First-class functions
+
+Functions can be defined below the top level, e.g. inside other functions:
+
+```
+two_functions := fn (
+	fn (
+		42
+	)
+)
+
+inner_function := two_functions ()
+fourty_two := inner_function ()
+```
+
+Functions can be generated with various parameters this way, as they are allowed
+to capture identifiers from the outer environment.
+
+```
+multiply_by := fn factor := num (
+	fn input := num ( input * factor )
+)
+
+double := multiply_by 2
+triple := multiply_by 3
+
+twenty := double 10
+sixty := triple twenty
+```
+
 ## Function chains
 
 Functions can naturally be chained due to their precedence.
