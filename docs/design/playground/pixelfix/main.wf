@@ -1,0 +1,150 @@
+|output_as| = [
+	|bleed| = symbol;
+	|bleed_opaque| = symbol;
+	|coverage| = symbol;
+	|uv| = symbol;
+	|distance| = symbol;
+];
+
+|main| = fn || {
+	do |args| = :cli.parse;
+	do :print "Loading image from \{args.input}";
+
+	|img| = args.input :image.open :expect "Failed to open image"
+		-> :image.with_guessed_format :expect "Failed to guess format of image";
+		-> :decode:expect "Failed to decode image";
+
+	|size| = (img:width; img:height);
+	do :print "Image size is \{size.0} x \{size.1}";
+
+	|var search_radius| = size:max:log2:ceil:exp2:floor_div 2;
+	do :print "Will use a search radius of \{search_radius}";
+
+	|preserve_above| = args.preserve_above :ok_or 0;
+	do :print "Will preserve alpha above \{preserve_above}";
+
+	do :print "Will use \{args.edge_mode} edge behaviour";
+
+	do :print "Will use \{args.edge_mode} edge behaviour";
+
+	|voronoi_1| = :voronoi.new size;
+	|voronoi_2| = :voronoi.new size;
+	|var voronoi_read| = voronoi_1;
+	|var voronoi_write| = voronoi_2;
+
+	do :print "Preparing Voronoi graph for filling...";
+
+	do for |pos| in (0; 0):count_until size {
+		|alpha| = img:get_pixel pos;
+		if alpha > preserve_above {
+			voronoi_read:set_closest(pos; :maybe.some pos);
+		};
+	};
+
+	do :print "Filling Voronoi graph...";
+
+	do |jfa| = loop {
+		|results| = (0; 0):count_until size -> :map fn |(x; y)| {
+			|index| = x * size.0 + y;
+			|maybe_closest| = :iter[
+				voronoi_read:get_closest((x; y); args.edge_mode);
+				voronoi_read:get_closest((x; y - search_radius); args.edge_mode);
+				voronoi_read:get_closest((x; y + search_radius); args.edge_mode);
+				voronoi_read:get_closest((x - search_radius; y); args.edge_mode);
+				voronoi_read:get_closest((x + search_radius; y); args.edge_mode);
+				voronoi_read:get_closest((x - search_radius; y - search_radius); args.edge_mode);
+				voronoi_read:get_closest((x - search_radius; y + search_radius); args.edge_mode);
+				voronoi_read:get_closest((x + search_radius; y - search_radius); args.edge_mode);
+				voronoi_read:get_closest((x + search_radius; y + search_radius); args.edge_mode);
+			]
+			-> :filter_map fn |maybe_position| {
+				if |<some position>| = maybe_position {
+					|offset| = position - (x; y);
+					|distance| = offset:magnitude;
+					:maybe.some (position, distance)
+				} else { maybe.none }
+			}
+			-> :reduce fn |best, candidate| {
+				if candidate.1 < best.1 { candidate } else { best }
+			};
+
+			if |<some closest>| = maybe_closest {
+				:maybe.some ((x; y); :maybe.some closest.0)
+			} else { maybe.none }
+		};
+		
+		do for |result| in results {
+			voronoi_write :set_closest result;
+		};
+
+		|(var voronoi_read, var voronoi_write)| = (voronoi_write, voronoi_read);
+
+		if search_radius <= 1 {
+			do jfa:break;
+		} else {
+			|var search_radius| /= 2;
+		};
+	};
+
+	match args.output_as
+	if |<output_as.bleed>| {
+		do :print "Bleeding pixels and preserving alpha...";
+		do for |image_pos| in (0; 0) :count_until size {
+			if |<some closest_pos>| = voronoi_read :get_closest (image_pos; args.edge_mode) {
+				|colour| = image:get_pixel closest_pos -> .(0; 1; 2);
+				|alpha| = image:get_pixel image_pos -> .3;
+				image:put_pixel(colour...; alpha);
+			} else {
+				image:put_pixel(0; 0; 0; 0);
+			};
+		};
+	}
+	else if |<output_as.bleed_opaque>| {
+		do :print "Bleeding pixels and discarding alpha...";
+		do for |image_pos| in (0; 0):count_until size {
+			if |<some closest_pos>| = voronoi_read:get_closest(image_pos; args.edge_mode) {
+				|colour| = image get_pixel closest_pos -> .(0; 1; 2);
+				image:put_pixel(colour...; 255);
+			} else {
+				image:put_pixel(0; 0; 0; 0);
+			};
+		};
+	}
+	else if |<output_as.uv>| {
+		do :print "Plotting closest UVs...";
+		do for |image_pos| in (0; 0):count_until size {
+			if |<some closest_pos>| = voronoi_read:get_closest(image_pos; args.edge_mode) {
+				image:put_pixel(closest_pos * 255 / size -> ...; 0; 255);
+			} else {
+				image:put_pixel(0; 0; 255; 255);
+			};
+		};
+	}
+	else if |<output_as.coverage>| {
+		do :print "Plotting Voronoi coverage...";
+		do for |image_pos| in (0; 0):count_until size {
+			if |<some>| = voronoi_read:get_closest(image_pos; args.edge_mode) {
+				image:put_pixel(255; 255; 255; 255);
+			} else {
+				image:put_pixel(0; 0; 0; 255);
+			};
+		};
+	}
+	else if |<output_as.distance>| {
+		do :print "Plotting distance field...";
+		do for |image_pos| in (0; 0) :count_until size {
+			if |<some closest_pos>| = voronoi_read:get_closest(image_pos; args.edge_mode) {
+				|distance| = image_pos - closest_pos -> :magnitude;
+				|value| = 255 - distance:clamp(0, 255):round;
+				image:put_pixel(value; value; value; 255);
+			} else {
+				image:put_pixel(0; 0; 0; 255);
+			};
+		};
+	};
+
+	|output| = args.output:ok_or args.input;
+	do :print "Saving image to \{output}";
+	do img:save output -> expect "Failed to save image;
+	do :print "Completed!";
+};
