@@ -10,4 +10,4 @@ copyright: Text is MIT licensed unless specified; use with attribution, links ar
 
 plugins:
   - jekyll-feed
-  - jekyll-seo-tag
+  - jekyll-seo-tag 

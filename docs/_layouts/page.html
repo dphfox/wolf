@@ -5,7 +5,7 @@ layout: bare
 	<a href="{{site.url}}">
 		<picture>
 			<source media="(prefers-color-scheme: dark)" srcset="/assets/logo-dark.svg">
-			<img alt="Wolf logo" src="/assets/logo-light.svg">
+			<img alt="Wolf logo" src="/assets/logo-light.svg" width="338" height="120">
 		</picture>
 	</a>
 </header>
@@ -26,11 +26,11 @@ layout: bare
 		{% assign last_page_info = neighbours | where: "page_number", last_page_number | first %}
 		{% assign next_page_info = neighbours | where: "page_number", next_page_number | first %}
 		{%if last_page_info %}
-			<a href="{{last_page_info.url}}">Back: {{last_page_info.title}}</a>
+			<a id="keyboard-back" class="nav-back" href="{{last_page_info.url}}">{{last_page_info.title}}</a>
 		{% endif %}
 		<hr>
 		{% if next_page_info %}
-			<a href="{{next_page_info.url}}">Next: {{next_page_info.title}}</a>
+			<a id="keyboard-next" class="nav-next" href="{{next_page_info.url}}">{{next_page_info.title}}</a>
 		{% endif %}
   	</nav>
   {% endif %}

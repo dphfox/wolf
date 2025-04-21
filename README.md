@@ -12,14 +12,21 @@ to Luau.
 
 ## Goals
 
-- *Principled.* Wolf is built from first principles by composing together minimal, powerful features. Prior art is acknowledged, but freely moved beyond.
-- *Consistent.* Similar things appear similar on the page, and divergent things do not.
-- *Analysable.* Everything in Wolf is designed for static analysis, allowing
-for smart safety checks without annotating everything for the computer.
-- *Declarative.* In Wolf, processes are described, not organised. Step-by-step
-instructions are not necessary to achieve a task.
-- *Workspaced.* Instead of file-based organisation, Wolf advocates for coarser
-workspace-centric access control and importing, reducing workflow friction.
+- *Principled.* 
+	- Wolf is built from first principles by composing together minimal, 
+	  powerful features. Prior art is acknowledged, but freely moved beyond.
+- *Consistent.*
+	- Similar things appear similar on the page, and divergent things do not.
+- *Analysable.*
+	- Everything in Wolf is designed for static analysis, allowing
+	  for smart safety checks without annotating everything for the computer.
+- *Declarative.* 
+	- In Wolf, processes are described, not organised. Step-by-step
+	  instructions are not necessary to achieve a task.
+- *Workspaced.* 
+	- Instead of file-based organisation, Wolf advocates for coarser
+	  workspace-centric access control and importing, reducing workflow
+	  friction.
 
 ## `wf` - the Wolf Reference Implementation
 

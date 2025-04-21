@@ -1,10 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=PT+Mono&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Besley:ital,wght@0,400..900;1,400..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+@view-transition {
+	navigation: auto;
+}
 
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 	font-optical-sizing: auto;
+	text-wrap: pretty;
 	tab-size: 4;
 }
 
@@ -15,6 +20,10 @@
 	--fg-alt: #1d0700;
 	--accent: #627546;
 	--accent-alt: #283910;
+
+	--fg-40: color-mix(in srgb, var(--fg) 40%, transparent);
+
+	overflow-y: scroll;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -29,14 +38,29 @@
 }
 
 body {
+	position: relative;
+
+	counter-reset: h2 h3 h4 h5 h6;
 	background-color: var(--bg);
 	color: var(--fg);
-	font: 1.25rem/1.5 "Playfair", "Cambria", serif;
+	font: 1.25rem/1.5 "Besley", "Cambria", serif;
 	padding: 2rem;
 	display: flex;
 	flex-direction: column;
 	align-items: start;
 	gap: 1rem;
+
+	&:after {
+		content: "";
+		display: block;
+		position: absolute;
+		inset: 0;
+		min-height: 100vh;
+		pointer-events: none;
+		background: url("/assets/paper.png");
+		mix-blend-mode: overlay;
+		opacity: 0.25;
+	}
 }
 
 body > * {
@@ -46,20 +70,68 @@ body > * {
 }
 
 h1, h2, h3, h4, h5, h6 {
-	font-family: "Playfair Display", "Playfair", "Cambria", serif;
-	font-variant-caps: small-caps;
+	font-weight: 300;
 	letter-spacing: 0.04em;
-	margin-top: 1em;
+	margin-top: 1.5em;
+	margin-bottom: 0.5em;
+	color: var(--fg-alt);
+	text-wrap: balance;
+
+	&:before {
+		margin-right: 1em;
+		opacity: 0.5;
+	}
 }
 
 h1 {
 	font-size: 2em;
+	margin-top: 1em;
 	margin-bottom: 1em;
-	border-bottom: 1px solid color-mix(in srgb, var(--fg) 40%, transparent);
+	border-bottom: 1px solid var(--fg-40);
 }
 
 h2 {
 	font-size: 1.5em;
+	&:before {
+		counter-increment: h2;
+		content: counter(h2);
+	}
+}
+
+h3 {
+	&:before {
+		counter-increment: h3;
+		content: counter(h2) "." counter(h3);
+	}
+}
+
+h4 {
+	&:before {
+		counter-increment: h4;
+		content: counter(h2) "." counter(h3) "." counter(h4);
+	}
+}
+
+h5 {
+	&:before {
+		counter-increment: h5;
+		content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5);
+	}
+}
+
+h6 {
+	&:before {
+		counter-increment: h6;
+		content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6);
+	}
+}
+
+strong {
+	color: var(--fg-alt);
+}
+
+ul, ol {
+	padding-left: 0;
 }
 
 ul {
@@ -68,6 +140,19 @@ ul {
 
 li {
 	margin-left: 1em;
+	padding-left: 0.5em;
+	margin-top: 0.25em;
+	margin-bottom: 0.25em;
+
+	&::marker {
+		color: var(--accent);
+	}
+}
+
+p + p, p + ul, p + ol,
+ul + p, ul + ul, ul + ol,
+ol + p, ol + ul, ol + ol {
+	margin-top: 1em;
 }
 
 a {
@@ -82,7 +167,7 @@ hr {
 	width: 100%;
 	height: 1px;
 	border: none;
-	background: color-mix(in srgb, var(--fg) 40%, transparent);
+	background: var(--fg-40);
 }
 
 table {
@@ -109,16 +194,20 @@ th, td {
 }
 
 td {
-	border-top: 1px solid color-mix(in srgb, var(--fg) 40%, transparent);
+	border-top: 1px solid var(--fg-40);
 }
 
-th {
-	font-variant-caps: small-caps;
+code {
+	font: 1em/1.5 "Roboto Mono", "Consolas", monospace;
+	color: var(--fg-alt);
+	background-color: var(--bg-alt);
+	padding: 0 0.25em;
 }
 
 div.highlight {
 	background-color: var(--bg-alt);
 	margin: 1rem -2rem;
+	font-size: 0.8em;
 }
 
 div.highlight > pre {
@@ -129,15 +218,7 @@ div.highlight > pre {
 
 div.highlight > pre > code {
 	margin: 1rem 2rem;
-}
-
-code {
-	font: 0.8em/1.25 "PT Mono", "Consolas", monospace;
-	color: var(--fg-alt);
-}
-
-nav {
-	font-variant-caps: small-caps;
+	background-color: transparent;
 }
 
 main > nav {
@@ -146,13 +227,25 @@ main > nav {
 	justify-content: space-between;
 	gap: 2rem;
 	margin-top: 2rem;
-}
 
-main > nav > a {
-	flex-shrink: 0;
-}
+	& > hr {
+		width: 1fr;
+		flex-shrink: 1;
+	}
 
-main > nav > hr {
-	width: 1fr;
-	flex-shrink: 1;
+	& > a {
+		flex-shrink: 0;
+
+		&.nav-back:before {
+			display: inline-block;
+			content: "⇐";
+			margin-right: 0.5em;
+		}
+
+		&.nav-next:after {
+			display: inline-block;
+			content: "⇒";
+			margin-left: 0.5em;
+		}
+	}
 }
