@@ -7,26 +7,16 @@
 
 # The Wolf Scripting Language
 
-An experimental design for a static declarative logic language that transpiles
-to Luau.
+Wolf is an expression-based scripting language aiming to be:
 
-## Goals
-
-- *Principled.* 
-	- Wolf is built from first principles by composing together minimal, 
-	  powerful features. Prior art is acknowledged, but freely moved beyond.
-- *Consistent.*
-	- Similar things appear similar on the page, and divergent things do not.
-- *Analysable.*
-	- Everything in Wolf is designed for static analysis, allowing
-	  for smart safety checks without annotating everything for the computer.
-- *Declarative.* 
-	- In Wolf, processes are described, not organised. Step-by-step
-	  instructions are not necessary to achieve a task.
-- *Workspaced.* 
-	- Instead of file-based organisation, Wolf advocates for coarser
-	  workspace-centric access control and importing, reducing workflow
-	  friction.
+- **Easy.** Wolf lets you bring your own paradigms, and provides the tools to use
+them ergonomically.
+- **Small.** Wolf is built from first principles by composing together a few, well
+chosen features that are easily identified and repurposed.
+- **Smart.** Wolf code can be analysed 100% statically with smart inference, so
+you don't have to spell things out for the computer.
+- **Parallel.** Wolf code avoids prescribing a specific order or method of running
+code, so it can be rearranged or broken up across threads for performance.
 
 ## `wf` - the Wolf Reference Implementation
 

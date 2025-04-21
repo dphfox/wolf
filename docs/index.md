@@ -13,8 +13,6 @@ you don't have to spell things out for the computer.
 - **Parallel.** Wolf code avoids prescribing a specific order or method of running
 code, so it can be rearranged or broken up across threads for performance.
 
-
-
 ## Design
 
 <nav>
