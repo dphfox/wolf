@@ -47,5 +47,3 @@ will be evaluated.
 
 [^u]: Operators that only act on a single piece of data cannot appear multiple times in a row.
 [^i]: Inequality operators can appear once (`x < size`) or twice (for example, `0 <= x < size`). These form single- and double-ended ranges respectively. No further inequality operators are allowed.
-
-Florbulant!
