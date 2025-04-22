@@ -259,6 +259,11 @@ ol + p, ol + ul, ol + ol {
 	margin-top: 1em;
 }
 
+#header-logo {
+	max-width: 100%;
+	height: auto;
+}
+
 main > nav {
 	display: flex;
 	align-items: center;

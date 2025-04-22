@@ -1,7 +1,7 @@
 let spring_coefficients = fn [
 	at: time <num>
-	damping: damping <num>
-	speed: speed <num>
+	_: damping <num>
+	_: damping <num>
 ] (
 	if time == 0 or speed == 0 (
 		[

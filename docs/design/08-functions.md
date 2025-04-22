@@ -20,19 +20,11 @@ Each function is formed of a few pieces:
 ```
 let double: fn x: x * 2
 
-let four: double 2
-```
-
-## Multi-line functions
-
-More complex functions can use a block to span multiple lines without ending the
-function declaration.
-
-```
-let lerp: fn [:ratio <num>, :from <num>, :to <num>] (
+let lerp: fn [:ratio <num>, :from <num>, :to <num>]: (
 	let difference: to - from
 	to + difference * ratio
 )
 
+let four: double 2
 let five: lerp [from: 0, to: 10, ratio: 0.5]
 ```
