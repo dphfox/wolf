@@ -28,3 +28,5 @@ It isn't valid to use `\` without one of those specific sequences.
 -- Allowed:
 "do \\ re \\ mi"
 ```
+
+TODO: should these be string templates a la Python instead?

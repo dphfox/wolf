@@ -8,7 +8,7 @@ Blocks evaluate expressions inside of them to produce a value.
 
 They can be used to embed expressions safely inside of other expressions.
 
-## Basic usage
+## Basic use
 
 Blocks are declared with parentheses `()`. The inner expression becomes the
 outer value.
@@ -27,3 +27,5 @@ evaluated independently of the other expression.
 ```
 cos (negate 2)
 ```
+
+Note that 

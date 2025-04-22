@@ -49,7 +49,7 @@ insert the first underscore for you.
 [2, 5] => max => log2 => ceil => exp2
 ```
 
-You may mix thin arrows and fat arrows in the same pipeline.
+You may mix thin arrows and fat arrows in the same chain.
 
 ```
 [2, 5] => max -> divide [10, _]
