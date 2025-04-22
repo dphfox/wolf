@@ -4,6 +4,11 @@
 	navigation: auto;
 }
 
+::selection {
+	background-color: var(--accent);
+	color: var(--bg);
+}
+
 * {
 	margin: 0;
 	padding: 0;
@@ -142,25 +147,18 @@ ul, ol {
 	padding-left: 0;
 }
 
-ul {
-	list-style-type: square;
-}
-
 li {
 	margin-left: 1em;
 	padding-left: 0.5em;
 	margin-top: 0.25em;
 	margin-bottom: 0.25em;
-
-	&::marker {
-		color: var(--accent);
-	}
 }
 
-p + p, p + ul, p + ol,
-ul + p, ul + ul, ul + ol,
-ol + p, ol + ul, ol + ol {
-	margin-top: 1em;
+ul {
+	list-style-type: square;
+	& > li::marker {
+		color: var(--accent);
+	}
 }
 
 a {
@@ -189,11 +187,6 @@ table {
 	white-space: nowrap;
 	mask-image: linear-gradient(to right, transparent 0px, black 2rem, black calc(100% - 2rem), transparent 100%);
 }
-
-table * {
-	width: max-content;
-}
-
 th, td {
 	padding: 0.25rem 0.5rem;
 	text-align: left;
@@ -227,6 +220,43 @@ div.highlight > pre {
 div.highlight > pre > code {
 	margin: 1rem 2rem;
 	background-color: transparent;
+}
+
+.footnotes {
+	font-size: 0.8em;
+	letter-spacing: 0.04em;
+
+	border-top: 1px solid var(--fg-40);
+	margin-top: 3em;
+
+	& > * {
+		font-style: italic;
+	}
+
+	&::before {
+		display: block;
+		content: "Footnotes";
+		width: fit-content;
+		padding-right: 0.5em;
+		color: var(--fg-alt);
+		background-color: var(--bg);
+		margin-top: -0.6lh;
+		margin-bottom: 1em;
+	}
+
+	& .reversefootnote {
+		font-style: normal;
+
+		& > sup::before {
+			content: " ";
+		}
+	}
+}
+
+p + p, p + ul, p + ol,
+ul + p, ul + ul, ul + ol,
+ol + p, ol + ul, ol + ol {
+	margin-top: 1em;
 }
 
 main > nav {

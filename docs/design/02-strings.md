@@ -43,6 +43,6 @@ Raw string literals insert the contents exactly as it appears in the file,
 ignoring indentation at the start of following lines.
 
 ```
-"""None of "these" things will \(do) anything."""
+"""None of "these" things will \n do anything."""
 """""""I can even """include""" this raw string!""""""
 ```

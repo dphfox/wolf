@@ -9,7 +9,7 @@ In Wolf, tuples group multiple data into a single datum.
 
 ## Construction
 
-Tuples are constructed by enclosing data in square brackets `[` `]`.
+Tuples are constructed by enclosing data in square brackets `[ ]`.
 Data is separated by either commas `,` or newlines.
 
 ```

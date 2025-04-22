@@ -14,8 +14,6 @@ parse will only continue if ending the parse would result in incomplete syntax.
 
 Non-syntax errors are not considered when processing newlines.
 
-TODO: VSCode extension to visualise when the parser continues across a newline?
-
 ## Comments
 
 At any point in the program, you can type two hypens `--` to skip processing the

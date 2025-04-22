@@ -1,21 +1,23 @@
 ---
 layout: page
 title: Lets
-page_number: 8
+page_number: 6
 ---
 
-The `let` keyword allows you to reuse parts of expressions by giving them names.
+Lets allow you to introduce names for the duration of a block.
 
 ## Basic use
 
-Lets are formed of a few pieces:
+Any number of lets can be defined in a block before the final expression.
+
+Each let is formed of a few pieces:
 
 - The `let` keyword, to indicate new names are being introduced.
-- Some names to introduce to the current block.
+- A *capture* that introduces names (this will be elaborated on later).
 - A colon `:` to separate the names from the expression.
-- The expression to be reused.
+- The expression to be captured / named.
 
-In the simplest case, a `let` introduces one name.
+In the simplest case, a let introduces one name.
 
 ```
 let four: 4
@@ -27,17 +29,22 @@ the block. Order does not matter.
 
 ```
 -- Notice that `four` and `negative_two` are underneath `negative_eight`.
-let negative_eight = four => multiply negative_two
+let negative_eight: four => multiply negative_two
 
 let four: 4
 let negative_two: negate 2
 ```
 
+Conceptually, you can imagine replacing each name with that's name's expression.
 
+```
+-- The compiler sees this.
+let negative_eight: (4) => multiply (negate 2)
+```
 
 ## Restrictions
 
-Expressions in `let` declarations must be resolvable without infinite cycles.
+Expressions in lets must be resolvable without infinite cycles.
 
 ```
 -- This is not allowed.
@@ -60,8 +67,8 @@ Inner blocks can see names declared in outer blocks.
 
 ```
 let five: 5
-let ten: (
-	-- The value of 5 comes from the outer block.
+(
+	-- This evaluates to 10.
 	five * 2
 )
 ```
@@ -83,8 +90,8 @@ let ten: foo * 10 -- sees foo as `1`
 
 ## Empty lets
 
-An "empty let" is a `let` declaration without a colon or expression. They
-introduce names without introducing any expressions or values.
+An "empty let" is a let without a colon or expression. They introduce names
+without introducing any expressions or values.
 
 ```
 -- This is an example of an empty let.
@@ -104,11 +111,11 @@ outer block.
 
 ```
 let foo: 42
-let wont_compile: (
+(
 	-- Overshadows the outer `foo`, but doesn't provide a value.
 	let foo
 	
-	-- As a result, it is now a compile error to try and use `foo`.
+	-- As a result, it is a compile error to try and use `foo` here.
 	foo * 10
 )
 ```

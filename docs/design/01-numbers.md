@@ -10,7 +10,7 @@ integers up to 2^53.
 
 ## Number literals
 
-Numbers can be literally written with ASCII digits.
+Numbers can be literally written by entering digits.
 
 A dot may be added to specify a fractional part. This can't appear at the start
 or end of the number.
