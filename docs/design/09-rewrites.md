@@ -12,7 +12,8 @@ everything that depends on that declaration, for the duration of a block.
 Rewrites look identical to a `let` declaration, except they use the `rewrite`
 keyword. They must point at an existing declaration.
 
-The new value does not have to be the same kind of data.
+The new value does not have to be the same kind of data. However, the rewritten
+program must still be compatible with the new datum.
 
 ```
 let some_thing: 25
