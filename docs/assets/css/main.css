@@ -27,6 +27,7 @@
 	--accent-alt: #283910;
 
 	--fg-40: color-mix(in srgb, var(--fg) 40%, transparent);
+	--fg-60: color-mix(in srgb, var(--fg) 60%, transparent);
 
 	overflow-y: scroll;
 }
@@ -92,7 +93,7 @@ h1, h2, h3, h4, h5, h6 {
 
 	&:before {
 		margin-right: 1em;
-		opacity: 0.5;
+		color: var(--fg-60);
 	}
 }
 
@@ -145,6 +146,10 @@ strong {
 
 ul, ol {
 	padding-left: 0;
+	&.multicol {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(15ch, 1fr));
+	}
 }
 
 li {
@@ -158,6 +163,19 @@ ul {
 	list-style-type: square;
 	& > li::marker {
 		color: var(--accent);
+	}
+}
+
+@counter-style counter-plain {
+	system: numeric;
+	symbols: '0' '1' '2' '3' '4' '5' '6' '7' '8' '9';
+	suffix: "";
+}
+
+ol {
+	list-style-type: counter-plain;
+	& > li::marker {
+		color: var(--fg-60);
 	}
 }
 
