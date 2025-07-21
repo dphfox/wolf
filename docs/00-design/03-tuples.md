@@ -43,19 +43,51 @@ includes getting rid of all tuples.
 This is only done in limited situations where there's a clear conversion to be
 made.
 
-## Named data
+## Labelled data
 
-By default, data in tuples is indexed by position, starting at 0 for the first
-datum, 1 for the second datum, etc.
+By default, data in tuples is indexed automatically by position, starting at 0
+for the first datum, 1 for the second datum, etc.
 
-You can optionally provide names for data instead by putting a name and a colon
-`:` before the datum.
+You can explicitly label the indices by putting the index before the data, with
+a dot `.` prefix. You can use this to skip indices.
 
 ```
 [
-	year: 2015
-	month: 5
-	day: 15
+	.10 2015, 
+	.20 5, 
+	.30 15
+]
+```
+
+Negative or fractional indices cannot be specified.
+
+```
+-- This is not allowed.
+[
+	.-1 2015
+	.0.5 5
+	.-0 15
+]
+```
+
+Labels can't be reused in the same tuple.
+
+```
+-- This is not allowed.
+[
+	.0 2015, 
+	.0 5, 
+	.0 15
+]
+```
+
+You may also use an alphanumeric name.
+
+```
+[
+	.year 2015
+	.month 5
+	.day 15
 ]
 ```
 
@@ -69,45 +101,43 @@ following limitations:
 ```
 -- These names are valid.
 [
-	person: 1
-	PEOPLE: 2
-	Crowd: 3
-	large_gathering: 4
-	smallGroup: 5
-	3rd_Person: 6
+	.person 1
+	.PEOPLE 2
+	.Crowd 3
+	.large_gathering 4
+	.smallGroup 5
+	.3rd_Person 6
 ]
 ```
 
 Conventionally, names are written in `snake_case`.
 
-It's valid to mix named and positional data; positional data will not consider
-named data when determining indices.
+It's valid to mix labelled and unlabelled data; unlabelled data will not 
+consider labelled data when determining indices.
 
 ```
 [
 	1
 	2
-	foo: "a"
+	.foo "a"
 	3,
-	bar: "b",
+	.bar "b",
 	4,
 	5
 ]
 ```
 
-## Indexing
+## Accessing data
 
-You can access a datum with the dot `.` operator, followed by the index of the
-datum you want to take.
-
-Numbers are used for positional data, while names are used for named data.
+You can access a datum with the dot `.` operator, followed by the index or label
+of the datum you want to take.
 
 ```
 -- Evaluates to 5.
 [3, 5, 7].1
 
 -- Evaluates to 2015.
-[year: 2015, month: 5, day: 15].year
+[.year 2015, .month 5, .day 15].year
 ```
 
 ## Flattening
@@ -121,6 +151,6 @@ by using an ellipsis `...` after it.
 [1, 2, 3, 4, 5]
 
 -- So are these two expressions.
-[[year: 2015, month: 5]..., day: 15]
-[year: 2015, month: 5, day: 15]
+[[.year 2015, .month 5]..., .day 15]
+[.year 2015, .month 5, .day 15]
 ```

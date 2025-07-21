@@ -69,13 +69,13 @@ Certain functions in Wolf are important enough to have special notation.
 (3 == 3) == (2 != 5)
 
 -- Equality comparisons and boolean combination.
-9 == 9 & 10 != 10 | 19 == 21
+9 == 9 and 10 != 10 or 19 == 21
 
 -- Single-ended ranges.
-(2 < 5) & (3 <= 3) | (4 > 5) & (6 >= 0)
+(2 < 5) and (3 <= 3) or (4 > 5) and (6 >= 0)
 
 -- Double-ended ranges (combines single-ended ranges).
-(0 <= 5 < 21) | (20 >= 5 > -1)
+(0 <= 5 < 21) or (20 >= 5 > -1)
 ```
 
 The table below shows these *operators* and how they relate to each other. To
@@ -107,8 +107,8 @@ Other fundamental operators are also included to complete the comparison.
 | `A > B`    | `more_than [A, B]`           | ▼         | Once [^i]
 | `A <= B`   | `less_or_equals [A, B]`      | ▼         | Once [^i]
 | `A >= B`   | `more_or_equals [A, B]`      | ▼         | Once [^i]
-| `A & B`    | `and [A, B, ...]`            | ▼ ▼       | ✓
-| `A | B`    | `or [A, B, ...]`             | ▼ ▼ ▼     | ✓
+| `A and B`  | `::and [A, B, ...]`          | ▼ ▼       | ✓
+| `A or B`   | `::or [A, B, ...]`           | ▼ ▼ ▼     | ✓
 | `A -> B`   | *(manual chaining)*          | ▼ ▼ ▼ ▼   | ✓
 | `A => B`   | *(automatic chaining)*       | ▼ ▼ ▼ ▼   | ✓
 
