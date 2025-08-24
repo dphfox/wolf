@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Chains
-page_number: 5
+page_number: 7
 ---
 
 Chains allow multiple expressions to be appended together.
@@ -13,7 +13,7 @@ The final expression determines the value of the chain as a whole.
 
 ```
 -- This entire chain evaluates to 8, the result of the final expression.
-2 + 5 -> cos 2 -> max [2, 4, 6, 8]
+2 + 5 -> cos [2] -> max [2, 4, 6, 8]
 ```
 
 ## Forward passing
@@ -21,8 +21,8 @@ The final expression determines the value of the chain as a whole.
 The key feature that makes chains useful is forward passing. This is when the
 result of the previous expression is used in the next expression.
 
-In a chain, underscores `_` in an expression are populated with the value from
-the previous expression.
+The underscore `_` name is reserved by Wolf. In a chain, it refers to the result 
+of the previous expression.
 
 ```
 -- The underscore is replaced with 4, so this whole chain evaluates to 14.
@@ -33,7 +33,7 @@ the previous expression.
 
 In some common cases, Wolf can infer where the first underscore goes.
 
-- Functions that accept data directly (e.g. `-> func _`, `func [_]` or  `func [[_]]`).
+- Functions that accept data directly (e.g. `-> func [_]`  or `-> func [[_]]`).
 - Functions that accept a tuple (e.g. `-> func [_, a, b, c]`)
 - Operators [^1] (e.g. `_ + a`, `_...` or `+_`).
 
@@ -44,24 +44,16 @@ insert the first underscore for you.
 
 ```
 -- Manual:
-[2, 5] -> max _ -> log2 _ -> ceil _ -> exp2 _
+[2, 5] -> max [_] -> log2 [_] -> ceil [_] -> exp2 [_]
+2 -> _ + 5 -> _ * 3
 
 -- Automatic:
 [2, 5] => max => log2 => ceil => exp2
+2 => + 5 => * 3
 ```
 
 You may mix thin arrows and fat arrows in the same chain.
 
 ```
 [2, 5] => max -> 10 / _
-```
-
-Ordinary conversions between single-value tuples still apply; in particular, you
-may omit them for single values.
-
-```
--- These statements are equivalent.
-2 -> add [_, 2] -> multiply [_, 10]
-2 => add 2 => multiply 10
-2 => + 2 => * 10
 ```

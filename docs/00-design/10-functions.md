@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Functions
-page_number: 8
+page_number: 10
 ---
 
 Functions represent an expression done on an unknown datum.
@@ -20,12 +20,12 @@ Each function is formed of a few pieces:
 let multiply_add := fn [x / num, y / num, z / num] x * y + z
 
 let lerp := fn [
-	.from / num
-	.to / num
+	.from a / num
+	.to b / num
 	.ratio / num
 ] (
-	let difference := to - from
-	to + difference * ratio
+	let difference := b - a
+	b + difference * ratio
 )
 
 let four := multiply_add [5, 2, 3]

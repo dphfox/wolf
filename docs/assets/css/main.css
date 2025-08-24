@@ -217,9 +217,9 @@ td {
 }
 
 code {
-	font: 1em/1.5 "Roboto Mono", "Consolas", monospace;
-	color: var(--fg-alt);
+	font: 0.9em/1.5 "Roboto Mono", "Consolas", monospace;
 	background-color: var(--bg-alt);
+	border: 1px solid var(--fg-40);
 	padding: 0 0.25em;
 }
 
@@ -238,6 +238,7 @@ div.highlight > pre {
 div.highlight > pre > code {
 	margin: 1rem 2rem;
 	background-color: transparent;
+	border: none;
 }
 
 .footnotes {

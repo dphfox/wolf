@@ -6,6 +6,15 @@ page_number: 0
 
 The Wolf parser respects a few formatting conventions when parsing source code.
 
+## File encoding
+
+All Wolf files must be parseable as valid UTF-8. A file that is not valid UTF-8
+is not a valid Wolf program.
+
+Valid Wolf files may use either CRLF or LF line endings. However, during parsing,
+all line endings are normalised to LF, ensuring program behaviour is consistent
+regardless of line ending convention used.
+
 ## New lines
 
 The only meaningful whitespace in Wolf are new lines. When the parser encounters

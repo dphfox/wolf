@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Captures
-page_number: 7
+page_number: 9
 ---
 
 Captures describe how to name parts of a datum, so that the parts of the datum
@@ -28,15 +28,28 @@ let name_capture / num := 4
 
 ## Tuple captures
 
-Tuple syntax can be used to deconstruct a tuple datum.
-
-Names with dots `.` can be used to access labelled data, while unprefixed names
-can be used to access automatically indexed data.
+Tuple syntax can be used to deconstruct a tuple datum into a set of names.
 
 ```
 let [first, second, third] := [1, 2, 3]
+```
+
+### Explicit names
+
+Explicitly naed data can be accessed by including a dot-prefixed name before the
+name you wish to capture into.
+
+```
+let [.first_name first_name, .age age] := [.first_name "Adam", .age 27]
+```
+
+If the two names are the same, the second name can be omitted.
+
+```
 let [.first_name, .age] := [.first_name "Adam", .age 27]
 ```
+
+### Tuple typing
 
 Forward slashes can be used on individul names to specify types.
 
@@ -50,6 +63,8 @@ Forward slashes can also be used on a whole tuple capture.
 ```
 let [first, second, third] / [num, num, num] := [1, 2, 3]
 ```
+
+### Rest of tuple capture
 
 The rest of a tuple's data can be captured at the end using `...`.
 

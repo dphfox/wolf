@@ -1,45 +1,43 @@
-let output_as: [
-	bleed: unique
-	bleed_opaque: unique
-	coverage: unique
-	uv: unique
-	distance: unique
-]
+let [*] := image::prelude::*
 
-let main: algo fn args (
-	let args: args => cli.parse
-	do print "Loading image from \(args.input)"
+let output_as := mod (
+	let bleed := identity
+	let bleed_opaque := identity
+	let coverage := identity
+	let uv := identity
+	let distance := identity
+)
 
-	let img: image.open args.input => expect "Failed to open image" =>
-		 image.with_guessed_format => expect "Failed to guess format of image" =>
-		 decode => expect "Failed to decode image"
+let main := algo [raw_args / [...str]] (
+	let args := raw_args => cli.parse
+	await print "Loading image from \(args.input)"
 
-	let size: img => image.size
-	do print "Image size is \(size.0) x \(size.1)"
+	let img :=
+		image::open args.input => expect "Failed to open image" =>
+		with_guessed_format => expect "Failed to guess format of image" =>
+		decode => expect "Failed to decode image"
 
-	let var search_radius: size => max => log2 => ceil => exp2 => floor_div 2
+	let size := img => size
+	await print "Image size is \(size.0) x \(size.1)"
 
-	do print "Will use a search radius of \(search_radius)"
+	let var search_radius := max size => log2 => ceil => exp2 => floor_div 2
+	await print "Will use a search radius of \(search_radius)"
 
-	let preserve_above: args.preserve_above => ok_or 0
-	do print "Will preserve alpha above \(preserve_above)"
+	let preserve_above := args.preserve_above => ok_or 0
+	await print "Will preserve alpha above \(preserve_above)"
+	await print "Will use \(args.edge_mode) edge behaviour"
 
-	do print "Will use \(args.edge_mode) edge behaviour"
+	await print "Preparing Voronoi graph for filling..."
 
-	let voronoi_1: voronoi.new size
-	let voronoi_2: voronoi.new size
-	let var [voronoi_read, voronoi_write] = [voronoi_1, voronoi_2]
-
-	do print "Preparing Voronoi graph for filling..."
-
-	for pos in [0, 0] => count_until size (
-		let alpha: img => get_pixel pos
-		if alpha > preserve_above (
-			voronoi_read => at pos => do set_closest some pos
+	let voronoi := voronoi::create [
+		.size size
+		.contents fn [pos] (
+			let alpha := img => get pos
+			if alpha > preserve_above (some pos) else (none)
 		)
-	)
+	]
 
-	do print "Filling Voronoi graph..."
+	await print "Filling Voronoi graph..."
 
 	do loop (
 		let @jfa

@@ -1,55 +1,35 @@
 ---
 layout: page
 title: Operations
-page_number: 4
+page_number: 6
 ---
 
 Operations are used to process and transform data in Wolf.
 
-## Functions
+## Applying a function
 
-To use a function, prefix your data with the name of the function. A space may
-be necessary for some kinds of data, like numbers.
+Wolf allows you to apply functions to a single tuple of data at a time. This is
+done by prefixing the tuple with the function name.
 
 ```
 -- Negates 2.
-negate 2
+negate [2]
 ```
 
-## Composition
-
-You can run multiple functions on one piece of data by adding more names. This
-is known as function composition.
-
-```
--- Negates 2, then takes the cosine of -2.
-cos negate 2
-```
-
-Function composition has very high precedence. That means the function always
-applies to whatever is directly right of the name.
-
-```
--- This is how the statement is interpreted by the compiler.
-cos (negate 2)
-```
-
-## Multiple data
-
-Unlike other languages, Wolf functions don't accept more than one piece of data
-by default. When multiple "arguments" are needed, the data is physically grouped
-together, often with a tuple.
-
-For example, the built-in `add` function takes a tuple, which emulates the
-"traditional" list of arguments.
+The tuple can contain multiple data.
 
 ```
 -- Adds 9 and 10.
 add [9, 10]
 ```
 
-However, there is nothing special about the above function; it still accepts a
-single datum.
+If the tuple is empty, the brackets can be omitted.
+
+```
+-- These two expressions are equivalent.
+max []
+max
+```
 
 ## Special notation
 
@@ -116,8 +96,7 @@ Other fundamental operators are also included to complete the comparison.
 
 ## Blocks
 
-Blocks are declared with parentheses `()`. The inner expression becomes the
-outer value.
+Blocks are declared with parentheses `()`.
 
 They can be included in other expressions; the contents of the block are
 evaluated independently of the other expression, meaning they can change the

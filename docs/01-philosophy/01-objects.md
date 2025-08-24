@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Objects
-page_number: 0
+page_number: 1
 ---
 
 Wolf intentionally does not implement traditional objects. That is to say, there
