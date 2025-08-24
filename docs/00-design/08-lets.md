@@ -21,7 +21,7 @@ In the simplest case, a let introduces one name.
 
 ```
 let four := 4
-let negative_two := negate 2
+let negative_two := negate [2]
 ```
 
 Once a name is introduced anywhere in the block, it can be used anywhere else in
@@ -29,17 +29,17 @@ the block. Order does not matter.
 
 ```
 -- Notice that `four` and `negative_two` are underneath `negative_eight`.
-let negative_eight := four => multiply negative_two
+let negative_eight := four => multiply [negative_two]
 
 let four := 4
-let negative_two := negate 2
+let negative_two := negate [2]
 ```
 
 Conceptually, you can imagine replacing each name with that's name's expression.
 
 ```
 -- The compiler sees this.
-let negative_eight := (4) => multiply (negate 2)
+let negative_eight := 4 => multiply [negate [2]]
 ```
 
 ## Restrictions
@@ -48,8 +48,8 @@ Expressions in lets must be resolvable without infinite cycles.
 
 ```
 -- This is not allowed.
-let two := four => subtract 2
-let four := two => add 2
+let two := four => subtract [2]
+let four := two => add [2]
 ```
 
 Additionally, a name cannot be introduced to the same block more than once, as
