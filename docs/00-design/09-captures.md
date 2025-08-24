@@ -24,8 +24,6 @@ If desired, a type can be specified after a forward slash `/`.
 let name_capture / num := 4
 ```
 
-let name_capture / num := 4
-
 ## Tuple captures
 
 Tuple syntax can be used to deconstruct a tuple datum into a set of names.
