@@ -66,5 +66,5 @@ Raw string literals ignore insert sequences and preserve line feed characters.
 
 		"""The original line's indentation won't be included,
 			but the extra indent here *will* be included,
-		as well as all of the line breaks used here."
+		as well as all of the line breaks used here."""
 ```
