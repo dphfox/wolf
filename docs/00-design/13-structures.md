@@ -34,24 +34,8 @@ let person := struct [
 Tuples can store multiple sections of structured data. The name of the section
 refers to a structure somewhere in the namespace.
 
-The simplest syntax is to use the section name, followed by a colon `:`, before
-the datum's name.
-
-```
-let example_user := [
-	.internal_id 12345
-
-	.person:name "Jane Doe"
-	.person:is_verified true
-
-	.date:year 1995
-	.date:month 7
-	.date:day 16
-]
-```
-
-To reduce duplication, a section can be used for all following data declarations
-by writing the section declaration beforehand:
+To start a structured section, write the name of the section, followed by a
+colon `:`. 
 
 ```
 let example_user := [
@@ -85,34 +69,28 @@ let combined_data := [
 
 ## Accessing structured data
 
-When accessing data using the dot `.` operator, prepend the name with the
-section to be accessed, followed by a colon `:`.
-
-```
-let the_year = example_user.date:year
-let the_name = example_user.person:name
-```
-
-If no other section uses the name, the section part may be omitted.
+If only one section uses a name for a datum, the datum can be accessed directly.
 
 ```
 let the_year = example_user.year
 let the_name = example_user.name
 ```
 
+Otherwise, the explicit syntax can be used, where the section name is prepended
+to the datum name with a colon `:`.
+
+```
+let the_year = example_user.date:year
+let the_name = example_user.person:name
+```
+
 ## Capturing data from sections
 
-To capture a single datum from a section, prepend the name with the section,
-followed by a colon `:`.
-
-```
-let [.date:year, .person:name] = example_user
-```
-
-If no other section uses the name, the section part may be omitted.
+Tuple captures follow the same rules as tuple accesses.
 
 ```
 let [.year, .name] = example_user
+let [.date:year, .person:name] = example_user
 ```
 
 ## Rest-of-section capture

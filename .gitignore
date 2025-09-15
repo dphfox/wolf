@@ -6,4 +6,4 @@ vendor
 
 # Added by cargo
 
-/target
+**/target/
