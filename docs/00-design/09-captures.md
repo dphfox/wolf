@@ -64,7 +64,7 @@ let [first, second, third] / [num, num, num] := [1, 2, 3]
 
 ### Rest-of-tuple capture
 
-The rest of a tuple's data can be captured at the end using `...`.
+The rest of a tuple's data can be captured at the end using ellipsis `...`.
 
 ```
 -- `rest` becomes `[.age 27]`.
