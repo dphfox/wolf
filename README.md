@@ -18,9 +18,15 @@ you don't have to spell things out for the computer.
 - **Parallel.** Wolf code avoids prescribing a specific order or method of running
 code, so it can be rearranged or broken up across threads for performance.
 
+## The Wolf Book
+
+Visit https://wolf.phfox.net/ to read the Wolf Book, which describes the Wolf programming language's design and philosophy.
+
 ## `wf` - the Wolf Reference Implementation
 
-There is no reference implementation at this time, and there probably won't be for a while.
+`wf` is the Wolf Reference Implementation, a Rust-based set of language tools which focus on providing a readable implementation, and correctly processing Wolf programs.
+
+See the `wf/` directory for more information.
 
 ## License
 

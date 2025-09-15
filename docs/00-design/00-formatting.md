@@ -25,7 +25,7 @@ Non-syntax errors are not considered when processing newlines.
 
 ## Comments
 
-At any point in the program, you can type two hypens `--` to skip processing the
+Unless in a delimited span, you can type two hypens `--` to skip processing the
 rest of the line. All text until the next new line is treated as a comment.
 
 ```

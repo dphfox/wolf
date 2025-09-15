@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Looping
-page_number: 14
+page_number: 12
 ---
 
 Looping allows part of an expression chain to feed back into itself.
@@ -12,8 +12,8 @@ After an arrow, the `loop` keyword can be added to signal that the following
 expression can be fed back into itself.
 
 The expression must either:
-- Return a value wrapped in `feedback[]` (to feed the value back into the expression).
-- Return a value wrapped in `break[]` (which will exit the loop and continue along the chain). 
+- Return a value wrapped in `feedback [_]` (to feed the value back into the expression).
+- Return a value wrapped in `break [_]` (which will exit the loop and continue along the chain). 
 
 It is invalid to return a value which is not wrapped.
 

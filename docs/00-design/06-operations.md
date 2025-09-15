@@ -65,14 +65,15 @@ explain a few columns:
 operators in an expression.
 - **Extendable** - Whether multiple of the same operator can appear in a row.
 
-Other fundamental operators are also included to complete the comparison.
+Other non-operators are also included to complete the comparison.
 
 | Syntax     | Function                     | Priority  | Extendable
 |------------|------------------------------|-----------|-------------
-| `A.B`      | *(indexing into data)*       | ▲ ▲ ▲ ▲ ▲ | ✓
-| `A B`      | *(function evaluation)*      | ▲ ▲ ▲ ▲   | ✓
+| `A.B`      | *(accessing named data)*     | ▲ ▲ ▲ ▲ ▲ | ✓
+| `A [B]`    | *(function evaluation)*      | ▲ ▲ ▲ ▲   | ✓
 | `A...`     | *(tuple flattening)*         | ▲ ▲ ▲     |
 | `A ^ B`    | `exponent [A, B, ...]`       | ▲ ▲ ▲     | ✓
+| `~A`       | `boolean_not [A]`            | ▲ ▲ ▲     |
 | `-A`       | `negate A`                   | ▲ ▲       |
 | `+A`       | `double_negate A`            | ▲ ▲       |
 | `A * B`    | `multiply [A, B, ...]`       | ▲         | ✓
@@ -87,8 +88,8 @@ Other fundamental operators are also included to complete the comparison.
 | `A > B`    | `more_than [A, B]`           | ▼         | Once [^i]
 | `A <= B`   | `less_or_equals [A, B]`      | ▼         | Once [^i]
 | `A >= B`   | `more_or_equals [A, B]`      | ▼         | Once [^i]
-| `A and B`  | `::and [A, B, ...]`          | ▼ ▼       | ✓
-| `A or B`   | `::or [A, B, ...]`           | ▼ ▼ ▼     | ✓
+| `A and B`  | `boolean_and [A, B, ...]`    | ▼ ▼       | ✓
+| `A or B`   | `boolean_or [A, B, ...]`     | ▼ ▼ ▼     | ✓
 | `A -> B`   | *(manual chaining)*          | ▼ ▼ ▼ ▼   | ✓
 | `A => B`   | *(automatic chaining)*       | ▼ ▼ ▼ ▼   | ✓
 

@@ -62,7 +62,7 @@ Forward slashes can also be used on a whole tuple capture.
 let [first, second, third] / [num, num, num] := [1, 2, 3]
 ```
 
-### Rest of tuple capture
+### Rest-of-tuple capture
 
 The rest of a tuple's data can be captured at the end using `...`.
 
@@ -70,23 +70,3 @@ The rest of a tuple's data can be captured at the end using `...`.
 -- `rest` becomes `[.age 27]`.
 let [.first_name, ...rest] := [.first_name "Adam", .age 27]
 ```
-
-## Vagueness
-
-A capture that does not fully constrain the type it's expecting is called 
-"vague".
-
-```
--- These are vague captures, because there's no type constraint on the left hand
--- side of the assignment operator.
-let cool_number := 42
-let [first, second] := [2, 5]
-
--- These are not vague captures, because the types are fully constrained.
-let cool_number / num := 42
-let [first / num, second / num] = [2, 5]
-```
-
-When a vague capture is used, Wolf will attempt to fill in the vague areas with
-inferred type information. This process only considers information that's
-visible at the location where the capture is written.

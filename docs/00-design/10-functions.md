@@ -12,14 +12,14 @@ A function can be defined anywhere in an expression.
 
 Each function is formed of a few pieces:
 
-- The `fn` keyword, to indicate a new function is being constructed.
+- The `func` keyword, to indicate a new function is being constructed.
 - A tuple capture that decomposes the input datum into names.
 - The expression representing the body of the function.
 
 ```
-let multiply_add := fn [x / num, y / num, z / num] x * y + z
+let multiply_add := func [x / num, y / num, z / num] x * y + z
 
-let lerp := fn [
+let lerp := func [
 	.from a / num
 	.to b / num
 	.ratio / num
@@ -46,14 +46,13 @@ let price_per_xp_level := 10
 
 let final_price := price_info [
 	.item "gem_sword"
-	.dynamic_price fn [.xp_level] base_price + xp_level * price_per_xp_level
+	.dynamic_price func [.xp_level] base_price + xp_level * price_per_xp_level
 ]
 ```
 
-## Vagueness
+## Explicit types
 
-In Wolf, vague captures can only use locally visible information to fill in
-missing type information.
+Wolf only uses locally visible information to fill in missing type information.
 
 As a result, functions stored in `let` assignments must always have explicit
 type information; a `let` statement gives no context about how the function will
@@ -61,7 +60,7 @@ be used.
 
 ```
 -- Vague captures like this are not allowed.
-let multiply_add := fn [x, y, z] x * y + z
+let multiply_add := func [x, y, z] x * y + z
 ```
 
 However, functions defined in other places may be able to draw on other context.
@@ -73,6 +72,6 @@ information provided by the outer function.
 -- for `.dynamic_price` here.
 let final_price := price_info [
 	.item "gem_sword"
-	.dynamic_price fn [.xp_level] base_price + xp_level * price_per_xp_level
+	.dynamic_price func [.xp_level] base_price + xp_level * price_per_xp_level
 ]
 ```
