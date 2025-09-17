@@ -2,22 +2,15 @@
 layout: page
 ---
 
-Wolf is an expression-based scripting language designed by [Daniel P H Fox](https://phfox.uk/).
+Wolf is an expression-based declarative scripting language, built to be:
 
-It is designed to be **easy**, **small**, **smart** and **parallel**.
+- **Easy.** Bring your own paradigms, and use them ergonomically.
+- **Small.** Built from first principles with only a few, well chosen features.
+- **Smart.** Statically analysable, but doesn't require annotations everywhere.
 
-- **Easy.** Wolf lets you bring your own paradigms, and provides the tools to use
-them ergonomically.
-- **Small.** Wolf is built from first principles by composing together a few, well
-chosen features that are easily identified and repurposed.
-- **Smart.** Wolf code can be analysed 100% statically with smart inference, so
-you don't have to spell things out for the computer.
-- **Parallel.** Wolf code avoids prescribing a specific order or method of running
-code, so it can be rearranged or broken up across threads for performance.
+The design and implementation of Wolf are early and highly experimental.
 
-The design and implementation of Wolf are early and highly experimental. Wolf
-introduces new ideas about programming language design, but also draws
-inspiration from many other languages, particularly
+Insipred by
 [Luau](https://luau.org/),
 [Rust](https://rust-lang.org/),
 [Hylo](https://www.hylo-lang.org/),

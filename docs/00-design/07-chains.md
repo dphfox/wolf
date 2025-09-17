@@ -33,8 +33,8 @@ of the previous expression.
 
 In some common cases, Wolf can infer where the first underscore goes.
 
-- Functions that accept data directly (e.g. `-> func [_]`  or `-> func [[_]]`).
-- Functions that accept a tuple (e.g. `-> func [_, a, b, c]`)
+- Functions that accept data directly (e.g. `-> my_func [_]`  or `-> my_func [[_]]`).
+- Functions that accept a tuple (e.g. `-> my_func [_, a, b, c]`)
 - Operators [^1] (e.g. `_ + a`, `_...` or `+_`).
 
 [^1]: Double-ended ranges (e.g. `a < _ <= b`) cannot be automatically chained.

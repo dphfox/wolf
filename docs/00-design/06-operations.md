@@ -76,6 +76,7 @@ Other non-operators are also included to complete the comparison.
 | `~A`       | `boolean_not [A]`            | ▲ ▲ ▲     |
 | `-A`       | `negate A`                   | ▲ ▲       |
 | `+A`       | `double_negate A`            | ▲ ▲       |
+| `#A`       | `count A`                    | ▲ ▲       |
 | `A * B`    | `multiply [A, B, ...]`       | ▲         | ✓
 | `A / B`    | `divide [A, B, ...]`         | ▲         | ✓
 | `A // B`   | `floor_divide [A, B, ...]`   | ▲         | ✓

@@ -88,5 +88,5 @@ As before, change of base prefixes are case sensitive.
 
 Two names are reserved for special numbers:
 
-- `not_a_number` - the floating point "Not a Number", as from `0 / 0`
-- `infinity` - the largest positive floating point number, positive infinity
+- `nan` - the floating point "Not a Number", as from `0 / 0`
+- `inf` - the largest positive floating point number, positive infinity
