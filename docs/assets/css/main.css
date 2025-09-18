@@ -24,6 +24,18 @@
 	navigation: auto;
 }
 
+@keyframes wolf-logo-blink {
+	0% {
+		transform: translateY(-50%) scaleY(0%) translateY(60%);
+	}
+	25% {
+		transform: translateY(0%) scaleY(100%) translateY(0%);
+	}
+	100% {
+		transform: translateY(-50%) scaleY(0%) translateY(60%);
+	}
+}
+
 ::selection {
 	background-color: var(--accent);
 	color: var(--bg);
@@ -335,12 +347,32 @@ ol + p, ol + ul, ol + ol {
 	color: inherit;
 	text-decoration: none;
 
-	& img {
-		object-fit: cover;
-		object-position: center left;
-		width: 3.5em;
-		height: 6em;
-		box-shadow: 0 -6rem 0 var(--accent);
+	&:hover picture::after {
+		animation: wolf-logo-blink 0.2s 2;
+	}
+
+	& picture {
+		width: max-content;
+		height: max-content;
+		position: relative;
+
+		& img {
+			width: auto;
+			height: 6em;
+			box-shadow: 0 -6rem 0 var(--accent);
+		}
+
+		&::after {
+			content: " ";
+			position: absolute;
+			display: block;
+			top: 45%;
+			left: 54%;
+			right: 8%;
+			bottom: 42%;
+			transform: translateY(-50%) scaleY(0%) translateY(60%);
+			background-color: var(--accent);
+		}
 	}
 
 	& span {
