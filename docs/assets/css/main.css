@@ -1,5 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Besley:ital,wght@0,400..900;1,400..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
+@font-face {
+  font-family: 'Editor';
+  src: url('/assets/local-dev/fonts/Editor-Variable.woff2') format('woff2'),
+       url('/assets/local-dev/fonts/Editor-Variable.woff') format('woff'),
+       url('/assets/local-dev/fonts/Editor-Variable.ttf') format('truetype');
+  font-weight: 300 800;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Editor';
+  src: url('/assets/local-dev/fonts/Editor-VariableItalic.woff2') format('woff2'),
+       url('/assets/local-dev/fonts/Editor-VariableItalic.woff') format('woff'),
+       url('/assets/local-dev/fonts/Editor-VariableItalic.ttf') format('truetype');
+  font-weight: 300 800;
+  font-display: swap;
+  font-style: italic;
+}
+
 @view-transition {
 	navigation: auto;
 }
@@ -21,8 +41,8 @@
 :root {
 	--bg: #f5e5c5;
 	--bg-alt: #fff4db;
-	--fg: #291a15;
-	--fg-alt: #1d0700;
+	--fg: #1d0700;
+	--fg-alt: #291a15;
 	--accent: #627546;
 	--accent-alt: #283910;
 
@@ -36,8 +56,8 @@
 	:root {
 		--bg: #1E252F;
 		--bg-alt: #151B24;
-		--fg: #ccced0;
-		--fg-alt: #f2f8ff;
+		--fg: #f2f8ff;
+		--fg-alt: #ccced0;
 		--accent: #789980;
 		--accent-alt: #CBEAD3;
 	}
@@ -49,7 +69,10 @@ body {
 	counter-reset: h2 h3 h4 h5 h6;
 	background-color: var(--bg);
 	color: var(--fg);
-	font: 1rem/1.5 "Besley", "Cambria", serif;
+
+	--main-font-family: "Editor", "Besley", serif;
+	font: 1rem/1.5 var(--main-font-family);
+	font-weight: 420;
 	padding: 2rem;
 	display: flex;
 	flex-direction: column;
@@ -58,7 +81,20 @@ body {
 	max-width: 100vw;
 	overflow-x: none;
 
-	&:after {
+	&::before {
+		content: "";
+		display: block;
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 12rem;
+		height: 12rem;
+		background: var(--bg-alt);
+		mask-image: url("/assets/page-detail.svg");
+		mask-size: 100%;
+	}
+
+	&::after {
 		content: "";
 		display: block;
 		position: absolute;
@@ -79,13 +115,11 @@ body {
 
 body > * {
 	width: 100%;
-	max-width: 100ch;
+	max-width: 80ch;
 	margin: 0 auto;
 }
 
 h1, h2, h3, h4, h5, h6 {
-	font-weight: 300;
-	letter-spacing: 0.04em;
 	margin-top: 1.5em;
 	margin-bottom: 0.5em;
 	color: var(--fg-alt);
@@ -93,7 +127,7 @@ h1, h2, h3, h4, h5, h6 {
 
 	&:before {
 		margin-right: 1em;
-		color: var(--fg-60);
+		color: var(--fg-40);
 	}
 }
 
@@ -102,6 +136,7 @@ h1 {
 	margin-top: 1em;
 	margin-bottom: 1em;
 	border-bottom: 1px solid var(--fg-40);
+	font-weight: 500;
 }
 
 h2 {
@@ -110,6 +145,7 @@ h2 {
 		counter-increment: h2;
 		content: counter(h2);
 	}
+	font-weight: 500;
 }
 
 h3 {
@@ -117,6 +153,7 @@ h3 {
 		counter-increment: h3;
 		content: counter(h2) "." counter(h3);
 	}
+	font-weight: 600;
 }
 
 h4 {
@@ -124,6 +161,7 @@ h4 {
 		counter-increment: h4;
 		content: counter(h2) "." counter(h3) "." counter(h4);
 	}
+	font-weight: 600;
 }
 
 h5 {
@@ -131,6 +169,7 @@ h5 {
 		counter-increment: h5;
 		content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5);
 	}
+	font-weight: 700;
 }
 
 h6 {
@@ -138,6 +177,7 @@ h6 {
 		counter-increment: h6;
 		content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6);
 	}
+	font-weight: 700;
 }
 
 strong {
@@ -195,7 +235,6 @@ hr {
 }
 
 table {
-	position: relative;
 	display: block;
 	max-width: 100vw;
 	overflow-x: auto;
@@ -205,7 +244,9 @@ table {
 	white-space: nowrap;
 	mask-image: linear-gradient(to right, transparent 0px, black 2rem, black calc(100% - 2rem), transparent 100%);
 }
+
 th, td {
+	min-width: max-content;
 	padding: 0.25rem 0.5rem;
 	text-align: left;
 	text-align: left;
@@ -239,11 +280,13 @@ div.highlight > pre > code {
 	margin: 1rem 2rem;
 	background-color: transparent;
 	border: none;
+	text-wrap: nowrap;
 }
 
 .footnotes {
 	font-size: 0.8em;
-	letter-spacing: 0.04em;
+	font-weight: 450;
+	letter-spacing: 0.02em;
 
 	border-top: 1px solid var(--fg-40);
 	margin-top: 3em;
@@ -265,6 +308,12 @@ div.highlight > pre > code {
 
 	& .reversefootnote {
 		font-style: normal;
+		
+		/* Prevent emoji rendering */
+		font-family: monospace; 
+		& > * {
+			font-family: var(--main-font-family);
+		}
 
 		& > sup::before {
 			content: " ";
@@ -278,9 +327,29 @@ ol + p, ol + ul, ol + ol {
 	margin-top: 1em;
 }
 
-#header-logo {
-	max-width: 100%;
-	height: auto;
+.header-logo {
+	display: flex;
+	align-items: center;
+	gap: 1.5em;
+
+	color: inherit;
+	text-decoration: none;
+
+	& img {
+		object-fit: cover;
+		object-position: center left;
+		width: 3.5em;
+		height: 6em;
+		box-shadow: 0 -6rem 0 var(--accent);
+	}
+
+	& span {
+		padding-top: 0.05em; /* optical alignment */
+		color: var(--fg-alt);
+		font-size: 3.5em;
+		font-weight: 500;
+		text-transform: uppercase;
+	}
 }
 
 main > nav {
