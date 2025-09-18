@@ -104,6 +104,7 @@ body {
 		background: var(--bg-alt);
 		mask-image: url("/assets/page-detail.svg");
 		mask-size: 100%;
+		z-index: -1;
 	}
 
 	&::after {
