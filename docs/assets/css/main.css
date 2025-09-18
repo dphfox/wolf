@@ -1,10 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Besley:ital,wght@0,400..900;1,400..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
-
 @font-face {
   font-family: 'Editor';
-  src: url('/assets/local-dev/fonts/Editor-Variable.woff2') format('woff2'),
-       url('/assets/local-dev/fonts/Editor-Variable.woff') format('woff'),
-       url('/assets/local-dev/fonts/Editor-Variable.ttf') format('truetype');
+  src: url('https://phfox.net/assets/private/Editor-Variable.woff2') format('woff2'),
+       url('https://phfox.net/assets/private/Editor-Variable.woff') format('woff'),
+       url('https://phfox.net/assets/private/Editor-Variable.ttf') format('truetype');
   font-weight: 300 800;
   font-display: swap;
   font-style: normal;
@@ -12,9 +10,9 @@
 
 @font-face {
   font-family: 'Editor';
-  src: url('/assets/local-dev/fonts/Editor-VariableItalic.woff2') format('woff2'),
-       url('/assets/local-dev/fonts/Editor-VariableItalic.woff') format('woff'),
-       url('/assets/local-dev/fonts/Editor-VariableItalic.ttf') format('truetype');
+  src: url('https://phfox.net/assets/private/Editor-VariableItalic.woff2') format('woff2'),
+       url('https://phfox.net/assets/private/Editor-VariableItalic.woff') format('woff'),
+       url('https://phfox.net/assets/private/Editor-VariableItalic.ttf') format('truetype');
   font-weight: 300 800;
   font-display: swap;
   font-style: italic;
@@ -82,7 +80,7 @@ body {
 	background-color: var(--bg);
 	color: var(--fg);
 
-	--main-font-family: "Editor", "Besley", serif;
+	--main-font-family: "Editor", serif;
 	font: 1rem/1.5 var(--main-font-family);
 	font-weight: 420;
 	padding: 2rem;
