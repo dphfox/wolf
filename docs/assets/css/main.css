@@ -99,8 +99,8 @@ body {
 		position: absolute;
 		top: 0;
 		right: 0;
-		width: 12rem;
-		height: 12rem;
+		width: 9rem;
+		height: 9rem;
 		background: var(--bg-alt);
 		mask-image: url("/assets/page-detail.svg");
 		mask-size: 100%;
@@ -360,7 +360,7 @@ ol + p, ol + ul, ol + ol {
 		& img {
 			width: auto;
 			height: 6em;
-			box-shadow: 0 -6rem 0 var(--accent);
+			box-shadow: 0 -6rem 0 var(--accent), inset 0 1px 0 var(--accent);
 		}
 
 		&::after {
