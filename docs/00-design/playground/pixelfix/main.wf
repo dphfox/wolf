@@ -1,38 +1,38 @@
-let [*] := image::prelude::*
+let [*] = image::prelude::*
 
-let output_as := mod (
-	let bleed := identity
-	let bleed_opaque := identity
-	let coverage := identity
-	let uv := identity
-	let distance := identity
+let output_as = mod (
+	let bleed = identity
+	let bleed_opaque = identity
+	let coverage = identity
+	let uv = identity
+	let distance = identity
 )
 
-let main := algo [raw_args / [...str]] (
-	let args := raw_args => cli.parse
+let main = algo [raw_args / [...str]] (
+	let args = raw_args => cli.parse
 	await print "Loading image from \(args.input)"
 
-	let img :=
+	let img =
 		image::open args.input => expect "Failed to open image" =>
 		with_guessed_format => expect "Failed to guess format of image" =>
 		decode => expect "Failed to decode image"
 
-	let size := img => size
+	let size = img => size
 	await print "Image size is \(size.0) x \(size.1)"
 
-	let var search_radius := max size => log2 => ceil => exp2 => floor_div 2
+	let var search_radius = max size => log2 => ceil => exp2 => floor_div 2
 	await print "Will use a search radius of \(search_radius)"
 
-	let preserve_above := args.preserve_above => ok_or 0
+	let preserve_above = args.preserve_above => ok_or 0
 	await print "Will preserve alpha above \(preserve_above)"
 	await print "Will use \(args.edge_mode) edge behaviour"
 
 	await print "Preparing Voronoi graph for filling..."
 
-	let voronoi := voronoi::create [
+	let voronoi = voronoi::create [
 		.size size
 		.contents fn [pos] (
-			let alpha := img => get pos
+			let alpha = img => get pos
 			if alpha > preserve_above (some pos) else (none)
 		)
 	]

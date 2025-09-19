@@ -18,17 +18,17 @@ The expression must either:
 It is invalid to return a value which is not wrapped.
 
 ```
-largest_multiple_of_two := fn [.no_larger_than / num] (
+largest_multiple_of_two = fn [.no_larger_than / num] (
 	2 -> loop (
-		let current := _
-		let doubled := current * 2
+		let current = _
+		let doubled = current * 2
 		if doubled > no_larger_than
 			then break [current]
 			else feedback [doubled]
 	)
 )
 
-sixty_four := largest_multiple_of_two [.no_larger_than 80]
+sixty_four = largest_multiple_of_two [.no_larger_than 80]
 ```
 
 ## Equivalence
@@ -38,9 +38,9 @@ a recursive function:
 
 ```
 -- This is equivalent to the loop above.
-largest_multiple_of_two := fn [.no_larger_than / num] (
-	feedback := fn [current] (
-		let doubled := current * 2
+largest_multiple_of_two = fn [.no_larger_than / num] (
+	feedback = fn [current] (
+		let doubled = current * 2
 		if doubled > no_larger_than
 			then current
 			else feedback [doubled]
