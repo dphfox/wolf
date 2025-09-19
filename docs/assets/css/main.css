@@ -406,7 +406,7 @@ div.highlight > pre > code {
 		font-style: normal;
 		
 		/* Prevent emoji rendering */
-		font-family: monospace; 
+		font-family: var(--code-font-family); 
 		& > * {
 			font-family: var(--main-font-family);
 		}
