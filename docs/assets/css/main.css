@@ -456,10 +456,10 @@ ol + p, ol + ul, ol + ol {
 			content: " ";
 			position: absolute;
 			display: block;
-			top: 45%;
-			left: 54%;
-			right: 8%;
-			bottom: 42%;
+			top: 48%;
+			left: 57%;
+			right: 9%;
+			bottom: 39%;
 			transform: translateY(-50%) scaleY(0%) translateY(60%);
 			background-color: var(--accent);
 		}
