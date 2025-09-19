@@ -280,6 +280,10 @@ ul {
 
 ol {
 	list-style-type: counter-plain;
+	& > li {
+		padding-left: 0.5em;
+	}
+
 	& > li::marker {
 		color: var(--fg-60);
 	}
