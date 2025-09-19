@@ -460,7 +460,7 @@ ol + p, ol + ul, ol + ol {
 			left: 57%;
 			right: 9%;
 			bottom: 39%;
-			transform: translateY(-50%) scaleY(0%) translateY(60%);
+			transform: translateY(-50%) scaleY(0%) translateY(50%);
 			background-color: var(--accent);
 		}
 	}
