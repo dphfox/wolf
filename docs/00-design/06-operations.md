@@ -23,6 +23,22 @@ The tuple can contain multiple data.
 add [9, 10]
 ```
 
+## Blocks
+
+Blocks are declared with parentheses `()`.
+
+They can be included in other expressions; the contents of the block are
+evaluated independently of the other expression, meaning they can change the
+order in which operations are done.
+
+```
+-- The block evaluates to 8, then is multiplied by 2.
+2 * (5 + 3)
+```
+
+In most execution environments, the entire file or expression is implicitly
+encased in a block.
+
 ## Special notation
 
 Certain functions in Wolf are important enough to have special notation.
@@ -59,6 +75,8 @@ operators in an expression.
 
 Other non-operators are also included to complete the comparison.
 
+---
+
 | Syntax     | Function                     | Priority  | Extendable
 |------------|------------------------------|-----------|-------------
 | `A.B`      | *(accessing named data)*     | ▲ ▲ ▲ ▲ ▲ | ✓
@@ -87,19 +105,3 @@ Other non-operators are also included to complete the comparison.
 | `A => B`   | *(automatic chaining)*       | ▼ ▼ ▼ ▼   | ✓
 
 [^i]: Inequality operators can appear once (`x < size`) or twice (for example, `0 <= x < size`). These form single- and double-ended ranges respectively. No further inequality operators are allowed.
-
-## Blocks
-
-Blocks are declared with parentheses `()`.
-
-They can be included in other expressions; the contents of the block are
-evaluated independently of the other expression, meaning they can change the
-order in which operations are done.
-
-```
--- The block evaluates to 8, then is multiplied by 2.
-2 * (5 + 3)
-```
-
-In most execution environments, the entire file or expression is implicitly
-encased in a block.

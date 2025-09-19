@@ -19,20 +19,22 @@ layout: bare
 		{% endif %}
 		{{ content }}
   	</article>
-  {% if page.page_number %}
-  	<nav>
-		{% assign neighbours = site.pages | where: "dir", page.dir %}
-		{% assign last_page_number = page.page_number | minus: 1 %}
-		{% assign next_page_number = page.page_number | plus: 1 %}
-		{% assign last_page_info = neighbours | where: "page_number", last_page_number | first %}
-		{% assign next_page_info = neighbours | where: "page_number", next_page_number | first %}
-		{%if last_page_info %}
-			<a id="keyboard-back" class="nav-back" href="{{last_page_info.url}}">{{last_page_info.title}}</a>
-		{% endif %}
-		<hr>
-		{% if next_page_info %}
-			<a id="keyboard-next" class="nav-next" href="{{next_page_info.url}}">{{next_page_info.title}}</a>
-		{% endif %}
-  	</nav>
-  {% endif %}
+  	{% if page.page_number %}
+		<nav>
+			{% assign neighbours = site.pages | where: "dir", page.dir %}
+			{% assign last_page_number = page.page_number | minus: 1 %}
+			{% assign next_page_number = page.page_number | plus: 1 %}
+			{% assign last_page_info = neighbours | where: "page_number", last_page_number | first %}
+			{% assign next_page_info = neighbours | where: "page_number", next_page_number | first %}
+			{%if last_page_info %}
+				<a id="keyboard-back" class="nav-back" href="{{last_page_info.url}}">{{last_page_info.title}}</a>
+			{% endif %}
+			<hr>
+			{% if next_page_info %}
+				<a id="keyboard-next" class="nav-next" href="{{next_page_info.url}}">{{next_page_info.title}}</a>
+			{% endif %}
+		</nav>
+  	{% else %}
+  		<hr>
+ 	 {% endif %}
 </main>
