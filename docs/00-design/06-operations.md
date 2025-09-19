@@ -23,14 +23,6 @@ The tuple can contain multiple data.
 add [9, 10]
 ```
 
-If the tuple is empty, the brackets can be omitted.
-
-```
--- These two expressions are equivalent.
-max []
-max
-```
-
 ## Special notation
 
 Certain functions in Wolf are important enough to have special notation.

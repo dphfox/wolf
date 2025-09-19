@@ -33,12 +33,6 @@ of the previous expression.
 
 In some common cases, Wolf can infer where the first underscore goes.
 
-- Functions that accept data directly (e.g. `-> my_func [_]`  or `-> my_func [[_]]`).
-- Functions that accept a tuple (e.g. `-> my_func [_, a, b, c]`)
-- Operators [^1] (e.g. `_ + a`, `_...` or `+_`).
-
-[^1]: Double-ended ranges (e.g. `a < _ <= b`) cannot be automatically chained.
-
 For these cases, you can use the fat arrow `=>` instead. This tells Wolf to
 insert the first underscore for you.
 
@@ -51,6 +45,17 @@ insert the first underscore for you.
 [2, 5] => max => log2 => ceil => exp2
 2 => + 5 => * 3
 ```
+
+This feature works with:
+
+- The single value passed to a function.
+    - e.g. `=> my_func` is rewritten as `-> my_func [_]`
+- The `.0` value passed to a function.
+	- e.g. `=> my_func [a, b, c]` is rewritten as `-> my_func [_, a, b, c]`
+- The single value passed to a unary operator.
+	- e.g. `=> -` is rewritten as `-> - _`
+- The left hand value passed to a binary operator.
+	- e.g. `=> + a` is rewritten as `-> _ + a`
 
 You may mix thin arrows and fat arrows in the same chain.
 
