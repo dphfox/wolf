@@ -54,7 +54,7 @@ Certain functions in Wolf are important enough to have special notation.
 4 // 3 % 5
 
 -- Equality comparisons.
-(3 = 3) = (2 ~= 5)
+1 + 1 = 4 - 2 = 2
 
 -- Equality comparisons and boolean combination.
 9 = 9 and 10 = 10 or 19 ~= 21
