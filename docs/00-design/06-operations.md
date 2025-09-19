@@ -54,10 +54,10 @@ Certain functions in Wolf are important enough to have special notation.
 4 // 3 % 5
 
 -- Equality comparisons.
-(3 == 3) == (2 != 5)
+(3 = 3) = (2 ~= 5)
 
 -- Equality comparisons and boolean combination.
-9 == 9 and 10 != 10 or 19 == 21
+9 = 9 and 10 = 10 or 19 ~= 21
 
 -- Single-ended ranges.
 (2 < 5) and (3 <= 3) or (4 > 5) and (6 >= 0)
@@ -83,7 +83,7 @@ Other non-operators are also included to complete the comparison.
 | `A [B]`    | *(function evaluation)*      | ▲ ▲ ▲ ▲   | ✓
 | `A...`     | *(tuple flattening)*         | ▲ ▲ ▲     |
 | `A ^ B`    | `exponent [A, B, ...]`       | ▲ ▲ ▲     | ✓
-| `~A`       | `boolean_not [A]`            | ▲ ▲ ▲     |
+| `!A`       | `boolean_not [A]`            | ▲ ▲ ▲     |
 | `-A`       | `negate A`                   | ▲ ▲       |
 | `+A`       | `double_negate A`            | ▲ ▲       |
 | `#A`       | `count A`                    | ▲ ▲       |
@@ -93,7 +93,7 @@ Other non-operators are also included to complete the comparison.
 | `A % B`    | `floor_mod [A, B, ...]`      | ▲         | ✓
 | `A + B`    | `add [A, B, ...]`            |           | ✓
 | `A - B`    | `subtract [A, B, ...]`       |           | ✓
-| `A == B`   | `equals [A, B, ...]`         | ▼         | ✓
+| `A = B`    | `equals [A, B, ...]`         | ▼         | ✓
 | `A != B`   | `not_equals [A, B, ...]`     | ▼         | ✓
 | `A < B`    | `less_than [A, B]`           | ▼         | Once [^i]
 | `A > B`    | `more_than [A, B]`           | ▼         | Once [^i]
