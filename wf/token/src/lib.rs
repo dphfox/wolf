@@ -46,6 +46,7 @@ pub enum TokenType {
 	CloseParen,
 	Comma,
 	Dot,
+	Colon,
 	Plus,
 	Minus,
 	Asterisk,
@@ -87,6 +88,7 @@ impl TokenType {
 		exact!(")", CloseParen),
 		exact!(",", Comma),
 		exact!(".", Dot),
+		exact!(":", Colon),
 		exact!("+", Plus),
 		exact!("-", Minus),
 		exact!("*", Asterisk),
@@ -132,19 +134,6 @@ impl Iterator for Tokenizer<'_> {
 		// EOF
 		if start_index >= len { return None; }
 
-		// Exact tokens
-		for (expect, token) in TokenType::SORTED_EXACT_TOKENS {
-			let (from, to) = (self.pos, self.pos + expect.len());
-			if to < len && chars[from..to] == **expect {
-				self.pos += expect.len();
-				ret!(*token);
-			}
-		}
-
-		// Whitespace
-		while self.pos < len && matches!(chars[self.pos], b' ' | b'\t') { self.pos += 1; }
-		if self.pos > start_index { ret!(TokenType::Whitespace); }
-
 		// Comment
 		{
 			let mut num_hyphens = 0;
@@ -169,6 +158,48 @@ impl Iterator for Tokenizer<'_> {
 				self.pos += 2;
 				while self.pos < len && !matches!(chars[self.pos], b'\n' | b'\r') { self.pos += 1; }
 				ret!(TokenType::Comment { num_hyphens });
+			}
+		}
+
+		// Exact tokens
+		for (expect, token) in TokenType::SORTED_EXACT_TOKENS {
+			let (from, to) = (self.pos, self.pos + expect.len());
+			if to < len && chars[from..to] == **expect {
+				self.pos += expect.len();
+				ret!(*token);
+			}
+		}
+
+		// Whitespace
+		while self.pos < len && matches!(chars[self.pos], b' ' | b'\t') { self.pos += 1; }
+		if self.pos > start_index { ret!(TokenType::Whitespace); }
+
+		// Name
+		{
+			// Unbackticked name
+			let mut digit_preceding = false;
+			let mut can_add_dot = true;
+			while self.pos < len {
+				let char = chars[self.pos];
+				if char.is_ascii_alphabetic() || char == b'_' { 
+					digit_preceding = false; 
+					self.pos += 1; 
+				} else if char.is_ascii_digit() {
+					digit_preceding = true;
+					self.pos += 1; 
+				} else if digit_preceding && can_add_dot && char == b'.' && self.pos + 1 < len && chars[self.pos + 1].is_ascii_digit() {
+					(digit_preceding, can_add_dot) = (true, false);
+					self.pos += 2;
+				} else { break; }
+			}
+			if self.pos > start_index { ret!(TokenType::Name { backticked: false }); }
+
+			// Backticked name
+			if self.pos < len && chars[self.pos] == b'`' {
+				self.pos += 1;
+				while self.pos < len && chars[self.pos] != b'`' { self.pos += 1; }
+				if self.pos < len && chars[self.pos] == b'`' { self.pos += 1; }
+				ret!(TokenType::Name { backticked: true });
 			}
 		}
 
@@ -211,35 +242,6 @@ impl Iterator for Tokenizer<'_> {
 					self.pos += 1;
 				}
 				ret!(TokenType::String { num_quotes });
-			}
-		}
-
-		// Name
-		{
-			// Unbackticked name
-			let mut digit_preceding = false;
-			let mut can_add_dot = true;
-			while self.pos < len {
-				let char = chars[self.pos];
-				if char.is_ascii_alphabetic() || char == b'_' { 
-					digit_preceding = false; 
-					self.pos += 1; 
-				} else if char.is_ascii_digit() {
-					digit_preceding = true;
-					self.pos += 1; 
-				} else if digit_preceding && can_add_dot && char == b'.' && self.pos + 1 < len && chars[self.pos + 1].is_ascii_digit() {
-					(digit_preceding, can_add_dot) = (true, false);
-					self.pos += 2;
-				} else { break; }
-			}
-			if self.pos > start_index { ret!(TokenType::Name { backticked: false }); }
-
-			// Backticked name
-			if self.pos < len && chars[self.pos] == b'`' {
-				self.pos += 1;
-				while self.pos < len && chars[self.pos] != b'`' { self.pos += 1; }
-				if self.pos < len && chars[self.pos] == b'`' { self.pos += 1; }
-				ret!(TokenType::Name { backticked: true });
 			}
 		}
 

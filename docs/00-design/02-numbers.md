@@ -14,7 +14,7 @@ cannot redefine what these names mean.
 
 Names consisting of only digits refer to integer numbers.
 
-```
+```wolf
 -- These both refer to the floating point value of 12345
 `12345`
 12345
@@ -27,7 +27,7 @@ with precision loss.
 
 Underscores `_` are permitted between digits, and will be ignored by Wolf.
 
-```
+```wolf
 -- These both refer to the floating point value of 12345
 1_2_3_4_5
 `12_345`
@@ -40,7 +40,7 @@ part.
 
 If using backticked names, only one of the parts needs to be present.
 
-```
+```wolf
 -- These refer to the floating point value of 0.125
 0.125
 `0.125`
@@ -60,7 +60,7 @@ the integer exponent.
 
 Exponents are case sensitive and are only available when using decimal digits.
 
-```
+```wolf
 -- These are valid exponents.
 `1.23e+45`
 `1.23e-45`
@@ -77,7 +77,7 @@ Similarly, numbers starting with `0b` are interpreted using binary digits.
 
 As before, change of base prefixes are case sensitive.
 
-```
+```wolf
 -- These numbers are equal.
 0xF_F
 0b1111_1111
@@ -86,7 +86,10 @@ As before, change of base prefixes are case sensitive.
 
 ## Special numbers
 
-Two names are reserved for special numbers:
+A few names are reserved for useful special numbers:
 
 - `nan` - the floating point "Not a Number", as from `0 / 0`
 - `inf` - the largest positive floating point number, positive infinity
+- `eul` - the closest number to Euler's number
+- `tau` - the closest number to tau, the ratio of radius to circumference
+- `phi` - the closest number to phi, the golden ratio

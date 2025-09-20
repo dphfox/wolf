@@ -28,7 +28,7 @@ Non-syntax errors are not considered when processing newlines.
 Unless in a delimited span, you can type two hypens `--` to skip processing the
 rest of the line. All text until the next new line is treated as a comment.
 
-```
+```wolf
 -- This is a comment.
 -- Text after the `--` is not processed.
 ```
@@ -36,7 +36,7 @@ rest of the line. All text until the next new line is treated as a comment.
 Long comments can be started with three or more hyphens `---`. Long comments do
 not stop at new lines; they only stop when the same number of hyphens is found.
 
-```
+```wolf
 ---
 This is a long comment.
 No text is processed until the next sequence of three hyphens.

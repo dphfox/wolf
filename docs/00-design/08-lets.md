@@ -19,7 +19,7 @@ Each let is formed of a few pieces:
 
 In the simplest case, a let introduces one name.
 
-```
+```wolf
 let four = 4
 let negative_two = negate [2]
 ```
@@ -27,7 +27,7 @@ let negative_two = negate [2]
 Once a name is introduced anywhere in the block, it can be used anywhere else in
 the block. Order does not matter.
 
-```
+```wolf
 -- Notice that `four` and `negative_two` are underneath `negative_eight`.
 let negative_eight = four => multiply [negative_two]
 
@@ -37,7 +37,7 @@ let negative_two = negate [2]
 
 Conceptually, you can imagine replacing each name with that's name's expression.
 
-```
+```wolf
 -- The compiler sees this.
 let negative_eight = 4 => multiply [negate [2]]
 ```
@@ -46,7 +46,7 @@ let negative_eight = 4 => multiply [negate [2]]
 
 Expressions in lets must be resolvable without infinite cycles.
 
-```
+```wolf
 -- This is not allowed.
 let two = four => subtract [2]
 let four = two => add [2]
@@ -55,7 +55,7 @@ let four = two => add [2]
 Additionally, a name cannot be introduced to the same block more than once, as
 it is unclear which expression should be used.
 
-```
+```wolf
 -- This is not allowed.
 let cool_number = 5
 let cool_number = 42
@@ -65,7 +65,7 @@ let cool_number = 42
 
 Inner blocks can see names declared in outer blocks.
 
-```
+```wolf
 let five = 5
 (
 	-- This evaluates to 10.
@@ -79,7 +79,7 @@ Inner blocks can redefine names from outer blocks; this is called shadowing.
 Expressions in the inner block see the inner value, while expressions in the
 outer block see the outer value.
 
-```
+```wolf
 let foo = 1
 let fifty = (
 	let foo = 5

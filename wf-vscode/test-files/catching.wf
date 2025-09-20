@@ -1,0 +1,11 @@
+---
+Catching values thrown from inner blocks.
+---
+
+let overwrite = catch (
+	let foo = 50
+	if foo > 20 then (
+		let bar = 30
+		if bar < 100 then throw foo + bar else 10
+	) else 25
+)

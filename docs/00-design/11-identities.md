@@ -11,13 +11,13 @@ anything else, even other identities; they only ever equal themselves.
 
 An identity is declared in any expression using the `identity` keyword.
 
-```
+```wolf
 let snowflake = identity
 ```
 
 Identities from the same location in the source file are equal.
 
-```
+```wolf
 let get_identity = fn [] identity
 
 -- `thing_1` will always equal `thing_2`, because their `identity` comes from
@@ -28,7 +28,7 @@ let thing_2 = get_identity []
 
 Inversely, identities from different locations are not equal.
 
-```
+```wolf
 let get_identity_1 = fn [] identity
 let get_identity_2 = fn [] identity
 

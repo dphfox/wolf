@@ -1,0 +1,25 @@
+{
+  "name": "wf-vscode",
+  "displayName": "Wolf for VSCode",
+  "description": "Use the Wolf Reference Implementation with VSCode",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.104.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "wolf",
+      "aliases": ["Wolf", "wolf"],
+      "extensions": [".wf"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "wolf",
+      "scopeName": "source.wolf",
+      "path": "./syntaxes/wolf.tmLanguage.json"
+    }]
+  }
+}

@@ -17,8 +17,8 @@ The expression must either:
 
 It is invalid to return a value which is not wrapped.
 
-```
-largest_multiple_of_two = fn [.no_larger_than / num] (
+```wolf
+largest_multiple_of_two = fn [.no_larger_than : num] (
 	2 -> loop (
 		let current = _
 		let doubled = current * 2
@@ -36,9 +36,9 @@ sixty_four = largest_multiple_of_two [.no_larger_than 80]
 Loops are equivalent to recursion - they are a more ergonomic way of writing
 a recursive function:
 
-```
+```wolf
 -- This is equivalent to the loop above.
-largest_multiple_of_two = fn [.no_larger_than / num] (
+largest_multiple_of_two = fn [.no_larger_than : num] (
 	feedback = fn [current] (
 		let doubled = current * 2
 		if doubled > no_larger_than
@@ -52,7 +52,7 @@ largest_multiple_of_two = fn [.no_larger_than / num] (
 Loops are *also* equivalent to more traditional `for` or `while` constructs - 
 the mutable state is the value that's fed back into the loop.
 
-```
+```wolf
 -- This is also equivalent to the loop above (Luau syntax).
 
 local function largest_multiple_of_two(no_larger_than: number)

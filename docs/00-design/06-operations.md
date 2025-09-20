@@ -11,14 +11,14 @@ Operations are used to process and transform data in Wolf.
 Wolf allows you to apply functions to a single tuple of data at a time. This is
 done by prefixing the tuple with the function name.
 
-```
+```wolf
 -- Negates 2.
 negate [2]
 ```
 
 The tuple can contain multiple data.
 
-```
+```wolf
 -- Adds 9 and 10.
 add [9, 10]
 ```
@@ -31,7 +31,7 @@ They can be included in other expressions; the contents of the block are
 evaluated independently of the other expression, meaning they can change the
 order in which operations are done.
 
-```
+```wolf
 -- The block evaluates to 8, then is multiplied by 2.
 2 * (5 + 3)
 ```
@@ -43,7 +43,7 @@ encased in a block.
 
 Certain functions in Wolf are important enough to have special notation.
 
-```
+```wolf
 -- Standard arithmetic (including exponentiation).
 2/5 + 4*3 - 6^4
 
@@ -81,7 +81,6 @@ Other non-operators are also included to complete the comparison.
 |------------|------------------------------|-----------|-------------
 | `A.B`      | *(accessing named data)*     | ▲ ▲ ▲ ▲ ▲ | ✓
 | `A [B]`    | *(function evaluation)*      | ▲ ▲ ▲ ▲   | ✓
-| `A...`     | *(tuple flattening)*         | ▲ ▲ ▲     |
 | `A ^ B`    | `exponent [A, B, ...]`       | ▲ ▲ ▲     | ✓
 | `!A`       | `boolean_not [A]`            | ▲ ▲ ▲     |
 | `-A`       | `negate A`                   | ▲ ▲       |

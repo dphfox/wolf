@@ -1,0 +1,153 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Wolf",
+	"scopeName": "source.wolf",
+	"fileTypes": ["wf"],
+	"patterns": [
+		{
+			"include": "#comment"
+		},
+		{
+			"include": "#string"
+		},
+		{
+			"include": "#keyword"
+		},
+		{
+			"include": "#name"
+		},
+		{
+			"include": "#operator"
+		}
+	],
+	"repository": {
+		"comment": {
+			"patterns": [
+				{
+					"name": "comment.block.wolf",
+					"begin": "(---+)",
+          			"end": "\\1"
+				},
+				{
+					"name": "comment.line.wolf",
+					"begin": "--",
+          			"end": "[\\n\\r]"
+				}
+			]
+		},
+		"string": {
+			"patterns": [
+				{
+					"name": "string.block.wolf",
+					"begin": "(\"\"\"+)",
+          			"end": "\\1"
+				},
+				{
+					"name": "string.line.wolf",
+					"begin": "\"",
+          			"end": "\""
+				}
+			]
+		},
+		"keyword": {
+			"patterns": [
+				{
+					"name": "keyword.control.wolf",
+					"match": "\\b(loop|throw|catch|let|fn|if|then|else)\\b"
+				},
+				{
+					"name": "keyword.operator.wolf",
+					"match": "\\b(and|or)\\b"
+				}
+			]
+		},
+		"name": {
+			"patterns": [
+				{
+					"name": "variable.constant.numeric.binary.unticked.wolf",
+					"match": "\\b(0[bB][01_]*[01](\\.[01][01_]*)?)\\b"
+				},
+				{
+					"name": "variable.constant.numeric.binary.backticked.wolf",
+					"match": "`0[bB][01_]*[01](\\.[01][01_]*)?`"
+				},
+				{
+					"name": "variable.constant.numeric.hexadecimal.unticked.wolf",
+					"match": "\\b(0[xX][0-9a-fA-F_]*[0-9a-fA-F](\\.[0-9a-fA-F][0-9a-fA-F_]*)?)\\b"
+				},
+				{
+					"name": "variable.constant.numeric.hexadecimal.backticked.wolf",
+					"match": "`0[xX][0-9a-fA-F_]*[0-9a-fA-F](\\.[0-9a-fA-F][0-9a-fA-F_]*)?`"
+				},
+				{
+					"name": "variable.constant.numeric.scientific.backticked.wolf",
+					"match": "`[0-9_]*[0-9](\\.[0-9][0-9_]*)?[eE][\\+\\-][0-9_]+`"
+				},
+				{
+					"name": "variable.constant.numeric.decimal.backticked.wolf",
+					"match": "`[0-9_]*[0-9](\\.[0-9][0-9_]*)?`"
+				},
+				{
+					"name": "variable.constant.numeric.decimal.unticked.wolf",
+					"match": "\\b([0-9_]*[0-9](\\.[0-9][0-9_]*)?)\\b"
+				},
+				{
+					"name": "variable.constant.numeric.named.unticked.wolf",
+					"match": "\\b(nan|inf|tau|eul|phi)\\b"
+				},
+				{
+					"name": "variable.constant.numeric.named.backticked.wolf",
+					"match": "`(nan|inf|tau|eul|phi)`"
+				},
+				{
+					"name": "variable.constant.language.unticked.wolf",
+					"match": "\\b(true|false)\\b"
+				},
+				{
+					"name": "variable.constant.language.backticked.wolf",
+					"match": "`(true|false)`"
+				},
+				{
+					"name": "variable.other.name_in_tuple.unticked.wolf",
+					"match": "\\.([a-zA-Z0-9_]+([0-9]\\.[0-9][a-zA-Z0-9_]+)?)\\b"
+				},
+				{
+					"name": "variable.other.name_in_tuple.backticked.wolf",
+					"match": "\\.`[^`]*`"
+				},
+				{
+					"name": "variable.other.unticked.wolf",
+					"match": "\\b([a-zA-Z0-9_]+([0-9]\\.[0-9][a-zA-Z0-9_]+)?)\\b"
+				},
+				{
+					"name": "variable.other.backticked.wolf",
+					"match": "`[^`]*`"
+				}
+			]
+		},
+		"operator": {
+			"patterns": [
+				{
+					"name": "keyword.operator.boolean.wolf",
+					"match": "=|!=?|<=?|>=?"
+				},
+				{
+					"name": "keyword.operator.arithmetic.wolf",
+					"match": "\\+|-|%|\\*|\\/\\/|\\/|\\^"
+				},
+				{
+					"name": "keyword.operator.chain.wolf",
+					"match": "[-=]>"
+				},
+				{
+					"name": "keyword.operator.tuple.wolf",
+					"match": "#|\\.(\\.\\.)?"
+				},
+				{
+					"name": "keyword.operator.type.wolf",
+					"match": ":"
+				}
+			]
+		}
+	}
+}
