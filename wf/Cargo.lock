@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "wf-ast"
+name = "wf-token"
 version = "0.1.0"

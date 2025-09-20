@@ -1,5 +1,5 @@
 [package]
-name = "wf-ast"
+name = "wf-token"
 version = { workspace = true }
 edition = { workspace = true }
 

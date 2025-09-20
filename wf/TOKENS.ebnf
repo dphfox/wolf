@@ -25,9 +25,9 @@ string_standard ::= '"', { insert_sequence / (any_character - '"') }, '"';
 string_raw_3 ::=  '"""', {any_character - '"""'}, '"""';
 string ::= ? string_raw_6/5/4/etc... ? / string_raw_3 / string_standard;
 
+keyword ::= 'loop' / 'and' / 'let' / 'or' / 'fn';
+
 notation ::=
-	'context' /
-	'loop' / 'func' /
-	'...' / 'and' / 'let' /
-	'//' / '==' / '~=' / '<=' / '>=' / '->' / '=>' / ':=' / 'or' /
-	'[' / ']' / '(' / ')' / ',' / '.' / '+' / '-' / '*' / '/' / '^' / '=' / '~' / '<' / '>';
+	'...' /
+	'//' / '!=' / '<=' / '>=' / '->' / '=>' /
+	'[' / ']' / '(' / ')' / ',' / '.' / '+' / '-' / '*' / '/' / '^' / '=' / '!' / '<' / '>';
