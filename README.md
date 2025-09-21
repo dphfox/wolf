@@ -26,6 +26,12 @@ Wolf programs.
 
 See the `wf/` directory for more information.
 
+## Contributions
+
+I'm not really looking for contributions at the moment. Feel free to play with
+things but this is far from a serious project. I will probably not really look
+at GitHub all that much, if ever.
+
 ## License
 
 Licensed the same way as all of my open source projects: BSD 3-Clause + Security Disclaimer.
