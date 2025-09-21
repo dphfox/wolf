@@ -14,7 +14,8 @@ cannot redefine what these names mean.
 
 Names consisting of only digits refer to integer numbers.
 
-<!--wolf-->```
+<!--wolf-->
+```
 -- These both refer to the floating point value of 12345
 `12345`
 12345
@@ -27,7 +28,8 @@ with precision loss.
 
 Underscores `_` are permitted between digits, and will be ignored by Wolf.
 
-<!--wolf-->```
+<!--wolf-->
+```
 -- These both refer to the floating point value of 12345
 1_2_3_4_5
 `12_345`
@@ -40,7 +42,8 @@ part.
 
 If using backticked names, only one of the parts needs to be present.
 
-<!--wolf-->```
+<!--wolf-->
+```
 -- These refer to the floating point value of 0.125
 0.125
 `0.125`
@@ -60,7 +63,8 @@ the integer exponent.
 
 Exponents are case sensitive and are only available when using decimal digits.
 
-<!--wolf-->```
+<!--wolf-->
+```
 -- These are valid exponents.
 `1.23e+45`
 `1.23e-45`
@@ -77,7 +81,8 @@ Similarly, numbers starting with `0b` are interpreted using binary digits.
 
 As before, change of base prefixes are case sensitive.
 
-<!--wolf-->```
+<!--wolf-->
+```
 -- These numbers are equal.
 0xF_F
 0b1111_1111

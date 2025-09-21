@@ -12,7 +12,8 @@ something that's available to the program.
 Names are enclosed in backticks. Any characters between the backticks are
 interpreted as a name (except for backticks, which close the name).
 
-<!--wolf-->```
+<!--wolf-->
+```
 -- These are valid names.
 `Hello, world!`
 `12345`
@@ -26,7 +27,8 @@ Conventionally, names are written in `snake_case`.
 Some simple names do not need backticks. Any contiguous span of letters and
 digits is interpreted as a name.
 
-<!--wolf-->```
+<!--wolf-->
+```
 -- These are valid names.
 123          -- becomes: `123`
 Hello        -- becomes: `Hello`
@@ -41,7 +43,8 @@ In addition, a few extra characters are permitted without backticks:
 Any extra characters that don't follow those rules will not be included in the
 name unless backticks are used.
 
-<!--wolf-->```
+<!--wolf-->
+```
 -- These are valid names.
 Hello_World    -- becomes: `Hello_World`
 _Hello_World   -- becomes: `_Hello_World`

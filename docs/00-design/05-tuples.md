@@ -11,7 +11,8 @@ In Wolf, tuples group multiple data into a single datum.
 Tuples are constructed by enclosing data in square brackets `[ ]`.
 Data is separated by either commas `,` or newlines.
 
-<!--wolf-->```
+<!--wolf-->
+```
 ["hello", "world", 2025]
 
 [
@@ -23,7 +24,8 @@ Data is separated by either commas `,` or newlines.
 
 Empty tuples are also allowed. Conceptually, they contain no data.
 
-<!--wolf-->```
+<!--wolf-->
+```
 []
 ```
 
@@ -32,7 +34,8 @@ Empty tuples are also allowed. Conceptually, they contain no data.
 Wolf can automatically convert between single-value tuples of any depth. This
 includes getting rid of all tuples.
 
-<!--wolf-->```
+<!--wolf-->
+```
 2
 [2]
 [[2]]
@@ -47,7 +50,8 @@ made.
 By default, data in tuples is named automatically by position, starting with `0`
 for the first datum, `1` for the second datum, etc.
 
-<!--wolf-->```
+<!--wolf-->
+```
 [
 	2015 -- named `0`
 	5    -- named `1`
@@ -58,7 +62,8 @@ for the first datum, `1` for the second datum, etc.
 You can explicitly provide names by putting a dot-prefixed name before the
 data. As with all names, backticks are optional.
 
-<!--wolf-->```
+<!--wolf-->
+```
 [
 	.`year` 2015 -- named `year`
 	.month  5    -- named `month`
@@ -68,7 +73,8 @@ data. As with all names, backticks are optional.
 
 Names can't be reused in the same tuple.
 
-<!--wolf-->```
+<!--wolf-->
+```
 -- This is not allowed.
 [
 	.`0` 2015, 
@@ -83,7 +89,8 @@ consider explicitly named data when assigning automatic names.
 Be aware that explicitly named data can still have namespace collisions with
 automatically named data.
 
-<!--wolf-->```
+<!--wolf-->
+```
 [
 	0         -- named `0`
 	1         -- named `1`
@@ -100,7 +107,8 @@ automatically named data.
 You can access a datum with the dot `.` operator, followed by the name of the
 datum to be accessed.
 
-<!--wolf-->```
+<!--wolf-->
+```
 -- Evaluates to 5.
 [3, 5, 7].1
 
@@ -116,7 +124,8 @@ datum to be accessed.
 If you're putting a tuple inside of another tuple, you can flatten its contents
 by using an ellipsis `...` instead of a name.
 
-<!--wolf-->```
+<!--wolf-->
+```
 -- These two expressions are equivalent.
 [... [1, 2, 3], 4, 5]
 [1, 2, 3, 4, 5]

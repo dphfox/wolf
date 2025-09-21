@@ -23,7 +23,8 @@ A conditional expression is made of a few parts:
 
 All parts of the construct are required.
 
-<!--wolf-->```
+<!--wolf-->
+```
 let get_account_type = fn [age : num] if age < 18 then "Child" else "Adult"
 ```
 
@@ -32,7 +33,8 @@ let get_account_type = fn [age : num] if age < 18 then "Child" else "Adult"
 Conditional expressions can be composed together in order to test more than one
 condition at a time.
 
-<!--wolf-->```
+<!--wolf-->
+```
 let secret_number = 5
 
 let guess = fn [guess : num]
