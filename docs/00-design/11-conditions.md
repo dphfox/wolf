@@ -10,7 +10,7 @@ or false.
 Wolf provides conditional expressions for evaluating one expression or another
 based on the outcome of a condition expression.
 
-# Basic use
+## Basic use
 
 A conditional expression is made of a few parts:
 
@@ -28,7 +28,7 @@ All parts of the construct are required.
 let get_account_type = fn [age : num] if age < 18 then "Child" else "Adult"
 ```
 
-# Multiple conditions
+## Multiple conditions
 
 Conditional expressions can be composed together in order to test more than one
 condition at a time.
