@@ -39,9 +39,6 @@ order in which operations are done.
 2 * (5 + 3)
 ```
 
-In most execution environments, the entire file or expression is implicitly
-encased in a block.
-
 ## Special notation
 
 Certain functions in Wolf are important enough to have special notation.
