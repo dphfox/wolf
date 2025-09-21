@@ -112,8 +112,8 @@ Other non-operators are also included to complete the comparison.
 ## Integer conversion
 
 Wolf does not implicitly convert between `num` and `int`. Instead, the
-arithmetic operators accept any mix of `int` or `num`, and return `int` if they
-can guarantee the result is an integer.
+arithmetic operators accept any mix of `int` or `num`, and return `int` if the
+types guarantee the result is an integer.
 
 That means:
 
