@@ -52,9 +52,8 @@ largest_multiple_of_two = fn [.no_larger_than : num] (
 Loops are *also* equivalent to more traditional `for` or `while` constructs - 
 the mutable state is the value that's fed back into the loop.
 
-```wolf
+```luau
 -- This is also equivalent to the loop above (Luau syntax).
-
 local function largest_multiple_of_two(no_larger_than: number)
 	local current = 2
 	while true do

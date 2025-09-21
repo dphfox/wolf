@@ -1,25 +1,53 @@
 {
-  "name": "wf-vscode",
-  "displayName": "Wolf for VSCode",
-  "description": "Use the Wolf Reference Implementation with VSCode",
-  "version": "0.0.1",
-  "engines": {
-    "vscode": "^1.104.0"
-  },
-  "categories": [
-    "Programming Languages"
-  ],
-  "contributes": {
-    "languages": [{
-      "id": "wolf",
-      "aliases": ["Wolf", "wolf"],
-      "extensions": [".wf"],
-      "configuration": "./language-configuration.json"
-    }],
-    "grammars": [{
-      "language": "wolf",
-      "scopeName": "source.wolf",
-      "path": "./syntaxes/wolf.tmLanguage.json"
-    }]
-  }
+	"name": "wf-vscode",
+	"displayName": "Wolf for VSCode",
+	"description": "Use the Wolf Reference Implementation with VSCode",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.104.0"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"contributes": {
+		"languages": [
+			{
+				"id": "wolf",
+				"aliases": [
+					"Wolf",
+					"wolf"
+				],
+				"extensions": [
+					".wf"
+				],
+				"mimetypes": [
+					"text/wolf"
+				],
+				"icon": {"light": "./images/wolf-light.svg", "dark": "./images/wolf-dark.svg"},
+				"configuration": "./language-configuration.json"
+			},
+			{
+				"id": "wolf-markdown",
+				"aliases": []
+			}
+		],
+		"grammars": [
+			{
+				"language": "wolf",
+				"scopeName": "source.wolf",
+				"path": "./syntaxes/wolf.tmLanguage.json"
+			},
+			{
+				"language": "wolf-markdown",
+				"scopeName": "markdown.wolf.codeblock",
+				"path": "./syntaxes/wolf-markdown.json",
+				"injectTo": [
+					"text.html.markdown"
+				],
+				"embeddedLanguages": {
+					"meta.embedded.block.wolf": "wolf"
+				}
+			}
+		]
+	}
 }
