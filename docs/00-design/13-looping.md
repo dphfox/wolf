@@ -42,6 +42,8 @@ let largest_mult = fn [.limit : num] loop n = 2 (
 let sixteen = largest_mult [.limit 25]
 ```
 
+Standard throwing rules apply; throws must be local (non-viral) and type-safe.
+
 ## Multiple data
 
 Using tuple captures, a loop can keep track of multiple named data with every
