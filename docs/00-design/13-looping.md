@@ -15,6 +15,7 @@ A loop is formed of a few parts:
 - A capture to use on every iteration.
 - The assignment operator `=`.
 - The initial value to be captured.
+- The block to be run repeatedly.
 
 <!--wolf-->
 ```
