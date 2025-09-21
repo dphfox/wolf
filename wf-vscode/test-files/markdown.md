@@ -2,7 +2,7 @@
 
 This is a test of embedding Wolf code inside of Markdown files.
 
-```wolf
+<!--wolf-->```
 ---
 Returns "Hello, world!".
 ---

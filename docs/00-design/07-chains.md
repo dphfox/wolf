@@ -11,7 +11,7 @@ Chains allow multiple expressions to be appended together.
 A chain is written as a series of expressions delimited by arrows `->`.
 The final expression determines the value of the chain as a whole.
 
-```wolf
+<!--wolf-->```
 -- This entire chain evaluates to 8, the result of the final expression.
 2 + 5 -> cos [2] -> max [2, 4, 6, 8]
 ```
@@ -24,7 +24,7 @@ result of the previous expression is used in the next expression.
 The underscore `_` name is reserved by Wolf. In a chain, it refers to the result 
 of the previous expression.
 
-```wolf
+<!--wolf-->```
 -- The underscore is replaced with 4, so this whole chain evaluates to 14.
 2 + 2 -> _ + 10
 ```
@@ -36,7 +36,7 @@ In some common cases, Wolf can infer where the first underscore goes.
 For these cases, you can use the fat arrow `=>` instead. This tells Wolf to
 insert the first underscore for you.
 
-```wolf
+<!--wolf-->```
 -- Manual:
 [2, 5] -> max [_] -> log2 [_] -> ceil [_] -> exp2 [_]
 2 -> _ + 5 -> _ * 3
@@ -59,6 +59,6 @@ This feature works with:
 
 You may mix thin arrows and fat arrows in the same chain.
 
-```wolf
+<!--wolf-->```
 [2, 5] => max -> 10 / _
 ```

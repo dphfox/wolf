@@ -10,7 +10,7 @@ In Wolf, strings are a UTF-8 string of text with LF line endings.
 
 String literals are written in double quotes `"`.
 
-```wolf
+<!--wolf-->```
 ""
 "Hello, world"
 ```
@@ -23,7 +23,7 @@ in the string.
 If the starting line has any indentation, any matching indentation characters
 are ignored on the following lines. Extra indentation characters remain included.
 
-```wolf
+<!--wolf-->```
 "A much longer string.
 Strings can span multiple lines."
 
@@ -46,7 +46,7 @@ be used to change how the string is interpreted:
 - `\\` inserts a literal backslash
 - `\"` inserts a literal quote
 
-```wolf
+<!--wolf-->```
 "By explicitly inserting a line break \n
 this multiline string is able to keep the line feed character."
 
@@ -60,7 +60,7 @@ double quotes must be matched at the other end.
 
 Raw string literals ignore insert sequences and preserve line feed characters.
 
-```wolf
+<!--wolf-->```
 """None of "these" things will \n do anything."""
 """""""I can even """include""" this raw string!""""""
 

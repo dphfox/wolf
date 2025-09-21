@@ -10,9 +10,9 @@ let positional_multiline = [
 ]
 let named = [.a 1, .b 2, .c 3, .d 4, .e 5]
 let named_multiline = [
-	.a 1
+	.a   1
 	.`b` 2
-	.c 3
+	.c   3
 ]
 let mix = [1, 2, .a 3, .b 4, 5]
 
@@ -23,8 +23,8 @@ let [a, b, c, d, e] = positional
 let [.a, .b, .c, .d, .e] = named
 
 let [
-	.0 : num
-	.1 : num
+	.0   : num
+	.1   : num
 	.`a` : num
 ] = mix
 

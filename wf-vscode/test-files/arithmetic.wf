@@ -36,9 +36,6 @@ let solved = quadratic_equation [
 	.c 2.0
 ]
 
-let a = foo.bar + 2
-let a = (foo).bar + 2
-
 -- Ways of writing numbers
 let unary = [+2, -2]
 let special_numbers = [nan, inf, -inf, -nan, tau, eul, phi]

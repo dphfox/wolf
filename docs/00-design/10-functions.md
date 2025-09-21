@@ -16,7 +16,7 @@ Each function is formed of a few pieces:
 - A tuple capture that decomposes the input datum into names.
 - The expression representing the body of the function.
 
-```wolf
+<!--wolf-->```
 let multiply_add = fn [x : num, y : num, z : num] x * y + z
 
 let lerp = fn [
@@ -40,7 +40,7 @@ values.
 In fact, all functions in Wolf are values; "freestanding" functions are simply
 function values assigned to names with `let`.
 
-```wolf
+<!--wolf-->```
 let base_price = 50
 let price_per_xp_level = 10
 
@@ -58,7 +58,7 @@ As a result, functions stored in `let` assignments must always have explicit
 type information; a `let` statement gives no context about how the function will
 be used.
 
-```wolf
+<!--wolf-->```
 -- Untyped captures like this are not allowed.
 let multiply_add = fn [x, y, z] x * y + z
 ```
@@ -67,7 +67,7 @@ However, functions defined in other places may be able to draw on other context.
 For example, a function "callback" passed into another function can draw on type
 information provided by the outer function.
 
-```wolf
+<!--wolf-->```
 -- Untyped captures like this are allowed, because type information is available
 -- for `.dynamic_price` here.
 let final_price = price_info [

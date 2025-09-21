@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Looping
-page_number: 12
+page_number: 14
 ---
 
 Looping allows part of an expression chain to feed back into itself.
@@ -17,7 +17,7 @@ The expression must either:
 
 It is invalid to return a value which is not wrapped.
 
-```wolf
+<!--wolf-->```
 largest_multiple_of_two = fn [.no_larger_than : num] (
 	2 -> loop (
 		let current = _
@@ -36,7 +36,7 @@ sixty_four = largest_multiple_of_two [.no_larger_than 80]
 Loops are equivalent to recursion - they are a more ergonomic way of writing
 a recursive function:
 
-```wolf
+<!--wolf-->```
 -- This is equivalent to the loop above.
 largest_multiple_of_two = fn [.no_larger_than : num] (
 	feedback = fn [current] (
