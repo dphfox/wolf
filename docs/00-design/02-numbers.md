@@ -4,25 +4,40 @@ title: Numbers
 page_number: 2
 ---
 
-Numbers in Wolf are represented with 64-bit IEEE floating point numbers.
+All names that look like numbers are reserved by Wolf. Each one refers either to:
 
-All names that look like numbers are reserved by Wolf, and refer to the floating
-point value that minimally diverges from the written digits. Wolf programs
-cannot redefine what these names mean.
+- An exact integer value (of type `int`)
+- The floating point value that minimally diverges from the written digits (of type `num`)
+
+Wolf programs cannot redefine what these names mean.
 
 ## Integers
 
-Names consisting of only digits refer to integer numbers.
+Names consisting of only digits refer to integer numbers of type `int`.
 
 <!--wolf-->
 ```
--- These both refer to the floating point value of 12345
+-- These both refer to the integer value of 12345
 `12345`
 12345
 ```
 
-All integers up to 2^53 can be exactly represented. Larger integers are stored
-with precision loss.
+## Numbers
+
+A decimal point `.` can be used in the name to delimit an integer and fractional
+part. When a decimal point is present, the type is `num`, even if the fractional
+part is 0.
+
+<!--wolf-->
+```
+-- These refer to the floating point value of 0.125
+0.125
+`0.125`
+
+-- The first value is the integer 0. The second value is floating-point 0.
+0
+0.0
+```
 
 ## Underscores
 
@@ -33,24 +48,6 @@ Underscores `_` are permitted between digits, and will be ignored by Wolf.
 -- These both refer to the floating point value of 12345
 1_2_3_4_5
 `12_345`
-```
-
-## Reals
-
-A decimal point `.` can be used in the name to delimit an integer and fractional
-part.
-
-If using backticked names, only one of the parts needs to be present.
-
-<!--wolf-->
-```
--- These refer to the floating point value of 0.125
-0.125
-`0.125`
-`.125`
-
--- This refers to the floating point value of 256.0
-`256.`
 ```
 
 ## Scientific notation
@@ -87,6 +84,14 @@ As before, change of base prefixes are case sensitive.
 0xF_F
 0b1111_1111
 255
+```
+
+Bases can be used with both `int` and `num` types.
+
+<!--wolf-->
+```
+0xABC.DEF
+0b1010.0011
 ```
 
 ## Special numbers

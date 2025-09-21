@@ -108,3 +108,27 @@ Other non-operators are also included to complete the comparison.
 | `A => B`   | *(automatic chaining)*       | ▼ ▼ ▼ ▼   | ✓
 
 [^i]: Inequality operators can appear once (`x < size`) or twice (for example, `0 <= x < size`). These form single- and double-ended ranges respectively. No further inequality operators are allowed.
+
+## Integer conversion
+
+Wolf does not implicitly convert between `num` and `int`.
+
+Instead, the standard arithmetic operators accept any mix of `int` or `num`, and
+return `int` if they can guarantee the result is an integer.
+
+That means:
+
+- `/` always returns `num`, because not all integers divide evenly.
+- `//` always returns `int`, because the result is floored.
+- All other operators return `int` if all operands are `int`.
+
+You can use this behaviour to explicitly convert between `num` and `int`:
+
+<!--wolf-->
+```
+-- Converts the integer to the nearest floating-point number.
+2 / 1
+
+-- Floors the floating-point number towards the largest integer less than it.
+2.4 // 1
+```
