@@ -128,7 +128,6 @@ You can use this behaviour to explicitly convert between `num` and `int`:
 ```
 -- Converts the integer to the nearest floating-point number.
 2 / 1
-
 -- Floors the floating-point number towards the largest integer less than it.
 2.4 // 1
 -- Floors the floating-point number towards the smallest integer greater than it.
