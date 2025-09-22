@@ -27,11 +27,16 @@ pub enum TokenType {
 	Name { backticked: bool },
 	String { num_quotes: usize }, // 1 = standard string, 2 = empty string, 3+ = raw string
 
+	Throw,
+	Catch,
 	Loop,
+	Then,
+	Else,
 	And,
 	Let,
 	Or,
 	Fn,
+	If,
 
 	Ellipsis,
 	DoubleSlash,
@@ -66,7 +71,12 @@ macro_rules! exact {
 impl TokenType {
 	// Longer strings should come before shorter ones due to greedy matching.
 	pub const SORTED_EXACT_TOKENS: &[(&[u8], TokenType)] = &[
+		exact!("throw", Throw),
+		exact!("catch", Catch),
+
 		exact!("loop", Loop),
+		exact!("then", Then),
+		exact!("else", Else),
 
 		exact!("and", And),
 		exact!("let", Let),
@@ -74,6 +84,7 @@ impl TokenType {
 
 		exact!("or", Or),
 		exact!("fn", Fn),
+		exact!("if", If),
 		exact!("//", DoubleSlash),
 		exact!("!=", BangEqual),
 		exact!("<=", LessEqual),
@@ -112,11 +123,16 @@ impl TokenType {
 			Name { .. } => "name",
 			String { .. } => "string",
 
+			Throw => "throw",
+			Catch => "catch",
 			Loop => "loop",
+			Then => "then",
+			Else => "else",
 			And => "and",
 			Let => "let",
 			Or => "or",
 			Fn => "fn",
+			If => "if",
 
 			Ellipsis => "ellipsis",
 			DoubleSlash => "double_slash",
@@ -170,6 +186,7 @@ impl Iterator for Tokeniser<'_> {
 		macro_rules! ret {
 			($ty:expr) => {
 				let length = self.pos - start_index;
+				debug_assert!(length > 0, "Zero length tokens aren't valid - they lead to infinite loops");
 				return Some(Token { ty: $ty, span: Span { index: start_index, length } });
 			};
 		}
@@ -207,7 +224,8 @@ impl Iterator for Tokeniser<'_> {
 		// Exact tokens
 		for (expect, token) in TokenType::SORTED_EXACT_TOKENS {
 			let (from, to) = (self.pos, self.pos + expect.len());
-			if to < len && chars[from..to] == **expect {
+			// Because `to` is exclusive, it must be <= len, not < len.
+			if to <= len && chars[from..to] == **expect {
 				self.pos += expect.len();
 				ret!(*token);
 			}
@@ -288,6 +306,7 @@ impl Iterator for Tokeniser<'_> {
 			}
 		}
 
+		self.pos += 1; // Without this, the tokeniser doesn't move forward.
 		ret!(TokenType::Unexpected);
 	}
 }

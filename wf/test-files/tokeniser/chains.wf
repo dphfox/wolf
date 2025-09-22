@@ -8,7 +8,7 @@ let a = 2 => + 5 => * 3
 let function_call = a -> do_something [a]
 let method_call = a => do_something
 
-let [_, sum] = loop [sum, index] = [10, 0] (
-	if index = 0 then throw sum
-	else [index - 1, sum + index]
+let [_, sum] = [10, 0] -> loop [sum, index] (
+	if index == 0 then sum
+	else repeat [index - 1, sum + index]
 )   

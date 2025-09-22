@@ -5,7 +5,8 @@ import * as ui from './ui';
 
 type Configuration = {
 	exec: {
-		path: string
+		path: string,
+		safetyTimeout: number
 	}
 }
 
@@ -19,7 +20,8 @@ export class ConfigState {
 		const docConfig = vscode.workspace.getConfiguration('wolf', editor.document);
 		this.config = {
 			exec: {
-				path: docConfig.get('exec.path', 'wolf') ?? ""
+				path: docConfig.get('exec.path', ''),
+				safetyTimeout: docConfig.get('exec.safetyTimeout', 1000)
 			}
 		}
 	}
@@ -31,6 +33,10 @@ export class ConfigState {
 		} else {
 			throw exePath.err;
 		}
+	}
+
+	public getSafetyTimeout(): number {
+		return this.config.exec.safetyTimeout;
 	}
 
 	private async initExePath(): Promise<ExePath> {

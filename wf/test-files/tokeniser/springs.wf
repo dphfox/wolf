@@ -2,7 +2,7 @@ let spring_coefficients = fn [
 	.at time : num
 	.speed   : num
 	.damping : num
-] if time = 0 or speed = 0 then
+] if time == 0 or speed == 0 then
 	[
 		.pos_pos 1
 		.pos_vel 0
@@ -25,7 +25,7 @@ let spring_coefficients = fn [
 		.vel_pos (exp2 - exp1) * neg_half_over_alpha_speed * speed
 		.vel_vel (exp1 * z1 - exp2 * z2) * neg_half_over_alpha_speed
 	]
-) else if damping = 1 then (
+) else if damping == 1 then (
 	-- critically damped spring
 
 	let time_speed = time * speed

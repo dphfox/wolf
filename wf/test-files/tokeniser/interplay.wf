@@ -1,0 +1,23 @@
+---
+Doing filthy things with the syntax rules.
+---
+
+-- This "has" a string """ inside.
+let foo = "bar + baz"
+
+let empty_strings = ["", "", ""]
+let raw_strings = ["""", """", """", """"]
+
+let string = """
+	This string has a -- comment in it
+	or a --- long comment in it.
+"""
+let string2 = """""
+	This string has a """ in it.
+	"""
+	let foo = bar
+"""""
+let foo = bar
+
+let `this name has a -- comment or --- long comment --- in it` = 42
+let `this name has a """ in it` = 43

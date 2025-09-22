@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { reload } from './main';
+import debounce from './debounce';
 
 export function errorWolfNotOnPath() {
 	vscode.window.showErrorMessage(
@@ -29,3 +30,11 @@ export function errorManualWolfPathNotExe() {
 		if (action === "Reload") reload();
 	});
 }
+
+// This is expected to be called frequently when decoration happens, so a small
+// debounce makes it less distracting if it fails repeatedly.
+export let errorFailedToDecorate = debounce((e: unknown) => {
+	vscode.window.showErrorMessage(
+		"Wolf failed to decorate this file: " + e
+	)
+}, 2000)

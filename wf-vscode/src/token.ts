@@ -1,4 +1,11 @@
 import * as vscode from 'vscode';
+import * as child_process from 'child_process';
+import { promisify } from 'util';
+import { ConfigState } from './config';
+import { output } from './main';
+import { callExe } from './cli';
+
+const execFile = promisify(child_process.execFile);
 
 export type TokenType = 
 	| "unexpected" 
@@ -48,39 +55,61 @@ export type Token = {
 	}
 }
 
-export function tokeniseDocument(document: vscode.TextDocument): Token[] {
-	
-	return [];
+export async function tokeniseDocument(document: vscode.TextDocument, config: ConfigState): Promise<Token[]> {
+	output.appendLine("Calling for tokens...");
+	const stdout = await callExe(config, ["tokenise"], document.getText());
+	let tokens = [];
+	try {
+		let startIndex = 0;
+		let currentIndex = 0;
+		let parts = [];
+		while (currentIndex < stdout.length) {
+			const char = stdout.charAt(currentIndex);
+			if (char == ",") {
+				parts.push(stdout.substring(startIndex, currentIndex));
+				startIndex = currentIndex + 1;
+			} else if (char == ";") {
+				parts.push(stdout.substring(startIndex, currentIndex));
+				startIndex = currentIndex + 1;
+				if (parts.length != 3) throw new Error("Unexpected number of token parts");
+				let index = parseInt(parts[0]);
+				let length = parseInt(parts[1]);
+				if (isNaN(index) || isNaN(length)) throw new Error("Unexpected token start/length (not integer)");
+				let ty = parts[2] as TokenType;
+				tokens.push({ty: ty, span: {index: index, length: length}});
+				parts = [];
+			}
+			currentIndex += 1;
+		}
+	} catch (e) {
+		throw new Error("Failed to parse stdout: " + e);
+	}
+	output.appendLine("Found " + tokens.length + " tokens.");
+	return tokens;
 }
 
-export function highlightTokenStream(document: vscode.TextDocument): vscode.DecorationOptions[] {
+export async function highlightTokenStream(document: vscode.TextDocument, config: ConfigState): Promise<Record<string, vscode.DecorationOptions[]>> {
 	const text = document.getText();
-	const highlights = [];
-	let startPos = new vscode.Position(0, 0);
+	const highlights: Record<string, vscode.DecorationOptions[]> = {};
+	let startUtf16 = 0;
 	let currentUtf16 = 0;
 	let currentByte = 0;
-	for (let token of tokeniseDocument(document)) {
+	for (let token of await tokeniseDocument(document, config)) {
 		const endByte = token.span.index + token.span.length;
+		output.appendLine("token is  " + token.ty + " from " + token.span.index + " for " + token.span.length );
 		while (currentByte < endByte && currentUtf16 < text.length) {
-			const code = text.charCodeAt(currentUtf16);
-			if (code >= 0xD800 && code <= 0xDBFF) {
-				currentByte += 4;  // Surrogate pair = 4 UTF-8 bytes
-				currentUtf16 += 2;
-			} else if (code < 0x80) {
-				currentByte += 1;  // ASCII
-				currentUtf16 += 1;
-			} else if (code < 0x800) {
-				currentByte += 2;  // 2-byte UTF-8
-				currentUtf16 += 1;
-			} else {
-				currentByte += 3;  // 3-byte UTF-8
-				currentUtf16 += 1;
-			}
+			currentByte += 1;
+			currentUtf16 += 1;
 		}
+		const startPos = document.positionAt(startUtf16);
 		const endPos = document.positionAt(currentUtf16);
-		const decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: token.ty }
-		highlights.push(decoration);
-		startPos = endPos;
+		const decoration: vscode.DecorationOptions = { range: new vscode.Range(startPos, endPos), hoverMessage: token.ty };
+		output.appendLine("Highlighting from " + startUtf16 + " to " + currentUtf16);
+		if (!highlights[token.ty]) {
+			highlights[token.ty] = [];
+		}
+		highlights[token.ty].push(decoration);
+		startUtf16 = currentUtf16;
 	}
 	return highlights;
 }

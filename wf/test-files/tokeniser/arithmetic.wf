@@ -22,7 +22,7 @@ let quadratic_equation = fn [
 	let discriminant = b^2 - 4 * a * c
 	if discriminant < 0 then
 		[]
-	else if discriminant = 0 then
+	else if discriminant == 0 then
 		[-b / (2 * a)]
 	else
 		[
