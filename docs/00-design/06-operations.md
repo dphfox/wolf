@@ -133,7 +133,4 @@ You can use this behaviour to explicitly convert between `num` and `int`:
 2.4 // 1
 -- Floors the floating-point number towards the smallest integer greater than it.
 2.4 /^ 1
--- Rounds the floating-point number, where the choice of `//` or `/^` is used
--- to determine how to tie-break 0.5.
-
 ```
