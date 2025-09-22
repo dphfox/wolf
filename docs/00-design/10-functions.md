@@ -26,7 +26,7 @@ let lerp = fn [
 	.ratio  : num
 ] (
 	let difference = b - a
-	b + difference * ratio
+	a + difference * ratio
 )
 
 let four = multiply_add [5, 2, 3]

@@ -54,6 +54,9 @@ Certain functions in Wolf are important enough to have special notation.
 -- Floor division and floor modulo.
 4 // 3 % 5
 
+-- Ceiling division.
+4 /^ 3I
+
 -- Equality comparisons.
 1 + 1 = 4 - 2 = 2
 
@@ -90,6 +93,7 @@ Other non-operators are also included to complete the comparison.
 | `A * B`    | `multiply [A, B, ...]`       | ▲         | ✓
 | `A / B`    | `divide [A, B, ...]`         | ▲         | ✓
 | `A // B`   | `floor_divide [A, B, ...]`   | ▲         | ✓
+| `A /^ B`   | `ceil_divide [A, B, ...]`    | ▲         | ✓
 | `A % B`    | `floor_mod [A, B, ...]`      | ▲         | ✓
 | `A + B`    | `add [A, B, ...]`            |           | ✓
 | `A - B`    | `subtract [A, B, ...]`       |           | ✓
@@ -115,7 +119,7 @@ types guarantee the result is an integer.
 That means:
 
 - `/` always returns `num`, because not all integers divide evenly.
-- `//` always returns `int`, because the result is floored.
+- `//` and `/^` always returns `int`, because the result is floored.
 - All other operators return `int` if all operands are `int`.
 
 You can use this behaviour to explicitly convert between `num` and `int`:
@@ -127,4 +131,9 @@ You can use this behaviour to explicitly convert between `num` and `int`:
 
 -- Floors the floating-point number towards the largest integer less than it.
 2.4 // 1
+-- Floors the floating-point number towards the smallest integer greater than it.
+2.4 /^ 1
+-- Rounds the floating-point number, where the choice of `//` or `/^` is used
+-- to determine how to tie-break 0.5.
+
 ```
