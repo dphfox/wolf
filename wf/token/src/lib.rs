@@ -1,11 +1,11 @@
-/// Lossless tokeniser.
-/// 
-/// The tokeniser treats all source material as ASCII - UTF-8 characters are not
-/// specifically part of any syntax, but could still be included in spans like
-/// names, comments or strings.
-/// 
-/// The implementation is intentionally simple for maintainability and for high
-/// performance. The cost of this is that a whole file is tokenised at once.
+// Lossless tokeniser.
+// 
+// The tokeniser treats all source material as ASCII - UTF-8 characters are not
+// specifically part of any syntax, but could still be included in spans like
+// names, comments or strings.
+// 
+// The implementation is intentionally simple for maintainability and for high
+// performance. The cost of this is that a whole file is tokenised at once.
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Span {
@@ -101,14 +101,57 @@ impl TokenType {
 		exact!("\n", EndLine),
 		exact!("\r", EndLine),
 	];
+
+	pub fn external_name(&self) -> &'static str {
+		use TokenType::*;
+		match self {
+			Unexpected => "unexpected",
+
+			Whitespace => "whitespace",
+			Comment { .. } => "comment",
+			Name { .. } => "name",
+			String { .. } => "string",
+
+			Loop => "loop",
+			And => "and",
+			Let => "let",
+			Or => "or",
+			Fn => "fn",
+
+			Ellipsis => "ellipsis",
+			DoubleSlash => "double_slash",
+			BangEqual => "bang_equal",
+			LessEqual => "less_equal",
+			MoreEqual => "more_equal",
+			ThinArrow => "thin_arrow",
+			FatArrow => "fat_arrow",
+			OpenBracket => "open_bracket",
+			CloseBracket => "close_bracket",
+			OpenParen => "open_paren",
+			CloseParen => "close_paren",
+			Comma => "comma",
+			Dot => "dot",
+			Colon => "colon",
+			Plus => "plus",
+			Minus => "minus",
+			Asterisk => "asterisk",
+			Slash => "slash",
+			Caret => "caret",
+			Equal => "equal",
+			Bang => "bang",
+			Less => "less",
+			More => "more",
+			EndLine => "end_line",
+		}
+	}
 }
 
-pub struct Tokenizer<'a> {
+pub struct Tokeniser<'a> {
 	ascii_chars: &'a [u8],
 	pos: usize,
 }
 
-impl<'a> Tokenizer<'a> {
+impl<'a> Tokeniser<'a> {
 	pub fn new(input: &'a str) -> Self {
 		Self {
 			ascii_chars: input.as_bytes(),
@@ -117,7 +160,7 @@ impl<'a> Tokenizer<'a> {
 	}
 }
 
-impl Iterator for Tokenizer<'_> {
+impl Iterator for Tokeniser<'_> {
 	type Item = Token;
 
 	fn next(&mut self) -> Option<Self::Item> {

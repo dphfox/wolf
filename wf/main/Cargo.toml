@@ -1,0 +1,8 @@
+[package]
+name = "wf-main"
+version = { workspace = true }
+edition = { workspace = true }
+
+[dependencies]
+wf-token = { path = "../token" }
+clap = { version = "4", features = ["derive"]}

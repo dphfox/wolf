@@ -1,0 +1,6 @@
+---
+Returns "Hello, world!".
+---
+
+-- This is the entry point
+let main = fn [] "Hello, world!"

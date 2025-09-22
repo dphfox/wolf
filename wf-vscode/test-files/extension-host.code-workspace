@@ -1,0 +1,10 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"wolf.exec.path": "../../wf/target/debug/wf-main.exe"
+	}
+}

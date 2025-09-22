@@ -9,3 +9,5 @@ vendor
 **/target/
 
 **/local-dev/
+
+**/node_modules/

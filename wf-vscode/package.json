@@ -9,7 +9,237 @@
 	"categories": [
 		"Programming Languages"
 	],
+	"main": "./out/main.js",
 	"contributes": {
+		"configuration": {
+			"title": "Wolf",
+			"properties": {
+				"wolf.exec.path": {
+					"type": "string",
+					"scope": "resource",
+					"default": "",
+					"description": "Path to the Wolf executable. Leave empty to look for 'wf' in your PATH."
+				}
+			}
+		},
+		"colors": [
+			{
+				"id": "wolf.debug.1",
+				"description": "Wolf debug colour 1",
+				"defaults": {
+					"dark": "#ffaac4",
+					"light": "#e94b8a",
+					"highContrast": "#ff5799"
+				}
+			},
+			{
+				"id": "wolf.debug.1.20p",
+				"description": "Wolf debug colour 1 (20% opacity)",
+				"defaults": {
+					"dark": "#ffaac433",
+					"light": "#e94b8a33",
+					"highContrast": "#ff579933"
+				}
+			},
+			{
+				"id": "wolf.debug.2",
+				"description": "Wolf debug colour 2",
+				"defaults": {
+					"dark": "#ffafa2",
+					"light": "#f0503d",
+					"highContrast": "#ff6551"
+				}
+			},
+			{
+				"id": "wolf.debug.2.20p",
+				"description": "Wolf debug colour 2 (20% opacity)",
+				"defaults": {
+					"dark": "#ffafa233",
+					"light": "#f0503d33",
+					"highContrast": "#ff655133"
+				}
+			},
+			{
+				"id": "wolf.debug.3",
+				"description": "Wolf debug colour 3",
+				"defaults": {
+					"dark": "#ffb475",
+					"light": "#d17400",
+					"highContrast": "#e68100"
+				}
+			},
+			{
+				"id": "wolf.debug.3.20p",
+				"description": "Wolf debug colour 3 (20% opacity)",
+				"defaults": {
+					"dark": "#ffb47533",
+					"light": "#d1740033",
+					"highContrast": "#e6810033"
+				}
+			},
+			{
+				"id": "wolf.debug.4",
+				"description": "Wolf debug colour 4",
+				"defaults": {
+					"dark": "#f1c000",
+					"light": "#af8a00",
+					"highContrast": "#c19900"
+				}
+			},
+			{
+				"id": "wolf.debug.4.20p",
+				"description": "Wolf debug colour 4 (20% opacity)",
+				"defaults": {
+					"dark": "#f1c00033",
+					"light": "#af8a0033",
+					"highContrast": "#c1990033"
+				}
+			},
+			{
+				"id": "wolf.debug.5",
+				"description": "Wolf debug colour 5",
+				"defaults": {
+					"dark": "#b7d800",
+					"light": "#849c00",
+					"highContrast": "#92ac00"
+				}
+			},
+			{
+				"id": "wolf.debug.5.20p",
+				"description": "Wolf debug colour 5 (20% opacity)",
+				"defaults": {
+					"dark": "#b7d80033",
+					"light": "#849c0033",
+					"highContrast": "#92ac0033"
+				}
+			},
+			{
+				"id": "wolf.debug.6",
+				"description": "Wolf debug colour 6",
+				"defaults": {
+					"dark": "#49e97d",
+					"light": "#00ac4f",
+					"highContrast": "#00be58"
+				}
+			},
+			{
+				"id": "wolf.debug.6.20p",
+				"description": "Wolf debug colour 6 (20% opacity)",
+				"defaults": {
+					"dark": "#49e97d33",
+					"light": "#00ac4f33",
+					"highContrast": "#00be5833"
+				}
+			},
+			{
+				"id": "wolf.debug.7",
+				"description": "Wolf debug colour 7",
+				"defaults": {
+					"dark": "#00e6ca",
+					"light": "#00a692",
+					"highContrast": "#00b8a1"
+				}
+			},
+			{
+				"id": "wolf.debug.7.20p",
+				"description": "Wolf debug colour 7 (20% opacity)",
+				"defaults": {
+					"dark": "#00e6ca33",
+					"light": "#00a69233",
+					"highContrast": "#00b8a133"
+				}
+			},
+			{
+				"id": "wolf.debug.8",
+				"description": "Wolf debug colour 8",
+				"defaults": {
+					"dark": "#00dffa",
+					"light": "#00a1b5",
+					"highContrast": "#00b2c8"
+				}
+			},
+			{
+				"id": "wolf.debug.8.20p",
+				"description": "Wolf debug colour 8 (20% opacity)",
+				"defaults": {
+					"dark": "#00dffa33",
+					"light": "#00a1b533",
+					"highContrast": "#00b2c833"
+				}
+			},
+			{
+				"id": "wolf.debug.9",
+				"description": "Wolf debug colour 9",
+				"defaults": {
+					"dark": "#8ccfff",
+					"light": "#0099e0",
+					"highContrast": "#00a9f7"
+				}
+			},
+			{
+				"id": "wolf.debug.9.20p",
+				"description": "Wolf debug colour 9 (20% opacity)",
+				"defaults": {
+					"dark": "#8ccfff33",
+					"light": "#0099e033",
+					"highContrast": "#00a9f733"
+				}
+			},
+			{
+				"id": "wolf.debug.10",
+				"description": "Wolf debug colour 10",
+				"defaults": {
+					"dark": "#b1c5ff",
+					"light": "#6483ff",
+					"highContrast": "#7997ff"
+				}
+			},
+			{
+				"id": "wolf.debug.10.20p",
+				"description": "Wolf debug colour 10 (20% opacity)",
+				"defaults": {
+					"dark": "#b1c5ff33",
+					"light": "#6483ff33",
+					"highContrast": "#7997ff33"
+				}
+			},
+			{
+				"id": "wolf.debug.11",
+				"description": "Wolf debug colour 11",
+				"defaults": {
+					"dark": "#d0b8ff",
+					"light": "#a46bf5",
+					"highContrast": "#b17eff"
+				}
+			},
+			{
+				"id": "wolf.debug.11.20p",
+				"description": "Wolf debug colour 11 (20% opacity)",
+				"defaults": {
+					"dark": "#d0b8ff33",
+					"light": "#a46bf533",
+					"highContrast": "#b17eff33"
+				}
+			},
+			{
+				"id": "wolf.debug.12",
+				"description": "Wolf debug colour 12",
+				"defaults": {
+					"dark": "#ff9ff7",
+					"light": "#cf57c8",
+					"highContrast": "#ff12f7"
+				}
+			},
+			{
+				"id": "wolf.debug.12.20p",
+				"description": "Wolf debug colour 12 (20% opacity)",
+				"defaults": {
+					"dark": "#ff9ff733",
+					"light": "#cf57c833",
+					"highContrast": "#ff12f733"
+				}
+			}
+		],
 		"languages": [
 			{
 				"id": "wolf",
@@ -49,5 +279,24 @@
 				}
 			}
 		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "vscode-test"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.86.0",
+		"@types/mocha": "^10.0.6",
+		"@types/node": "18.x",
+		"@typescript-eslint/eslint-plugin": "^7.0.2",
+		"@typescript-eslint/parser": "^7.0.2",
+		"eslint": "^8.56.0",
+		"typescript": "^5.3.3",
+		"@vscode/test-cli": "^0.0.6",
+		"@vscode/test-electron": "^2.3.9"
 	}
 }
