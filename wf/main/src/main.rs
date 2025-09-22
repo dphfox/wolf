@@ -1,4 +1,4 @@
-use std::{fs::read_to_string, path::PathBuf};
+use std::{fs, io, path::PathBuf};
 
 use clap::{Args, Parser, Subcommand};
 use wf_token::Tokeniser;
@@ -21,11 +21,15 @@ enum Commands {
 /// Directly tokenises a source file and emits tokens to stdout.
 struct TokeniseArgs {
 	/// The file that should be tokenised. Recommended to be a `.wf` file.
-	input_file: PathBuf
+	/// If none is provided, the input is read from stdin.
+	input_file: Option<PathBuf>
 }
 
 fn tokenise(args: TokeniseArgs) {
-	let source_text = read_to_string(args.input_file).expect("Failed to read source file");
+	let source_text = match args.input_file {
+		Some(input_file) => fs::read_to_string(input_file).expect("Failed to read source file"),
+		None => io::read_to_string(io::stdin()).expect("Failed to read from stdin")
+	};
 	for token in Tokeniser::new(&source_text) {
 		print!("{},{},{};", token.span.index, token.span.length, token.ty.external_name());
 	}

@@ -37,8 +37,7 @@ class EditorState {
 		this.updateDecorationsTimeout = setTimeout(async () => {
 			if (!this.shouldDecorate()) { return; }
 			try {
-				
-				const decorations = highlightTokenStream(this.activeEditor.document, []);
+				const decorations = highlightTokenStream(this.activeEditor.document);
 				this.activeEditor.setDecorations(decorationType, decorations);
 			} catch (e) {
 				output.appendLine
