@@ -11,3 +11,4 @@ vendor
 **/local-dev/
 
 **/node_modules/
+**/out/
