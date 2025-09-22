@@ -55,7 +55,7 @@ Certain functions in Wolf are important enough to have special notation.
 4 // 3 % 5
 
 -- Ceiling division.
-4 /^ 3I
+4 /^ 3
 
 -- Equality comparisons.
 1 + 1 = 4 - 2 = 2
