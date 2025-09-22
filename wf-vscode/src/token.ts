@@ -49,16 +49,17 @@ export type Token = {
 }
 
 export function tokeniseDocument(document: vscode.TextDocument): Token[] {
+	
 	return [];
 }
 
-export function highlightTokenStream(document: vscode.TextDocument, tokens: Token[]): vscode.DecorationOptions[] {
+export function highlightTokenStream(document: vscode.TextDocument): vscode.DecorationOptions[] {
 	const text = document.getText();
 	const highlights = [];
 	let startPos = new vscode.Position(0, 0);
 	let currentUtf16 = 0;
 	let currentByte = 0;
-	for (let token of tokens) {
+	for (let token of tokeniseDocument(document)) {
 		const endByte = token.span.index + token.span.length;
 		while (currentByte < endByte && currentUtf16 < text.length) {
 			const code = text.charCodeAt(currentUtf16);
