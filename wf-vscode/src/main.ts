@@ -34,6 +34,7 @@ const decorationTypes: Record<string, vscode.TextEditorDecorationType> = {
 	"if": newDecorationType(1, true),
 	"ellipsis": newDecorationType(4, true),
 	"double_slash": newDecorationType(4, true),
+	"slash_caret": newDecorationType(4, true),
 	"bang_equal": newDecorationType(4, true),
 	"less_equal": newDecorationType(4, true),
 	"more_equal": newDecorationType(4, true),

@@ -23,6 +23,7 @@ export type TokenType =
 
 	| "ellipsis"
 	| "double_slash"
+	| "slash_caret"
 	| "bang_equal"
 	| "less_equal"
 	| "more_equal"

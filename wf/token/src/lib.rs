@@ -7,18 +7,21 @@
 // The implementation is intentionally simple for maintainability and for high
 // performance. The cost of this is that a whole file is tokenised at once.
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+use serde::Serialize;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 pub struct Span {
 	pub index: usize,
 	pub length: usize
 }
 
+#[derive(Debug, Clone, Serialize)]
 pub struct Token {
 	pub ty: TokenType,
 	pub span: Span
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 pub enum TokenType {
 	Unexpected,
 
@@ -40,6 +43,7 @@ pub enum TokenType {
 
 	Ellipsis,
 	DoubleSlash,
+	SlashCaret,
 	BangEqual,
 	LessEqual,
 	MoreEqual,
@@ -86,6 +90,7 @@ impl TokenType {
 		exact!("fn", Fn),
 		exact!("if", If),
 		exact!("//", DoubleSlash),
+		exact!("/^", SlashCaret),
 		exact!("!=", BangEqual),
 		exact!("<=", LessEqual),
 		exact!(">=", MoreEqual),
@@ -136,6 +141,7 @@ impl TokenType {
 
 			Ellipsis => "ellipsis",
 			DoubleSlash => "double_slash",
+			SlashCaret => "slash_caret",
 			BangEqual => "bang_equal",
 			LessEqual => "less_equal",
 			MoreEqual => "more_equal",

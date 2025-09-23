@@ -42,3 +42,6 @@ let special_numbers = [nan, inf, -inf, -nan, tau, eul, phi]
 let not_numbers = [hello, world, these, are, not, numbers, including, pi, because, im, petty]
 
 let foo = eul ^ (i * tau * time)
+
+-- Division techniques
+let division = [2.4 / 1, 2.4 // 1, 2.4 /^ 1 ]

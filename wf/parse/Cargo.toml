@@ -1,7 +1,8 @@
 [package]
-name = "wf-token"
+name = "wf-parse"
 version = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
+wf-token = { workspace = true }
 serde = { workspace = true }
