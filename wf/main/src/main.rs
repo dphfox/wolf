@@ -1,4 +1,4 @@
-use std::io;
+use std::io::{self, Read, BufReader};
 
 use clap::{Parser, Subcommand};
 
@@ -34,19 +34,21 @@ fn main() {
 	}
 }
 
+macro_rules! stdin_bytes {
+	() => {
+		BufReader::new(io::stdin()).bytes().map(|x| x.expect("Failed to read stdin"))
+	};
+}
+
 fn tokenise() {
-	let source_text = io::read_to_string(io::stdin()).expect("Failed to read from stdin");
-	let tokeniser = wf_token::Tokeniser::new(&source_text);
-	let mut stdout = String::new();
+	let tokeniser = wf_token::Tokeniser::new(stdin_bytes!());
 	for token in tokeniser {
-		stdout.push_str(&format!("{},{},{};", token.span.index, token.span.length, token.ty.external_name()));
+		print!("{},{},{};", token.span.index, token.span.length, token.ty.external_name());
 	}
-	print!("{stdout}");
 }
 
 fn parse() {
-	let source_text = io::read_to_string(io::stdin()).expect("Failed to read from stdin");
-	let tokeniser = wf_token::Tokeniser::new(&source_text);
+	let tokeniser = wf_token::Tokeniser::new(stdin_bytes!());
 	let parser = wf_parse::Parser::new(tokeniser);
 	let syntax = parser.collect::<Result<Vec<_>, _>>();
 	let json = serde_json::to_string(&syntax).expect("Failed to serialise parser output as JSON");

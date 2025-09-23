@@ -20,17 +20,17 @@ pub enum SyntaxError {
 	UnexpectedStartToken(Token)
 }
 
-pub struct Parser<'a> {
-	tokeniser: Tokeniser<'a>
+pub struct Parser<Input: Iterator<Item = u8>> {
+	tokeniser: Tokeniser<Input>
 }
 
-impl<'a> Parser<'a> {
-	pub fn new(tokeniser: Tokeniser<'a>) -> Self {
+impl<Input: Iterator<Item = u8>> Parser<Input> {
+	pub fn new(tokeniser: Tokeniser<Input>) -> Self {
 		Self { tokeniser }
 	}
 }
 
-impl Iterator for Parser<'_> {
+impl<Input: Iterator<Item = u8>> Iterator for Parser<Input> {
 	type Item = Result<Syntax, SyntaxError>;
 
 	fn next(&mut self) -> Option<Self::Item> {
