@@ -17,7 +17,10 @@ const decorationTypes: Record<string, vscode.TextEditorDecorationType> = {
 		cursor: "not-allowed",
 		backgroundColor: "red"
 	}), 
-	// "whitespace": null,
+	"whitespace": vscode.window.createTextEditorDecorationType({
+		cursor: "crosshair",
+		backgroundColor: "#8881"
+	}), 
 	"comment": newDecorationType(4, false), 
 	"name": newDecorationType(8, false), 
 	"string": newDecorationType(12, false), 
