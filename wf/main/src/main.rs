@@ -25,12 +25,20 @@ enum Commands {
 	Parse
 }
 
+fn main() {
+	let cli = Cli::parse();
+
+	match cli.command {
+		Commands::Tokenise => tokenise(),
+		Commands::Parse => parse()
+	}
+}
+
 fn tokenise() {
 	let source_text = io::read_to_string(io::stdin()).expect("Failed to read from stdin");
 	let tokeniser = wf_token::Tokeniser::new(&source_text);
 	let mut stdout = String::new();
-	for (safety_check, token) in tokeniser.enumerate() {
-		if safety_check > 99999 { panic!("Safety limit reached"); }
+	for token in tokeniser {
 		stdout.push_str(&format!("{},{},{};", token.span.index, token.span.length, token.ty.external_name()));
 	}
 	print!("{stdout}");
@@ -43,13 +51,4 @@ fn parse() {
 	let syntax = parser.collect::<Result<Vec<_>, _>>();
 	let json = serde_json::to_string(&syntax).expect("Failed to serialise parser output as JSON");
 	print!("{json}");
-}
-
-fn main() {
-	let cli = Cli::parse();
-
-	match cli.command {
-		Commands::Tokenise => tokenise(),
-		Commands::Parse => parse()
-	}
 }
