@@ -198,13 +198,16 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 
 		// Comment
 		{
-			// TODO: make this work with constant lookahead
 			let mut num_hyphens = 0;
-			while matches!(bytes.peek(num_hyphens), Some(b'-')) { num_hyphens += 1; }
+			while matches!(bytes.peek(num_hyphens.min(2)), Some(b'-')) {
+				num_hyphens += 1;
+				// Start consuming behind us if we know we're a long comment to keep within the max lookahead.
+				if num_hyphens > 2 { bytes.consume(1); }
+			}
 
 			// Long comment
 			if num_hyphens > 2 {
-				bytes.consume(num_hyphens);
+				bytes.consume(2); // Consume the two hyphens we didn't initially consume.
 				let mut end_hyphens = 0;
 				while let Some(char) = bytes.peek(0) {
 					bytes.consume(1);
@@ -267,9 +270,12 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 
 		// String
 		{
-			// TODO: make this work with constant lookahead
 			let mut num_quotes = 0;
-			while matches!(bytes.peek(num_quotes), Some(b'"')) { num_quotes += 1; }
+			while matches!(bytes.peek(num_quotes.min(2)), Some(b'"')) {
+				num_quotes += 1;
+				// Start consuming behind us if we know we're a raw string to keep within the max lookahead.
+				if num_quotes > 2 { bytes.consume(1); }
+			}
 			
 			// Empty short string
 			if num_quotes == 2 {
@@ -291,7 +297,7 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 			
 			// Raw string
 			if num_quotes != 0 {
-				bytes.consume(num_quotes);
+				bytes.consume(2); // Consume the two hyphens we didn't initially consume.
 				let mut end_quotes = 0;
 				while let Some(char) = bytes.peek(0) {
 					bytes.consume(1);
