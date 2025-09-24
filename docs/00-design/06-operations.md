@@ -70,12 +70,9 @@ Certain functions in Wolf are important enough to have special notation.
 (0 <= 5 < 21) or (20 >= 5 > -1)
 ```
 
-The table below shows these *operators* and how they relate to each other. To
-explain a few columns:
-
-- **Priority** - Higher priority operators are evaluated before lower priority
-operators in an expression.
-- **Extendable** - Whether multiple of the same operator can appear in a row.
+The table below shows these *operators* and how they relate to each other. Higher 
+priority operators are evaluated before lower priority operators in an
+expression.
 
 Other non-operators are also included to complete the comparison.
 
