@@ -81,34 +81,35 @@ Other non-operators are also included to complete the comparison.
 
 ---
 
-| Syntax     | Function                     | Priority  | Extendable
+| Syntax     | Function                     | Priority  | Notes
 |------------|------------------------------|-----------|-------------
-| `A.B`      | *(accessing named data)*     | ▲ ▲ ▲ ▲ ▲ | ✓
-| `A [B]`    | *(function evaluation)*      | ▲ ▲ ▲ ▲   | ✓
-| `A ^ B`    | `exponent [A, B, ...]`       | ▲ ▲ ▲     | ✓
-| `!A`       | `boolean_not [A]`            | ▲ ▲ ▲     |
-| `-A`       | `negate A`                   | ▲ ▲       |
-| `+A`       | `double_negate A`            | ▲ ▲       |
-| `#A`       | `count A`                    | ▲ ▲       |
-| `A * B`    | `multiply [A, B, ...]`       | ▲         | ✓
-| `A / B`    | `divide [A, B, ...]`         | ▲         | ✓
-| `A // B`   | `floor_divide [A, B, ...]`   | ▲         | ✓
-| `A /^ B`   | `ceil_divide [A, B, ...]`    | ▲         | ✓
-| `A % B`    | `floor_mod [A, B, ...]`      | ▲         | ✓
-| `A + B`    | `add [A, B, ...]`            |           | ✓
-| `A - B`    | `subtract [A, B, ...]`       |           | ✓
-| `A = B`    | `equals [A, B, ...]`         | ▼         | ✓
-| `A != B`   | `not_equals [A, B, ...]`     | ▼         | ✓
-| `A < B`    | `less_than [A, B]`           | ▼         | Once [^i]
-| `A > B`    | `more_than [A, B]`           | ▼         | Once [^i]
-| `A <= B`   | `less_or_equals [A, B]`      | ▼         | Once [^i]
-| `A >= B`   | `more_or_equals [A, B]`      | ▼         | Once [^i]
-| `A and B`  | `boolean_and [A, B, ...]`    | ▼ ▼       | ✓
-| `A or B`   | `boolean_or [A, B, ...]`     | ▼ ▼ ▼     | ✓
-| `A -> B`   | *(manual chaining)*          | ▼ ▼ ▼ ▼   | ✓
-| `A => B`   | *(automatic chaining)*       | ▼ ▼ ▼ ▼   | ✓
+| `A [B]`    | *(function evaluation)*      | ▲ ▲ ▲ ▲ ▲ ▲ ▲ |
+| `A.B`      | *(accessing named data)*     | ▲ ▲ ▲ ▲ ▲ ▲   |
+| `!A`       | `boolean_not [A]`            | ▲ ▲ ▲ ▲ ▲     |
+| `#A`       | `count A`                    | ▲ ▲ ▲ ▲       |
+| `-A`       | `negate A`                   | ▲ ▲ ▲         | [^neg]
+| `+A`       | `double_negate A`            | ▲ ▲ ▲         | [^neg]
+| `A ^ B`    | `exponent [A, B, ...]`       | ▲ ▲           |
+| `A * B`    | `multiply [A, B, ...]`       | ▲             |
+| `A / B`    | `divide [A, B, ...]`         | ▲             |
+| `A // B`   | `floor_divide [A, B, ...]`   | ▲             |
+| `A /^ B`   | `ceil_divide [A, B, ...]`    | ▲             |
+| `A % B`    | `floor_mod [A, B, ...]`      | ▲             |
+| `A + B`    | `add [A, B, ...]`            |               |
+| `A - B`    | `subtract [A, B, ...]`       |               |
+| `A = B`    | `equals [A, B, ...]`         | ▼             |
+| `A != B`   | `not_equals [A, B, ...]`     | ▼             |
+| `A < B`    | `less_than [A, B]`           | ▼             | [^ineq]
+| `A > B`    | `more_than [A, B]`           | ▼             | [^ineq]
+| `A <= B`   | `less_or_equals [A, B]`      | ▼             | [^ineq]
+| `A >= B`   | `more_or_equals [A, B]`      | ▼             | [^ineq]
+| `A and B`  | `boolean_and [A, B, ...]`    | ▼ ▼           |
+| `A or B`   | `boolean_or [A, B, ...]`     | ▼ ▼ ▼         |
+| `A -> B`   | *(manual chaining)*          | ▼ ▼ ▼ ▼       |
+| `A => B`   | *(automatic chaining)*       | ▼ ▼ ▼ ▼       |
 
-[^i]: Inequality operators can appear once (`x < size`) or twice (for example, `0 <= x < size`). These form single- and double-ended ranges respectively. No further inequality operators are allowed.
+[^neg] `-A` cannot be mixed with `+A` at the same level.
+[^ineq]: `<` / `<=` cannot be mixed with `>` / `>=` at the same level.
 
 ## Integer conversion
 

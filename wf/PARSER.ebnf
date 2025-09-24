@@ -1,0 +1,32 @@
+comment ::= Comment;
+
+block ::= OpenParen, block_inner, CloseParen;
+block_inner ::= { let_declaration }, expr;
+
+let_declaration ::= Let, capture, Equal, expr;
+
+expr ::= [ Throw ], term_expr;
+
+term_expr ::= term_chain, { ( ThinArrow, term_chain ) / ( FatArrow, term_chain_auto ) };
+term_chain ::= term_bi_op, { bi_op, term_bi_op };
+term_chain_auto ::= ( ( bi_op, term_chain ) / ( Name, [ literal_tuple ] ) ), { bi_op, term_bi_op };
+term_bi_op ::= { un_op }, term_un_op;
+term_un_op ::= term_access, { Dot, Name };
+term_access ::= value;
+
+bi_op ::= Caret / Asterisk / Slash / DoubleSlash / SlashCaret / Percent / Plus / Minus / Equal / BangEqual / Less / More / LessEqual / MoreEqual / And / Or;
+un_op ::= Bang / Minus / Plus / Hash;
+
+value ::= value_fn / value_name / value_loop / value_block / value_literal;
+value_fn ::= Name, literal_tuple;
+value_name ::= Name;
+value_conditional ::= If, expr, Then, expr, Else, expr;
+value_loop ::= Loop, capture, Equal, expr, block;
+value_block ::= [ Catch ], block;
+value_literal ::= literal;
+
+literal ::= literal_fn / literal_string / literal_tuple;
+literal_fn ::= Fn, capture_tuple, expr;
+literal_string ::= String;
+literal_tuple ::= OpenBracket, { literal_tuple_entry, Comma }, [ literal_tuple_entry ], CloseBracket;
+literal_tuple_entry ::= [ ( Dot, Name ) / Ellipsis ], expr;
