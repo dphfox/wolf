@@ -2,6 +2,7 @@
 resolver = "3"
 members = [
 	"main",
+	"lookahead",
     "token",
 	"parse"
 ]
@@ -11,6 +12,7 @@ version = "0.1.0"
 edition = "2024"
 
 [workspace.dependencies]
+wf-lookahead = { path = "./lookahead" }
 wf-token = { path = "./token" }
 wf-parse = { path = "./parse" }
 clap = { version = "4", features = ["derive"]}

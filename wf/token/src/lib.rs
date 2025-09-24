@@ -5,25 +5,23 @@
 // names, comments or strings.
 
 use serde::Serialize;
+use wf_lookahead::Lookahead;
 
-use crate::byte::ByteStream;
-
-mod byte;
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Serialize)]
 pub struct Span {
 	pub index: usize,
 	pub length: usize
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Default, Clone, Serialize)]
 pub struct Token {
 	pub ty: TokenType,
 	pub span: Span
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Serialize)]
 pub enum TokenType {
+	#[default]
 	Unexpected,
 
 	Whitespace,
@@ -170,12 +168,12 @@ impl TokenType {
 }
 
 pub struct Tokeniser<Input: Iterator<Item = u8>> {
-    bytes: ByteStream<8, Input>
+    bytes: Lookahead<8, u8, Input>
 }
 
 impl<Input: Iterator<Item = u8>> Tokeniser<Input> {
 	pub fn new(input: Input) -> Self {
-		Self { bytes: ByteStream::new(input) }
+		Self { bytes: Lookahead::new(input) }
 	}
 }
 
@@ -194,7 +192,7 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 		}
 
 		// EOF
-		let start_char = bytes.peek(0)?;
+		let &start_char = bytes.peek(0)?;
 
 		// Comment
 		{
@@ -209,7 +207,7 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 			if num_hyphens > 2 {
 				bytes.consume(2); // Consume the two hyphens we didn't initially consume.
 				let mut end_hyphens = 0;
-				while let Some(char) = bytes.peek(0) {
+				while let Some(&char) = bytes.peek(0) {
 					bytes.consume(1);
 					if char == b'-' {
 						end_hyphens += 1;
@@ -229,7 +227,7 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 
 		// Exact tokens
 		for (expect, token) in TokenType::SORTED_EXACT_TOKENS {
-			let found_match = expect.iter().enumerate().all(|(offset, &expected)| bytes.peek(offset) == Some(expected));
+			let found_match = expect.iter().enumerate().all(|(offset, &expected)| bytes.peek(offset) == Some(&expected));
 			if found_match {
 				bytes.consume(expect.len());
 				ret!(*token);
@@ -246,7 +244,7 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 			let mut digit_preceding = false;
 			let mut can_add_dot = true;
 
-			while let Some(char) = bytes.peek(0) {
+			while let Some(&char) = bytes.peek(0) {
 				if char.is_ascii_alphabetic() || char == b'_' { digit_preceding = false; }
 				else if char.is_ascii_digit() { digit_preceding = true; } 
 				else if digit_preceding && can_add_dot && char == b'.' && bytes.peek(1).map(|x| x.is_ascii_digit()).unwrap_or(false) {
@@ -260,7 +258,7 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 			// Backticked name
 			if start_char == b'`' {
 				bytes.consume(1);
-				while let Some(char) = bytes.peek(0) {
+				while let Some(&char) = bytes.peek(0) {
 					bytes.consume(1);
 					if char == b'`' { break; }
 				}
@@ -287,7 +285,7 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 			if num_quotes == 1 {
 				bytes.consume(1);
 				let mut escaped = false;
-				while let Some(char) = bytes.peek(0) {
+				while let Some(&char) = bytes.peek(0) {
 					bytes.consume(1);
 					if escaped { escaped = false; } 
 					else if char == b'"' { break; }
@@ -299,7 +297,7 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 			if num_quotes != 0 {
 				bytes.consume(2); // Consume the two hyphens we didn't initially consume.
 				let mut end_quotes = 0;
-				while let Some(char) = bytes.peek(0) {
+				while let Some(&char) = bytes.peek(0) {
 					bytes.consume(1);
 					if char == b'"' {
 						end_quotes += 1;

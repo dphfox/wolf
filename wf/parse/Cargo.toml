@@ -4,5 +4,6 @@ version = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
+wf-lookahead = { workspace = true }
 wf-token = { workspace = true }
 serde = { workspace = true }
