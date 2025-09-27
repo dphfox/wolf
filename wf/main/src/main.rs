@@ -52,6 +52,6 @@ fn parse() {
 	let parser = wf_parse::Parser::new(tokeniser);
 	// let syntax = parser.collect::<Result<Vec<_>, _>>();
 	let syntax = parser.filter_map(Result::ok).collect::<Vec<_>>();
-	let json = serde_json::to_string(&syntax).expect("Failed to serialise parser output as JSON");
+	let json = serde_json::to_string_pretty(&syntax).expect("Failed to serialise parser output as JSON");
 	print!("{json}");
 }

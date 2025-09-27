@@ -196,6 +196,11 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 				return Some(Token { ty: $ty, span: Span { index: start_position, length } });
 			};
 		}
+		macro_rules! consume {
+			($count:expr) => {{
+				bytes.consume().take($count).for_each(drop)
+			}};
+		}
 
 		// EOF
 		let &start_char = bytes.peek(0)?;
@@ -206,15 +211,15 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 			while matches!(bytes.peek(num_hyphens.min(2)), Some(b'-')) {
 				num_hyphens += 1;
 				// Start consuming behind us if we know we're a long comment to keep within the max lookahead.
-				if num_hyphens > 2 { bytes.consume(1); }
+				if num_hyphens > 2 { consume!(1); }
 			}
 
 			// Long comment
 			if num_hyphens > 2 {
-				bytes.consume(2); // Consume the two hyphens we didn't initially consume.
+				consume!(2); // Consume the two hyphens we didn't initially consume.
 				let mut end_hyphens = 0;
 				while let Some(&char) = bytes.peek(0) {
-					bytes.consume(1);
+					consume!(1);
 					if char == b'-' {
 						end_hyphens += 1;
 						if end_hyphens == num_hyphens { break; }
@@ -225,8 +230,8 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 
 			// Short comment
 			if num_hyphens == 2 {
-				bytes.consume(2);
-				while let Some(char) = bytes.peek(0) && !matches!(char, b'\n' | b'\r') { bytes.consume(1); }
+				consume!(2);
+				while let Some(char) = bytes.peek(0) && !matches!(char, b'\n' | b'\r') { consume!(1); }
 				ret!(TokenType::Comment { num_hyphens });
 			}
 		}
@@ -235,13 +240,13 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 		for (expect, token) in TokenType::SORTED_EXACT_TOKENS {
 			let found_match = expect.iter().enumerate().all(|(offset, &expected)| bytes.peek(offset) == Some(&expected));
 			if found_match {
-				bytes.consume(expect.len());
+				consume!(expect.len());
 				ret!(*token);
 			}
 		}
 
 		// Whitespace
-		while matches!(bytes.peek(0), Some(b' ' | b'\t')) { bytes.consume(1); }
+		while matches!(bytes.peek(0), Some(b' ' | b'\t')) { consume!(1); }
 		if bytes.position() > start_position { ret!(TokenType::Whitespace); }
 
 		// Name
@@ -255,17 +260,17 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 				else if char.is_ascii_digit() { digit_preceding = true; } 
 				else if digit_preceding && can_add_dot && char == b'.' && bytes.peek(1).map(|x| x.is_ascii_digit()).unwrap_or(false) {
 					(digit_preceding, can_add_dot) = (true, false);
-					bytes.consume(1);
+					consume!(1);
 				} else { break; }
-				bytes.consume(1);
+				consume!(1);
 			}
 			if bytes.position() > start_position { ret!(TokenType::Name { backticked: false }); }
 
 			// Backticked name
 			if start_char == b'`' {
-				bytes.consume(1);
+				consume!(1);
 				while let Some(&char) = bytes.peek(0) {
-					bytes.consume(1);
+					consume!(1);
 					if char == b'`' { break; }
 				}
 				ret!(TokenType::Name { backticked: true });
@@ -278,21 +283,21 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 			while matches!(bytes.peek(num_quotes.min(2)), Some(b'"')) {
 				num_quotes += 1;
 				// Start consuming behind us if we know we're a raw string to keep within the max lookahead.
-				if num_quotes > 2 { bytes.consume(1); }
+				if num_quotes > 2 { consume!(1); }
 			}
 			
 			// Empty short string
 			if num_quotes == 2 {
-				bytes.consume(2);
+				consume!(2);
 				ret!(TokenType::String { num_quotes });
 			}
 			
 			// Short string
 			if num_quotes == 1 {
-				bytes.consume(1);
+				consume!(1);
 				let mut escaped = false;
 				while let Some(&char) = bytes.peek(0) {
-					bytes.consume(1);
+					consume!(1);
 					if escaped { escaped = false; } 
 					else if char == b'"' { break; }
 				}
@@ -301,10 +306,10 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 			
 			// Raw string
 			if num_quotes != 0 {
-				bytes.consume(2); // Consume the two hyphens we didn't initially consume.
+				consume!(2); // Consume the two hyphens we didn't initially consume.
 				let mut end_quotes = 0;
 				while let Some(&char) = bytes.peek(0) {
-					bytes.consume(1);
+					consume!(1);
 					if char == b'"' {
 						end_quotes += 1;
 						if end_quotes == num_quotes { break; }
@@ -314,7 +319,7 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 			}
 		}
 
-		bytes.consume(1); // Without this, the tokeniser doesn't move forward.
+		consume!(1); // Without this, the tokeniser doesn't move forward.
 		ret!(TokenType::Unexpected);
 	}
 }

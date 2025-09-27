@@ -5,14 +5,14 @@ block_inner ::= { let_declaration }, expr;
 
 let_declaration ::= Let, capture, Equal, expr;
 
-expr ::= [ Throw ], term_expr;
+expr ::= [ Throw ], expr_throw;
 
-term_expr ::= term_chain, { ( ThinArrow, term_chain ) / ( FatArrow, term_chain_auto ) };
-term_chain ::= term_bi_op, { bi_op, term_bi_op };
-term_chain_auto ::= ( ( bi_op, term_chain ) / ( Name, [ literal_tuple ] ) ), { bi_op, term_bi_op };
-term_bi_op ::= { un_op }, term_un_op;
-term_un_op ::= term_access, { Dot, Name };
-term_access ::= value;
+expr_throw ::= expr_chain, { ( ThinArrow, expr_chain ) / ( FatArrow, expr_chain_auto ) };
+expr_chain ::= expr_bi_op, { bi_op, expr_bi_op };
+expr_chain_auto ::= ( ( bi_op, expr_chain ) / ( Name, [ literal_tuple ] ) ), { bi_op, expr_bi_op };
+expr_bi_op ::= { un_op }, expr_un_op;
+expr_un_op ::= expr_access, { Dot, Name };
+expr_access ::= value;
 
 bi_op ::= Caret / Asterisk / Slash / DoubleSlash / SlashCaret / Percent / Plus / Minus / Equal / BangEqual / Less / More / LessEqual / MoreEqual / And / Or;
 un_op ::= Bang / Minus / Plus / Hash;
