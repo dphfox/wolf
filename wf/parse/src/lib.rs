@@ -62,27 +62,36 @@ impl<T> ParseErrorExt for Result<T, ParseError> {
 	}
 }
 
-macro_rules! next {
-	($self:expr, $pos:expr, across_lines) => {{
+// FUTURE: use try {} block for this instead
+macro_rules! wrap_err {
+	($name:ident, $block:block) => {
+		(move || $block)().$name()
+	}
+}
+
+macro_rules! skip_to_next {
+	($self:expr, across_lines) => {{
 		loop {
-			let Some(token) = $self.tokens.peek($pos) else { break None };
+			let Some(token) = $self.tokens.peek(0) else { break None };
 			match token.ty {
 				TokenType::Whitespace | TokenType::EndLine | TokenType::Comment { .. } => { let _ = $self.tokens.consume().next(); },
 				_ => { break Some(token); },
 			}
 		}
-	}}; 
-}
-
-macro_rules! next_typed {
-	($self:expr, $ty:pat, $pos:expr, across_lines) => {{
-		next!($self, $pos, across_lines).filter(|tok| matches!(tok.ty, $ty))
 	}};
 }
 
-macro_rules! literally {
-	($self:expr, $ty:ident, $expect:expr, across_lines) => {{
-		next!($self, 0, across_lines);
+macro_rules! is_of_type {
+	($self:expr, $ty:ident, $pos:expr) => {{
+		matches!($self.tokens.peek($pos), Some(Token { ty: TokenType::$ty { .. }, .. }))
+	}};
+	($self:expr, $ty:ident) => {{
+		is_of_type!($self, $ty, 0)
+	}};
+}
+
+macro_rules! consume {
+	($self:expr, $ty:ident, $expect:expr) => {{
 		if let Some(token) = $self.tokens.consume().next() {
 			if matches!(token.ty, TokenType::$ty { .. }){ 
 				Ok(token) 
@@ -106,37 +115,48 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 
 	// block_inner := { let_declaration }, expr, { let_declaration }
 	fn parse_block_inner(&mut self) -> Result<ParseInnerBlock, ParseError> {
-		let mut let_declarations = vec![];
-		while next_typed!(self, TokenType::Let, 0, across_lines).is_some() {
-			let_declarations.push(self.parse_let_declaration().in_block_inner()?);
-		}
-		let expr = self.parse_expr().in_block_inner()?;
-		while next_typed!(self, TokenType::Let, 0, across_lines).is_some() {
-			let_declarations.push(self.parse_let_declaration().in_block_inner()?);
-		}
-		Ok(ParseInnerBlock { let_declarations, expr })
+		wrap_err!(in_block_inner, {
+			let mut let_declarations = vec![];
+			while self.has_let_declaration() {
+				let_declarations.push(self.parse_let_declaration()?);
+			}
+			let expr = self.parse_expr()?;
+			while self.has_let_declaration() {
+				let_declarations.push(self.parse_let_declaration()?);
+			}
+			Ok(ParseInnerBlock { let_declarations, expr })
+		})
 	}
 
 	// let_declaration := Let, capture, Equal, expr
+	fn has_let_declaration(&mut self) -> bool {
+		is_of_type!(self, Let)
+	}
 	fn parse_let_declaration(&mut self) -> Result<ParseLetDeclaration, ParseError> {
-		literally!(self, Let, "let", across_lines).in_let_declaration()?;
-		let capture = self.parse_capture().in_let_declaration()?;
-		literally!(self, Equal, "assignment", across_lines).in_let_declaration()?;
-		let expr = self.parse_expr().in_let_declaration()?;
-		Ok(ParseLetDeclaration { capture, expr })
+		wrap_err!(in_let_declaration, {
+			consume!(self, Let, "let")?;
+			skip_to_next!(self, across_lines);
+			let capture = self.parse_capture()?;
+			consume!(self, Equal, "assignment")?;
+			skip_to_next!(self, across_lines);
+			let expr = self.parse_expr()?;
+			Ok(ParseLetDeclaration { capture, expr })
+		})
 	}
 
 	// TODO: proper expression parsing
 	// expr := Name
 	fn parse_expr(&mut self) -> Result<ParseExpr, ParseError> {
-		let value = literally!(self, Name, "value", across_lines).in_capture()?;
+		let value = consume!(self, Name, "value").in_capture()?;
+		skip_to_next!(self, across_lines);
 		Ok(ParseExpr { value })
 	}
 
 	// TODO: proper capture parsing
 	// capture := Name
 	fn parse_capture(&mut self) -> Result<ParseCapture, ParseError> {
-		let name = literally!(self, Name, "capture", across_lines).in_capture()?;
+		let name = consume!(self, Name, "capture").in_capture()?;
+		skip_to_next!(self, across_lines);
 		Ok(ParseCapture { name })
 	}
 }
@@ -145,6 +165,8 @@ impl<Input: Iterator<Item = Token>> Iterator for Parser<Input> {
 	type Item = Result<ParseInnerBlock, ParseError>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.tokens.at_end() { None } else { Some(self.parse_block_inner()) }
+		if self.tokens.at_end() { return None; }
+		skip_to_next!(self, across_lines);
+		Some(self.parse_block_inner())
 	}
 }
