@@ -4,8 +4,10 @@
 // Does not handle higher level concepts like desugaring or precedence.
 
 use serde::Serialize;
-use wf_token::{Token, TokenType};
+use wf_token::{Span, Token, TokenType};
 use wf_lookahead::Lookahead;
+
+pub mod explain;
 
 #[derive(Debug, Clone, Serialize)]
 pub struct ParseBlock {
@@ -27,42 +29,42 @@ pub struct ParseExpr {
 
 #[derive(Debug, Clone, Serialize)]
 pub struct ParseExprChain {
-	pub first: ParseExprChainThin,
+	pub first: ParseExprInfix,
 	pub rest: Vec<ParseExprChainPart>
 }
 
 #[derive(Debug, Clone, Serialize)]
 pub enum ParseExprChainPart {
-	Thin(ParseExprChainThin),
-	Fat(ParseExprChainFat)
+	Thin(ParseExprInfix),
+	Fat(ParseExprInfixAuto)
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub struct ParseExprChainThin {
-	pub first: ParseExprBiOp,
-	pub rest: Vec<(ParseBiOp, ParseExprBiOp)>
+pub struct ParseExprInfix {
+	pub first: ParseExprPrefix,
+	pub rest: Vec<(ParseBiOp, ParseExprPrefix)>
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub struct ParseExprChainFat {
-	pub first: ParseExprChainFatFirst,
-	pub rest: Vec<(ParseBiOp, ParseExprBiOp)>
+pub struct ParseExprInfixAuto {
+	pub first: ParseExprInfixAutoFirst,
+	pub rest: Vec<(ParseBiOp, ParseExprPrefix)>
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub enum ParseExprChainFatFirst {
-	BiOp((ParseBiOp, ParseExprBiOp)),
+pub enum ParseExprInfixAutoFirst {
+	BiOp((ParseBiOp, ParseExprPrefix)),
 	FnEval((Token, Option<ParseValueTuple>))
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub struct ParseExprBiOp {
+pub struct ParseExprPrefix {
 	pub un_ops: Vec<ParseUnOp>,
-	pub term: ParseExprUnOp
+	pub term: ParseExprAccess
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub struct ParseExprUnOp {
+pub struct ParseExprAccess {
 	pub term: ParseValue,
 	pub accesses: Vec<Token>
 }
@@ -193,18 +195,29 @@ pub enum ErrorInParse {
 	UnexpectedToken { token: Token, expected: &'static str },
 	UnexpectedEndOfFile { expected: &'static str },
 	NotYetImplemented { note: &'static str },
-	Context { name: &'static str, inner: Box<ErrorInParse> }
+	Context { start: Option<Span>, name: &'static str, inner: Box<ErrorInParse> }
 }
 
 // FUTURE: use try {} block for this instead
 macro_rules! err_context {
-	($name:expr, $block:block) => {
-		(move || Ok($block))().map_err(|e| ErrorInParse::Context { name: $name, inner: Box::new(e) })
-	};
+	($self:expr, $name:expr, $block:block) => {{
+		let span = match $self.tokens.peek(0) {
+			Some(tok) => Some(tok.span.clone()),
+			None => None
+		};
+		(move || Ok($block))().map_err(move |e| match e {
+			ErrorInParse::Context { start, .. } if start == span => e,
+			e => ErrorInParse::Context {
+				start: span,
+				name: $name, 
+				inner: Box::new(e)
+			}
+		})
+	}};
 }
 
-macro_rules! skip_to_next {
-	($self:expr, cant_end_here) => {{
+macro_rules! gap {
+	($self:expr, unstoppable) => {{
 		loop {
 			let Some(token) = $self.tokens.peek(0) else { break None };
 			match token.ty {
@@ -213,7 +226,7 @@ macro_rules! skip_to_next {
 			}
 		}
 	}};
-	($self:expr, valid_end) => {{
+	($self:expr, stop_at_line) => {{
 		loop {
 			let Some(token) = $self.tokens.peek(0) else { break None };
 			match token.ty {
@@ -277,22 +290,26 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 	}
 
 	fn parse_block(&mut self) -> Result<ParseBlock, ErrorInParse> {
-		err_context!("block", {
+		err_context!(self, "block", {
 			consume!(self, OpenParen, "opening parenthesis of block")?;
+			gap!(self, unstoppable);
 			let block = self.parse_block_inner()?;
+			gap!(self, unstoppable);
 			consume!(self, CloseParen, "closing parenthesis of block")?;
 			block
 		})
 	}
 
 	fn parse_block_inner(&mut self) -> Result<ParseBlock, ErrorInParse> {
-		err_context!("block contents", {
+		err_context!(self, "block contents", {
 			let mut let_declarations = vec![];
 			while self.peek_let_declaration() {
 				let_declarations.push(self.parse_let_declaration()?);
+				gap!(self, unstoppable);
 			}
 			let expr = self.parse_expr()?;
 			while self.peek_let_declaration() {
+				gap!(self, unstoppable);
 				let_declarations.push(self.parse_let_declaration()?);
 			}
 			ParseBlock { let_declarations, expr }
@@ -304,23 +321,24 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 	}
 
 	fn parse_let_declaration(&mut self) -> Result<ParseLetDeclaration, ErrorInParse> {
-		err_context!("let declaration", {
+		err_context!(self, "let declaration", {
 			consume!(self, Let, "let")?;
-			skip_to_next!(self, cant_end_here);
+			gap!(self, unstoppable);
 			let capture = self.parse_capture()?;
+			gap!(self, unstoppable);
 			consume!(self, Equal, "assignment")?;
-			skip_to_next!(self, cant_end_here);
+			gap!(self, unstoppable);
 			let expr = self.parse_expr()?;
 			ParseLetDeclaration { capture, expr }
 		})
 	}
 
 	fn parse_expr(&mut self) -> Result<ParseExpr, ErrorInParse> {
-		err_context!("expression", {
+		err_context!(self, "expression", {
 			let throw = is_of_type!(self, Throw);
 			if throw {
 				consume!(self);
-				skip_to_next!(self, cant_end_here);
+				gap!(self, unstoppable);
 			}
 			let expr_chain = self.parse_expr_chain()?;
 			ParseExpr { throw, expr_chain }
@@ -328,18 +346,21 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 	}
 
 	fn parse_expr_chain(&mut self) -> Result<ParseExprChain, ErrorInParse> {
-		err_context!("expression chain", {
-			let first = self.parse_expr_chain_thin()?;
+		err_context!(self, "expression chain", {
+			let first = self.parse_expr_infix()?;
+			gap!(self, stop_at_line);
 			let mut rest = vec![];
 			loop {
 				if is_of_type!(self, ThinArrow) {
 					consume!(self);
-					skip_to_next!(self, cant_end_here);
-					rest.push(ParseExprChainPart::Thin(self.parse_expr_chain_thin()?));
+					gap!(self, unstoppable);
+					rest.push(ParseExprChainPart::Thin(self.parse_expr_infix()?));
+					gap!(self, stop_at_line);
 				} else if is_of_type!(self, FatArrow) {
 					consume!(self);
-					skip_to_next!(self, cant_end_here);
-					rest.push(ParseExprChainPart::Fat(self.parse_expr_chain_fat()?));
+					gap!(self, unstoppable);
+					rest.push(ParseExprChainPart::Fat(self.parse_expr_infix_auto()?));
+					gap!(self, stop_at_line);
 				} else {
 					break;
 				}
@@ -348,77 +369,81 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 		})
 	}
 
-	fn parse_expr_chain_thin(&mut self) -> Result<ParseExprChainThin, ErrorInParse> {
-		err_context!("expression part", {
-			let first = self.parse_expr_bi_op()?;
+	fn parse_expr_infix(&mut self) -> Result<ParseExprInfix, ErrorInParse> {
+		err_context!(self, "infix operation", {
+			let first = self.parse_expr_prefix()?;
+			gap!(self, stop_at_line);
 			let mut rest = vec![];
 			while let Some(bi_op) = self.peek_bi_op() {
 				consume!(self);
-				skip_to_next!(self, cant_end_here);
-				rest.push((bi_op, self.parse_expr_bi_op()?));
+				gap!(self, unstoppable);
+				rest.push((bi_op, self.parse_expr_prefix()?));
+				gap!(self, stop_at_line);
 			}
-			ParseExprChainThin { first, rest }
+			ParseExprInfix { first, rest }
 		})
 	}
 
-	fn parse_expr_chain_fat(&mut self) -> Result<ParseExprChainFat, ErrorInParse> {
-		err_context!("auto-chained expression part", {
+	fn parse_expr_infix_auto(&mut self) -> Result<ParseExprInfixAuto, ErrorInParse> {
+		err_context!(self, "auto-chained infix operation", {
 			let first = if let Some(bi_op) = self.peek_bi_op() {
 				consume!(self);
-				skip_to_next!(self, cant_end_here);
-				ParseExprChainFatFirst::BiOp((bi_op, self.parse_expr_bi_op()?))
+				gap!(self, unstoppable);
+				ParseExprInfixAutoFirst::BiOp((bi_op, self.parse_expr_prefix()?))
 			} else if is_of_type!(self, Name) {
 				let tok = consume!(self);
-				skip_to_next!(self, valid_end);
+				gap!(self, stop_at_line);
 				let tuple = if self.peek_value_tuple() {
 					Some(self.parse_value_tuple()?)
 				} else {
 					None
 				};
-				ParseExprChainFatFirst::FnEval((tok, tuple))
+				ParseExprInfixAutoFirst::FnEval((tok, tuple))
 			} else {
 				expected!(self, "infix operator or function evaluation")
 			};
+			gap!(self, stop_at_line);
 			let mut rest = vec![];
 			while let Some(bi_op) = self.peek_bi_op() {
 				consume!(self);
-				skip_to_next!(self, cant_end_here);
-				rest.push((bi_op, self.parse_expr_bi_op()?));
+				gap!(self, unstoppable);
+				rest.push((bi_op, self.parse_expr_prefix()?));
+				gap!(self, stop_at_line);
 			}
-			ParseExprChainFat { first, rest }
+			ParseExprInfixAuto { first, rest }
 		})
 	}
 
-	fn parse_expr_bi_op(&mut self) -> Result<ParseExprBiOp, ErrorInParse> {
-		err_context!("infix operation", {
+	fn parse_expr_prefix(&mut self) -> Result<ParseExprPrefix, ErrorInParse> {
+		err_context!(self, "prefix operation", {
 			let mut un_ops = vec![];
 			while let Some(un_op) = self.peek_un_op() {
 				consume!(self);
-				skip_to_next!(self, cant_end_here);
+				gap!(self, unstoppable);
 				un_ops.push(un_op);
 			}
-			let term = self.parse_expr_un_op()?;
-			ParseExprBiOp { un_ops, term }
+			let term = self.parse_expr_access()?;
+			ParseExprPrefix { un_ops, term }
 		})
 	}
 
-	fn parse_expr_un_op(&mut self) -> Result<ParseExprUnOp, ErrorInParse> {
-		err_context!("prefix operation", {
+	fn parse_expr_access(&mut self) -> Result<ParseExprAccess, ErrorInParse> {
+		err_context!(self, "named access", {
 			let term = self.parse_value()?;
 			let mut accesses = vec![];
+			gap!(self, stop_at_line);
 			if is_of_type!(self, Dot) {
 				loop {
 					consume!(self);
-					skip_to_next!(self, cant_end_here);
-					let name = consume!(self, Name, "name to be accessed")?;
-					skip_to_next!(self, valid_end);
-					accesses.push(name);
+					gap!(self, unstoppable);
+					accesses.push(consume!(self, Name, "name to be accessed")?);
+					gap!(self, stop_at_line);
 					if !is_of_type!(self, Dot) {
 						break;
 					}
 				}
 			}
-			ParseExprUnOp { term, accesses }
+			ParseExprAccess { term, accesses }
 		})
 	}
 
@@ -459,10 +484,10 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 	}
 
 	fn parse_value(&mut self) -> Result<ParseValue, ErrorInParse> {
-		err_context!("value", {
+		err_context!(self, "value", {
 			if is_of_type!(self, Name) {
 				let name = consume!(self);
-				skip_to_next!(self, valid_end);
+				gap!(self, stop_at_line);
 				if self.peek_value_tuple() {
 					ParseValue::FnEval(ParseValueFnEval { name, datum: self.parse_value_tuple()? })
 				} else {
@@ -470,7 +495,6 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 				}
 			} else if is_of_type!(self, String) {
 				let string = consume!(self);
-				skip_to_next!(self, valid_end);
 				ParseValue::String(ParseValueString { string })
 			} else if self.peek_value_tuple() {
 				ParseValue::Tuple(self.parse_value_tuple()?)
@@ -493,20 +517,20 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 	}
 
 	fn parse_value_tuple(&mut self) -> Result<ParseValueTuple, ErrorInParse> {
-		err_context!("tuple", {
-			consume!(self, OpenParen, "opening bracket of tuple")?;
-			skip_to_next!(self, cant_end_here);
+		err_context!(self, "tuple value", {
+			consume!(self, OpenBracket, "opening bracket of tuple")?;
+			gap!(self, unstoppable);
 			let mut entries = vec![];
 			loop {
-				if is_of_type!(self, CloseParen) {
+				if is_of_type!(self, CloseBracket) {
 					consume!(self);
-					skip_to_next!(self, valid_end);
 					break;
 				}
 				entries.push(self.parse_value_tuple_entry()?);
+				gap!(self, stop_at_line);
 				if is_of_type!(self, Comma) || is_of_type!(self, EndLine) {
 					consume!(self);
-					skip_to_next!(self, cant_end_here);
+					gap!(self, unstoppable);
 				} else {
 					expected!(self, "comma or new line to separate tuple entries");
 				}
@@ -516,18 +540,17 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 	}
 
 	fn parse_value_tuple_entry(&mut self) -> Result<ParseValueTupleEntry, ErrorInParse> {
-		err_context!("tuple entry", {
+		err_context!(self, "tuple value entry", {
 			let matcher = if is_of_type!(self, Ellipsis) {
 				let ellipsis = consume!(self);
-				skip_to_next!(self, cant_end_here);
 				Some(ellipsis)
 			} else if is_of_type!(self, Dot) {
 				consume!(self);
-				skip_to_next!(self, cant_end_here);
+				gap!(self, unstoppable);
 				let name = consume!(self, Name, "name for tuple entry")?;
-				skip_to_next!(self, cant_end_here);
 				Some(name)
 			} else { None };
+			gap!(self, unstoppable);
 			let value = Box::new(self.parse_expr()?);
 			ParseValueTupleEntry { matcher, value }
 		})
@@ -538,15 +561,17 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 	}
 
 	fn parse_value_conditional(&mut self) -> Result<ParseValueConditional, ErrorInParse> {
-		err_context!("conditional", {
+		err_context!(self, "conditional value", {
 			consume!(self, If, "if")?;
-			skip_to_next!(self, cant_end_here);
+			gap!(self, unstoppable);
 			let if_expr = Box::new(self.parse_expr()?);
+			gap!(self, unstoppable);
 			consume!(self, Then, "then")?;
-			skip_to_next!(self, cant_end_here);
+			gap!(self, unstoppable);
 			let then_expr = Box::new(self.parse_expr()?);
+			gap!(self, unstoppable);
 			consume!(self, Else, "else")?;
-			skip_to_next!(self, cant_end_here);
+			gap!(self, unstoppable);
 			let else_expr = Box::new(self.parse_expr()?);
 			ParseValueConditional { if_expr, then_expr, else_expr }
 		})
@@ -557,13 +582,15 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 	}
 
 	fn parse_value_loop(&mut self) -> Result<ParseValueLoop, ErrorInParse> {
-		err_context!("loop", {
+		err_context!(self, "loop value", {
 			consume!(self, Loop, "loop")?;
-			skip_to_next!(self, cant_end_here);
+			gap!(self, unstoppable);
 			let capture = self.parse_capture()?;
+			gap!(self, unstoppable);
 			consume!(self, Equal, "initial assignment")?;
-			skip_to_next!(self, cant_end_here);
+			gap!(self, unstoppable);
 			let initial_expr = Box::new(self.parse_expr()?);
+			gap!(self, unstoppable);
 			let body = Box::new(self.parse_block()?);
 			ParseValueLoop { capture, initial_expr, body }
 		})
@@ -574,10 +601,10 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 	}
 
 	fn parse_value_block(&mut self) -> Result<ParseValueBlock, ErrorInParse> {
-		err_context!("block value", {
+		err_context!(self, "block value", {
 			let catch = if is_of_type!(self, Catch) {
 				consume!(self);
-				skip_to_next!(self, cant_end_here);
+				gap!(self, unstoppable);
 				true
 			} else {
 				false
@@ -592,20 +619,20 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 	}
 
 	fn parse_value_fn_def(&mut self) -> Result<ParseValueFnDef, ErrorInParse> {
-		err_context!("function definition", {
+		err_context!(self, "function definition", {
 			consume!(self, Fn, "fn")?;
-			skip_to_next!(self, cant_end_here);
+			gap!(self, unstoppable);
 			let capture = self.parse_capture_tuple()?;
+			gap!(self, unstoppable);
 			let expr = Box::new(self.parse_expr()?);
 			ParseValueFnDef { capture, expr }
 		})
 	}
 
 	fn parse_capture(&mut self) -> Result<ParseCapture, ErrorInParse> {
-		err_context!("capture", {
+		err_context!(self, "capture", {
 			if is_of_type!(self, Name) {
 				let name = consume!(self);
-				skip_to_next!(self, valid_end);
 				ParseCapture::Name(ParseCaptureName { name })
 			} else if self.peek_capture_tuple() {
 				ParseCapture::Tuple(self.parse_capture_tuple()?)
@@ -620,20 +647,20 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 	}
 
 	fn parse_capture_tuple(&mut self) -> Result<ParseCaptureTuple, ErrorInParse> {
-		err_context!("tuple capture", {
-			consume!(self, OpenParen, "opening bracket of tuple capture")?;
-			skip_to_next!(self, cant_end_here);
+		err_context!(self, "tuple capture", {
+			consume!(self, OpenBracket, "opening bracket of tuple capture")?;
+			gap!(self, unstoppable);
 			let mut entries = vec![];
 			loop {
-				if is_of_type!(self, CloseParen) {
+				if is_of_type!(self, CloseBracket) {
 					consume!(self);
-					skip_to_next!(self, valid_end);
 					break;
 				}
 				entries.push(self.parse_capture_tuple_entry()?);
+				gap!(self, stop_at_line);
 				if self.peek_capture_tuple_sep() {
 					consume!(self);
-					skip_to_next!(self, cant_end_here);
+					gap!(self, unstoppable);
 				} else {
 					expected!(self, "comma or new line to separate tuple capture entries");
 				}
@@ -647,31 +674,33 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 	}
 
 	fn parse_capture_tuple_entry(&mut self) -> Result<ParseCaptureTupleEntry, ErrorInParse> {
-		err_context!("tuple capture entry", {
+		err_context!(self, "tuple capture entry", {
 			let (matcher, capture) = if is_of_type!(self, Ellipsis) {
 				let ellipsis = consume!(self);
-				skip_to_next!(self, cant_end_here);
+				gap!(self, unstoppable);
 				let capture = Box::new(self.parse_capture()?);
+				gap!(self, stop_at_line);
 				(Some(ellipsis), Some(capture))
 			} else if is_of_type!(self, Dot) {
 				consume!(self);
-				skip_to_next!(self, cant_end_here);
+				gap!(self, unstoppable);
 				let name = consume!(self, Name, "name to access for tuple capture")?;
-				skip_to_next!(self, valid_end);
-				if self.peek_capture_tuple_sep() {
-					skip_to_next!(self, cant_end_here);
+				gap!(self, stop_at_line);
+				if self.peek_capture_tuple_sep() || is_of_type!(self, Colon) {
 					(Some(name), None)
 				} else {
 					let capture = Box::new(self.parse_capture()?);
+					gap!(self, stop_at_line);
 					(Some(name), Some(capture))
 				}
 			} else {
 				let capture = Box::new(self.parse_capture()?);
+				gap!(self, stop_at_line);
 				(None, Some(capture))
 			};
 			let ty = if is_of_type!(self, Colon) {
 				consume!(self);
-				skip_to_next!(self, cant_end_here);
+				gap!(self, unstoppable);
 				Some(self.parse_capture_type()?)
 			} else { None };
 			ParseCaptureTupleEntry { matcher, capture, ty }
@@ -679,9 +708,9 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 	}
 
 	fn parse_capture_type(&mut self) -> Result<ParseCaptureType, ErrorInParse> {
-		err_context!("capture type", {
+		err_context!(self, "capture type", {
 			let name = consume!(self, Name, "type name")?;
-			skip_to_next!(self, valid_end);
+			gap!(self, stop_at_line);
 			ParseCaptureType { name }
 		})
 	}
@@ -691,7 +720,7 @@ impl<Input: Iterator<Item = Token>> Iterator for Parser<Input> {
 	type Item = Result<ParseBlock, ErrorInParse>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		skip_to_next!(self, cant_end_here);
+		gap!(self, unstoppable);
 		if self.tokens.at_end() { return None; }
 		Some(self.parse_block_inner())
 	}

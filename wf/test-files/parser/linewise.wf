@@ -7,3 +7,5 @@ let foo = (
 	let bar = 2 + 2
 	- 5
 )
+
+"hi i'm a dummy value"

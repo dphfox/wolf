@@ -204,8 +204,25 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 		}
 		macro_rules! consume {
 			($count:expr) => {{
-				self.line_index += $count;
-				bytes.consume().take($count).for_each(drop)
+				let mut line_feed_should_increment = true;
+				for char in bytes.consume().take($count) {
+					if char == b'\r' {
+						self.line += 1;
+						self.line_index = 1;
+						line_feed_should_increment = false;
+						continue;
+					} else if char == b'\n' {
+						if line_feed_should_increment {
+							self.line += 1;
+							self.line_index = 1;
+						}
+						line_feed_should_increment = true;
+						continue;
+					} else {
+						self.line_index += 1;
+						line_feed_should_increment = true;
+					}
+				}
 			}};
 		}
 
@@ -248,10 +265,6 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 			let found_match = expect.iter().enumerate().all(|(offset, &expected)| bytes.peek(offset) == Some(&expected));
 			if found_match {
 				consume!(expect.len());
-				if token == &TokenType::EndLine {
-					self.line += 1;
-					self.line_index = 1;
-				}
 				ret!(*token);
 			}
 		}
