@@ -44,4 +44,6 @@ else if damping > 1 then (
 	let alpha = speed * sqrt [1 - damping^2]
 	let over_alpha = 1 / alpha
 	let exp = exp [-1 * time * speed * damping]
+
+	"todo"
 )
