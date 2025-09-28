@@ -6,7 +6,7 @@ pub fn explain_parse_error(error: &ErrorInParse) {
 			println!("not yet implemented: {note}");
 		},
 		ErrorInParse::UnexpectedToken { token, expected } => {
-			println!("unexpected token at {}:{}", token.span.line, token.span.line_index);
+			println!("unexpected token {} at {}:{}", token.ty.external_name(), token.span.line, token.span.line_index);
 			println!("expected {expected}");
 		},
 		ErrorInParse::UnexpectedEndOfFile { expected } => {

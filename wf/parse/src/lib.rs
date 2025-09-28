@@ -531,7 +531,7 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 				if is_of_type!(self, CloseBracket) {
 					consume!(self);
 					break;
-				} else if self.peek_value_tuple_entry_end() {
+				} else if is_of_type!(self, Comma) || is_of_type!(self, EndLine) {
 					consume!(self);
 					gap!(self, unstoppable);
 				} else {
@@ -540,10 +540,6 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 			}
 			ParseValueTuple { entries }
 		})
-	}
-
-	fn peek_value_tuple_entry_end(&mut self) -> bool {
-		is_of_type!(self, Comma) || is_of_type!(self, EndLine)
 	}
 
 	fn parse_value_tuple_entry(&mut self) -> Result<ParseValueTupleEntry, ErrorInParse> {
@@ -668,7 +664,7 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 				if is_of_type!(self, CloseBracket) {
 					consume!(self);
 					break;
-				} else if self.peek_capture_tuple_entry_end() {
+				} else if is_of_type!(self, Comma) || is_of_type!(self, EndLine) {
 					consume!(self);
 					gap!(self, unstoppable);
 				} else {
@@ -677,10 +673,6 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 			}
 			ParseCaptureTuple { entries }
 		})
-	}
-
-	fn peek_capture_tuple_entry_end(&mut self) -> bool {
-		is_of_type!(self, Comma) || is_of_type!(self, EndLine)
 	}
 
 	fn parse_capture_tuple_entry(&mut self) -> Result<ParseCaptureTupleEntry, ErrorInParse> {
@@ -696,7 +688,7 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 				gap!(self, unstoppable);
 				let name = consume!(self, Name, "name to access for tuple capture")?;
 				gap!(self, stop_at_line);
-				if self.peek_capture_tuple_entry_end() || is_of_type!(self, Colon) {
+				if is_of_type!(self, Comma) || is_of_type!(self, EndLine) || is_of_type!(self, CloseBracket) || is_of_type!(self, Colon) {
 					(Some(name), None)
 				} else {
 					let capture = Box::new(self.parse_capture()?);

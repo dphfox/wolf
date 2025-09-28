@@ -7,7 +7,7 @@ let sum = fn [a : num, b : num] a + b
 let ten = sum [3, 7]
 
 -- Factorial using recursion
-let factorial = fn [x] if x == 0 then 1 else x * factorial [x - 1]
+let factorial = fn [x] if x = 0 then 1 else x * factorial [x - 1]
 let ten_factorial = factorial [10]
 
 ----------------------------------------------------
@@ -22,7 +22,7 @@ let quadratic_equation = fn [
 	let discriminant = b^2 - 4 * a * c
 	if discriminant < 0 then
 		[]
-	else if discriminant == 0 then
+	else if discriminant = 0 then
 		[-b / (2 * a)]
 	else
 		[
