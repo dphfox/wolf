@@ -5,11 +5,11 @@ block_inner ::= { let_declaration }, expr;
 
 let_declaration ::= Let, capture, Equal, expr;
 
-expr ::= [ Throw ], expr_throw;
+expr ::= [ Throw ], expr_chain;
 
-expr_throw ::= expr_chain, { ( ThinArrow, expr_chain ) / ( FatArrow, expr_chain_auto ) };
-expr_chain ::= expr_bi_op, { bi_op, expr_bi_op };
-expr_chain_auto ::= ( ( bi_op, expr_chain ) / ( Name, [ literal_tuple ] ) ), { bi_op, expr_bi_op };
+expr_chain ::= expr_chain_thin, { ( ThinArrow, expr_chain_thin ) / ( FatArrow, expr_chain_fat ) };
+expr_chain_thin ::= expr_bi_op, { bi_op, expr_bi_op };
+expr_chain_fat ::= ( ( bi_op, expr_bi_op ) / ( Name, [ value_tuple ] ) ), { bi_op, expr_bi_op };
 expr_bi_op ::= { un_op }, expr_un_op;
 expr_un_op ::= expr_access, { Dot, Name };
 expr_access ::= value;
@@ -17,16 +17,21 @@ expr_access ::= value;
 bi_op ::= Caret / Asterisk / Slash / DoubleSlash / SlashCaret / Percent / Plus / Minus / Equal / BangEqual / Less / More / LessEqual / MoreEqual / And / Or;
 un_op ::= Bang / Minus / Plus / Hash;
 
-value ::= value_fn / value_name / value_loop / value_block / value_literal;
-value_fn ::= Name, literal_tuple;
+value ::= value_fn / value_name / value_loop / value_block / value_fn;
+value_fn_eval ::= Name, value_tuple;
 value_name ::= Name;
 value_conditional ::= If, expr, Then, expr, Else, expr;
 value_loop ::= Loop, capture, Equal, expr, block;
 value_block ::= [ Catch ], block;
-value_literal ::= literal;
+value_fn ::= Fn, capture_tuple, expr;
+value_string ::= String;
+value_tuple ::= OpenBracket, { value_tuple_entry, (Comma / EndLine) }, CloseBracket;
+value_tuple_entry ::= [ ( Dot, Name ) / Ellipsis ], expr;
 
-literal ::= literal_fn / literal_string / literal_tuple;
-literal_fn ::= Fn, capture_tuple, expr;
-literal_string ::= String;
-literal_tuple ::= OpenBracket, { literal_tuple_entry, Comma }, [ literal_tuple_entry ], CloseBracket;
-literal_tuple_entry ::= [ ( Dot, Name ) / Ellipsis ], expr;
+capture ::= ( capture_name / capture_tuple ), [ Colon, capture_type ];
+capture_name ::= Name;
+capture_tuple ::= OpenBracket, { capture_tuple_entry, (Comma / EndLine) }, CloseBracket;
+capture_tuple_entry ::= ( capture_tuple_explicit / capture_tuple_implicit );
+capture_tuple_explicit ::= ( ( Dot, Name ) / Ellipsis ), [ capture ];
+capture_tuple_implicit ::= capture;
+capture_type ::= Name;

@@ -50,8 +50,8 @@ fn tokenise() {
 fn parse() {
 	let tokeniser = wf_token::Tokeniser::new(stdin_bytes!());
 	let parser = wf_parse::Parser::new(tokeniser);
-	// let syntax = parser.collect::<Result<Vec<_>, _>>();
-	let syntax = parser.filter_map(Result::ok).collect::<Vec<_>>();
+	let syntax = parser.collect::<Result<Vec<_>, _>>();
+	// let syntax = parser.filter_map(Result::ok).collect::<Vec<_>>();
 	let json = serde_json::to_string_pretty(&syntax).expect("Failed to serialise parser output as JSON");
 	print!("{json}");
 }

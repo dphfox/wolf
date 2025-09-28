@@ -1,0 +1,9 @@
+---
+Should be interpreted as a block with:
+* `let bar = 2 + 2`
+* resolves to `-5`
+---
+let foo = (
+	let bar = 2 + 2
+	- 5
+)

@@ -10,7 +10,10 @@ use wf_lookahead::Lookahead;
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Serialize)]
 pub struct Span {
 	pub index: usize,
-	pub length: usize
+	pub length: usize,
+	// 1-indexed.
+	pub line: usize,
+	pub line_index: usize
 }
 
 #[derive(Debug, Default, Clone, Serialize)]
@@ -174,12 +177,14 @@ impl TokenType {
 }
 
 pub struct Tokeniser<Input: Iterator<Item = u8>> {
-    bytes: Lookahead<8, u8, Input>
+    bytes: Lookahead<8, u8, Input>,
+	line: usize,
+	line_index: usize
 }
 
 impl<Input: Iterator<Item = u8>> Tokeniser<Input> {
 	pub fn new(input: Input) -> Self {
-		Self { bytes: Lookahead::new(input) }
+		Self { bytes: Lookahead::new(input), line: 1, line_index: 1 }
 	}
 }
 
@@ -189,15 +194,17 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 	fn next(&mut self) -> Option<Self::Item> {
 		let bytes = &mut self.bytes;
 		let start_position = bytes.position();
+		let start_line = (self.line, self.line_index);
 		macro_rules! ret {
 			($ty:expr) => {
 				let length = bytes.position() - start_position;
 				debug_assert!(length > 0, "Zero length tokens aren't valid - they lead to infinite loops");
-				return Some(Token { ty: $ty, span: Span { index: start_position, length } });
+				return Some(Token { ty: $ty, span: Span { index: start_position, length, line: start_line.0, line_index: start_line.1 } });
 			};
 		}
 		macro_rules! consume {
 			($count:expr) => {{
+				self.line_index += $count;
 				bytes.consume().take($count).for_each(drop)
 			}};
 		}
@@ -241,6 +248,10 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 			let found_match = expect.iter().enumerate().all(|(offset, &expected)| bytes.peek(offset) == Some(&expected));
 			if found_match {
 				consume!(expect.len());
+				if token == &TokenType::EndLine {
+					self.line += 1;
+					self.line_index = 1;
+				}
 				ret!(*token);
 			}
 		}
