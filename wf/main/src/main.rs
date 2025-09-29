@@ -1,4 +1,4 @@
-use std::io::{self, Read, BufReader};
+use std::{io::{self, BufReader, Read}, time::Instant};
 
 use clap::{Parser, Subcommand};
 use wf_parse::explain::explain_parse_error;
@@ -49,9 +49,13 @@ fn tokenise() {
 }
 
 fn parse() {
+	let start_time = Instant::now();
 	let tokeniser = wf_token::Tokeniser::new(stdin_bytes!());
+	let time_to_tokenise = start_time.elapsed();
+	let start_time = Instant::now();
 	let parser = wf_parse::Parser::new(tokeniser);
 	let syntax = parser.collect::<Result<Vec<_>, _>>();
+	let time_to_parse = start_time.elapsed();
 	match syntax {
 		Ok(syntax) => {
 			let json = serde_json::to_string_pretty(&syntax).expect("Failed to serialise parser output as JSON");
@@ -59,5 +63,6 @@ fn parse() {
 		},
 		Err(err) => explain_parse_error(&err),
 	}
+	println!("Took {}micros to tokenise and {}micros to parse", time_to_tokenise.as_micros(), time_to_parse.as_micros())
 	
 }

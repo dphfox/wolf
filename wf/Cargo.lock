@@ -196,6 +196,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "smallvec"
+version = "1.15.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "67b1b7a3b5fe4f1376887184045fcf45c69e92af734b7aaddc05fb777b6fbd03"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "strsim"
 version = "0.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -243,6 +252,7 @@ name = "wf-parse"
 version = "0.1.0"
 dependencies = [
  "serde",
+ "smallvec",
  "wf-lookahead",
  "wf-token",
 ]

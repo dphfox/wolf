@@ -3,74 +3,47 @@
 //
 // Does not handle higher level concepts like desugaring or precedence.
 
+use std::iter::Peekable;
+
 use serde::Serialize;
 use wf_token::{Span, Token, TokenType};
-use wf_lookahead::Lookahead;
 
 pub mod explain;
 
 #[derive(Debug, Clone, Serialize)]
 pub struct ParseBlock {
 	pub let_declarations: Vec<ParseLetDeclaration>,
-	pub expr: ParseExpr
+	pub expr: Parse
 }
 
 #[derive(Debug, Clone, Serialize)]
 pub struct ParseLetDeclaration {
 	pub capture: ParseCapture,
-	pub expr: ParseExpr
+	pub expr: Parse
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub struct ParseExpr {
-	pub throw: bool,
-	pub expr_chain: ParseExprChain
+pub enum Parse {
+	ExprThrow(Box<Parse>),
+	ExprChain { first: Box<Parse>, rest: Vec<Parse> },
+	ExprAutoChainFirstBiOp { bi_op: BiOp, operand: Box<Parse> },
+	ExprAutoChainFirstFnEval { name: Token, datum: Option<ParseValueTuple> },
+	ExprInfix { first: Box<Parse>, rest: Vec<(BiOp, Parse)> },
+	ExprPrefix { un_ops: Vec<UnOp>, term: Box<Parse> },
+	ExprAccess { accesses: Vec<Token>, term: Box<Parse> },
+
+	ValueFnEval(ParseValueFnEval),
+	ValueName(String),
+	ValueConditional(ParseValueConditional),
+	ValueLoop(ParseValueLoop),
+	ValueBlock(ParseValueBlock),
+	ValueFn(ParseValueFnDef),
+	ValueString(String),
+	ValueTuple(ParseValueTuple)
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub struct ParseExprChain {
-	pub first: ParseExprInfix,
-	pub rest: Vec<ParseExprChainPart>
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub enum ParseExprChainPart {
-	Thin(ParseExprInfix),
-	Fat(ParseExprInfixAuto)
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct ParseExprInfix {
-	pub first: ParseExprPrefix,
-	pub rest: Vec<(ParseBiOp, ParseExprPrefix)>
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct ParseExprInfixAuto {
-	pub first: ParseExprInfixAutoFirst,
-	pub rest: Vec<(ParseBiOp, ParseExprPrefix)>
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub enum ParseExprInfixAutoFirst {
-	BiOp((ParseBiOp, ParseExprPrefix)),
-	FnEval((Token, Option<ParseValueTuple>))
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct ParseExprPrefix {
-	pub un_ops: Vec<ParseUnOp>,
-	pub term: ParseExprAccess
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct ParseExprAccess {
-	pub term: ParseValue,
-	pub accesses: Vec<Token>
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub enum ParseBiOp {
+pub enum BiOp {
 	Exponent,
 	Multiply,
 	Divide,
@@ -90,7 +63,7 @@ pub enum ParseBiOp {
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub enum ParseUnOp {
+pub enum UnOp {
 	Not,
 	Negate,
 	DoubleNegate,
@@ -98,55 +71,30 @@ pub enum ParseUnOp {
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub enum ParseValue {
-	FnEval(ParseValueFnEval),
-	Name(ParseValueName),
-	Conditional(ParseValueConditional),
-	Loop(ParseValueLoop),
-	Block(ParseValueBlock),
-	Fn(ParseValueFnDef),
-	String(ParseValueString),
-	Tuple(ParseValueTuple)
-}
-
-#[derive(Debug, Clone, Serialize)]
 pub struct ParseValueFnEval {
-	pub name: Token,
+	pub name: String,
 	pub datum: ParseValueTuple,
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub struct ParseValueName {
-	pub name: Token
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct ParseValueString {
-	pub string: Token
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct ParseValueTuple {
-	pub entries: Vec<ParseValueTupleEntry>
-}
+pub type ParseValueTuple = Vec<ParseValueTupleEntry>;
 
 #[derive(Debug, Clone, Serialize)]
 pub struct ParseValueTupleEntry {
 	pub matcher: Option<Token>,
-	pub value: Box<ParseExpr>
+	pub value: Box<Parse>
 }
 
 #[derive(Debug, Clone, Serialize)]
 pub struct ParseValueConditional {
-	pub if_expr: Box<ParseExpr>,
-	pub then_expr: Box<ParseExpr>,
-	pub else_expr: Box<ParseExpr>
+	pub if_expr: Box<Parse>,
+	pub then_expr: Box<Parse>,
+	pub else_expr: Box<Parse>
 }
 
 #[derive(Debug, Clone, Serialize)]
 pub struct ParseValueLoop {
 	pub capture: ParseCapture,
-	pub initial_expr: Box<ParseExpr>,
+	pub initial_expr: Box<Parse>,
 	pub body: Box<ParseBlock>
 }
 
@@ -159,24 +107,16 @@ pub struct ParseValueBlock {
 #[derive(Debug, Clone, Serialize)]
 pub struct ParseValueFnDef {
 	pub capture: ParseCaptureTuple,
-	pub expr: Box<ParseExpr>
+	pub expr: Box<Parse>
 }
 
 #[derive(Debug, Clone, Serialize)]
 pub enum ParseCapture {
-	Name(ParseCaptureName),
+	Name(String),
 	Tuple(ParseCaptureTuple)
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub struct ParseCaptureName {
-	pub name: Token
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct ParseCaptureTuple {
-	pub entries: Vec<ParseCaptureTupleEntry>
-}
+pub type ParseCaptureTuple = Vec<ParseCaptureTupleEntry>;
 
 #[derive(Debug, Clone, Serialize)]
 pub struct ParseCaptureTupleEntry {
@@ -186,8 +126,8 @@ pub struct ParseCaptureTupleEntry {
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub struct ParseCaptureType {
-	pub name: Token
+pub enum ParseCaptureType {
+	Name(String)
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -201,7 +141,7 @@ pub enum ErrorInParse {
 // FUTURE: use try {} block for this instead
 macro_rules! err_context {
 	($self:expr, $name:expr, $block:block) => {{
-		let span = match $self.tokens.peek(0) {
+		let span = match $self.tokens.peek() {
 			Some(tok) => Some(tok.span.clone()),
 			None => None
 		};
@@ -219,18 +159,18 @@ macro_rules! err_context {
 macro_rules! gap {
 	($self:expr, unstoppable) => {{
 		loop {
-			let Some(token) = $self.tokens.peek(0) else { break None };
+			let Some(token) = $self.tokens.peek() else { break None };
 			match token.ty {
-				TokenType::Whitespace | TokenType::EndLine | TokenType::Comment { .. } => { let _ = $self.tokens.consume().next(); },
+				TokenType::Whitespace | TokenType::EndLine | TokenType::Comment { .. } => { let _ = $self.tokens.next(); },
 				_ => { break Some(token); },
 			}
 		}
 	}};
 	($self:expr, stop_at_line) => {{
 		loop {
-			let Some(token) = $self.tokens.peek(0) else { break None };
+			let Some(token) = $self.tokens.peek() else { break None };
 			match token.ty {
-				TokenType::Whitespace | TokenType::Comment { .. } => { let _ = $self.tokens.consume().next(); },
+				TokenType::Whitespace | TokenType::Comment { .. } => { let _ = $self.tokens.next(); },
 				_ => { break Some(token); },
 			}
 		}
@@ -238,27 +178,24 @@ macro_rules! gap {
 }
 
 macro_rules! is_of_type {
-	($self:expr, $ty:ident, $pos:expr) => {{
-		matches!($self.tokens.peek($pos), Some(Token { ty: TokenType::$ty { .. }, .. }))
-	}};
 	($self:expr, $ty:ident) => {{
-		is_of_type!($self, $ty, 0)
+		matches!($self.tokens.peek(), Some(Token { ty: TokenType::$ty { .. }, .. }))
 	}};
 }
 
 macro_rules! consume {
 	($self:expr) => {{
-		$self.tokens.consume().next().expect("consume should only ever be called after peeking to ensure type")
+		$self.tokens.next().expect("consume should only ever be called after peeking to ensure type")
 	}};
 	($self:expr, $expect:expr) => {{
-		if let Some(token) = $self.tokens.consume().next() {
+		if let Some(token) = $self.tokens.next() {
 			Ok(token)
 		} else {
 			Err(ErrorInParse::UnexpectedEndOfFile { expected: $expect })
 		}
 	}};
 	($self:expr, $ty:ident, $expect:expr) => {{
-		if let Some(token) = $self.tokens.consume().next() {
+		if let Some(token) = $self.tokens.next() {
 			if matches!(token.ty, TokenType::$ty { .. }){ 
 				Ok(token) 
 			} else { 
@@ -272,7 +209,7 @@ macro_rules! consume {
 
 macro_rules! expected {
 	($self:expr, $expect:expr) => {{
-		if let Some(token) = $self.tokens.consume().next() {
+		if let Some(token) = $self.tokens.next() {
 			return Err(ErrorInParse::UnexpectedToken { token, expected: $expect })
 		} else {
 			return Err(ErrorInParse::UnexpectedEndOfFile { expected: $expect })
@@ -281,13 +218,15 @@ macro_rules! expected {
 }
 
 pub struct Parser<Input: Iterator<Item = Token>> {
-	tokens: Lookahead<8, Token, Input>
+	tokens: Peekable<Input>
 }
 
 impl<Input: Iterator<Item = Token>> Parser<Input> {	
 	pub fn new(input: Input) -> Self {
-		Self { tokens: Lookahead::new(input) }
-	}
+        Parser { 
+            tokens: input.peekable()
+        }
+    }
 
 	fn parse_block(&mut self) -> Result<ParseBlock, ErrorInParse> {
 		err_context!(self, "block", {
@@ -333,72 +272,80 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 		})
 	}
 
-	fn parse_expr(&mut self) -> Result<ParseExpr, ErrorInParse> {
+	fn parse_expr(&mut self) -> Result<Parse, ErrorInParse> {
 		err_context!(self, "expression", {
-			let throw = is_of_type!(self, Throw);
-			if throw {
+			if is_of_type!(self, Throw) {
 				consume!(self);
 				gap!(self, unstoppable);
+				Parse::ExprThrow(Box::new(self.parse_expr_chain()?))
+			} else {
+				self.parse_expr_chain()?
 			}
-			let expr_chain = self.parse_expr_chain()?;
-			ParseExpr { throw, expr_chain }
 		})
 	}
 
-	fn parse_expr_chain(&mut self) -> Result<ParseExprChain, ErrorInParse> {
+	fn parse_expr_chain(&mut self) -> Result<Parse, ErrorInParse> {
 		err_context!(self, "expression chain", {
 			let first = self.parse_expr_infix()?;
 			gap!(self, stop_at_line);
-			let mut rest = vec![];
-			loop {
-				if is_of_type!(self, ThinArrow) {
-					consume!(self);
-					gap!(self, unstoppable);
-					rest.push(ParseExprChainPart::Thin(self.parse_expr_infix()?));
-					gap!(self, stop_at_line);
-				} else if is_of_type!(self, FatArrow) {
-					consume!(self);
-					gap!(self, unstoppable);
-					rest.push(ParseExprChainPart::Fat(self.parse_expr_infix_auto()?));
-					gap!(self, stop_at_line);
-				} else {
-					break;
+			if is_of_type!(self, ThinArrow) || is_of_type!(self, FatArrow) {
+				let mut rest = vec![];
+				loop {
+					if is_of_type!(self, ThinArrow) {
+						consume!(self);
+						gap!(self, unstoppable);
+						rest.push(self.parse_expr_infix()?);
+						gap!(self, stop_at_line);
+					} else if is_of_type!(self, FatArrow) {
+						consume!(self);
+						gap!(self, unstoppable);
+						rest.push(self.parse_expr_infix_auto()?);
+						gap!(self, stop_at_line);
+					} else {
+						break;
+					}
 				}
+				Parse::ExprChain { first: Box::new(first), rest }
+			} else {
+				first
 			}
-			ParseExprChain { first, rest }
 		})
 	}
 
-	fn parse_expr_infix(&mut self) -> Result<ParseExprInfix, ErrorInParse> {
+	fn parse_expr_infix(&mut self) -> Result<Parse, ErrorInParse> {
 		err_context!(self, "infix operation", {
 			let first = self.parse_expr_prefix()?;
 			gap!(self, stop_at_line);
-			let mut rest = vec![];
-			while let Some(bi_op) = self.peek_bi_op() {
-				consume!(self);
-				gap!(self, unstoppable);
-				rest.push((bi_op, self.parse_expr_prefix()?));
-				gap!(self, stop_at_line);
+			if self.peek_bi_op().is_some() {
+				let mut rest = vec![];
+				while let Some(bi_op) = self.peek_bi_op() {
+					consume!(self);
+					gap!(self, unstoppable);
+					rest.push((bi_op, self.parse_expr_prefix()?));
+					gap!(self, stop_at_line);
+				}
+				Parse::ExprInfix { first: Box::new(first), rest }
+			} else {
+				first
 			}
-			ParseExprInfix { first, rest }
 		})
 	}
 
-	fn parse_expr_infix_auto(&mut self) -> Result<ParseExprInfixAuto, ErrorInParse> {
+	fn parse_expr_infix_auto(&mut self) -> Result<Parse, ErrorInParse> {
 		err_context!(self, "auto-chained infix operation", {
 			let first = if let Some(bi_op) = self.peek_bi_op() {
 				consume!(self);
 				gap!(self, unstoppable);
-				ParseExprInfixAutoFirst::BiOp((bi_op, self.parse_expr_prefix()?))
+				Parse::ExprAutoChainFirstBiOp { bi_op, operand: Box::new(self.parse_expr_prefix()?) }
 			} else if is_of_type!(self, Name) {
-				let tok = consume!(self);
+				let name = consume!(self);
 				gap!(self, stop_at_line);
-				let tuple = if self.peek_value_tuple() {
+				let datum = if self.peek_value_tuple() {
 					Some(self.parse_value_tuple()?)
 				} else {
 					None
 				};
-				ParseExprInfixAutoFirst::FnEval((tok, tuple))
+				Parse::ExprAutoChainFirstFnEval { name, datum }
 			} else {
 				expected!(self, "infix operator or function evaluation")
 			};
@@ -410,29 +357,32 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 				rest.push((bi_op, self.parse_expr_prefix()?));
 				gap!(self, stop_at_line);
 			}
-			ParseExprInfixAuto { first, rest }
+			Parse::ExprInfix { first: Box::new(first), rest }
 		})
 	}
 
-	fn parse_expr_prefix(&mut self) -> Result<ParseExprPrefix, ErrorInParse> {
+	fn parse_expr_prefix(&mut self) -> Result<Parse, ErrorInParse> {
 		err_context!(self, "prefix operation", {
-			let mut un_ops = vec![];
-			while let Some(un_op) = self.peek_un_op() {
-				consume!(self);
-				gap!(self, unstoppable);
-				un_ops.push(un_op);
+			if self.peek_un_op().is_some() {
+				let mut un_ops = vec![];
+				while let Some(un_op) = self.peek_un_op() {
+					consume!(self);
+					gap!(self, unstoppable);
+					un_ops.push(un_op);
+				}
+				Parse::ExprPrefix { un_ops, term: Box::new(self.parse_expr_access()?) }
+			} else {
+				self.parse_expr_access()?
 			}
-			let term = self.parse_expr_access()?;
-			ParseExprPrefix { un_ops, term }
 		})
 	}
 
-	fn parse_expr_access(&mut self) -> Result<ParseExprAccess, ErrorInParse> {
+	fn parse_expr_access(&mut self) -> Result<Parse, ErrorInParse> {
 		err_context!(self, "named access", {
 			let term = self.parse_value()?;
-			let mut accesses = vec![];
 			gap!(self, stop_at_line);
 			if is_of_type!(self, Dot) {
+				let mut accesses = vec![];
 				loop {
 					consume!(self);
 					gap!(self, unstoppable);
@@ -442,72 +392,74 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 						break;
 					}
 				}
+				Parse::ExprAccess { accesses, term: Box::new(term) }
+			} else {
+				term
 			}
-			ParseExprAccess { term, accesses }
 		})
 	}
 
-	fn peek_bi_op(&mut self) -> Option<ParseBiOp> {
-		let token = self.tokens.peek(0)?;
+	fn peek_bi_op(&mut self) -> Option<BiOp> {
+		let token = self.tokens.peek()?;
 		let ty = match token.ty {
-			TokenType::Caret => ParseBiOp::Exponent,
-			TokenType::Asterisk => ParseBiOp::Multiply,
-			TokenType::Slash => ParseBiOp::Divide,
-			TokenType::DoubleSlash => ParseBiOp::FloorDivide,
-			TokenType::SlashCaret => ParseBiOp::CeilDivide,
-			TokenType::Percent => ParseBiOp::FloorMod,
-			TokenType::Plus => ParseBiOp::Plus,
-			TokenType::Minus => ParseBiOp::Minus,
-			TokenType::Equal => ParseBiOp::Equal,
-			TokenType::BangEqual => ParseBiOp::NotEqual,
-			TokenType::Less => ParseBiOp::Less,
-			TokenType::More => ParseBiOp::More,
-			TokenType::LessEqual => ParseBiOp::LessEqual,
-			TokenType::MoreEqual => ParseBiOp::MoreEqual,
-			TokenType::And => ParseBiOp::And,
-			TokenType::Or => ParseBiOp::Or,
+			TokenType::Caret => BiOp::Exponent,
+			TokenType::Asterisk => BiOp::Multiply,
+			TokenType::Slash => BiOp::Divide,
+			TokenType::DoubleSlash => BiOp::FloorDivide,
+			TokenType::SlashCaret => BiOp::CeilDivide,
+			TokenType::Percent => BiOp::FloorMod,
+			TokenType::Plus => BiOp::Plus,
+			TokenType::Minus => BiOp::Minus,
+			TokenType::Equal => BiOp::Equal,
+			TokenType::BangEqual => BiOp::NotEqual,
+			TokenType::Less => BiOp::Less,
+			TokenType::More => BiOp::More,
+			TokenType::LessEqual => BiOp::LessEqual,
+			TokenType::MoreEqual => BiOp::MoreEqual,
+			TokenType::And => BiOp::And,
+			TokenType::Or => BiOp::Or,
 			_ => return None
 		};
 		Some(ty)
 	}
 	
-	fn peek_un_op(&mut self) -> Option<ParseUnOp> {
-		let token = self.tokens.peek(0)?;
+	fn peek_un_op(&mut self) -> Option<UnOp> {
+		let token = self.tokens.peek()?;
 		let ty = match token.ty {
-			TokenType::Bang => ParseUnOp::Not,
-			TokenType::Minus => ParseUnOp::Negate,
-			TokenType::Plus => ParseUnOp::DoubleNegate,
-			TokenType::Hash => ParseUnOp::Count,
+			TokenType::Bang => UnOp::Not,
+			TokenType::Minus => UnOp::Negate,
+			TokenType::Plus => UnOp::DoubleNegate,
+			TokenType::Hash => UnOp::Count,
 			_ => return None
 		};
 		Some(ty)
 	}
 
-	fn parse_value(&mut self) -> Result<ParseValue, ErrorInParse> {
+	fn parse_value(&mut self) -> Result<Parse, ErrorInParse> {
 		err_context!(self, "value", {
-			if is_of_type!(self, Name) {
-				let name = consume!(self);
-				gap!(self, stop_at_line);
-				if self.peek_value_tuple() {
-					ParseValue::FnEval(ParseValueFnEval { name, datum: self.parse_value_tuple()? })
-				} else {
-					ParseValue::Name(ParseValueName { name })
-				}
-			} else if is_of_type!(self, String) {
-				let string = consume!(self);
-				ParseValue::String(ParseValueString { string })
-			} else if self.peek_value_tuple() {
-				ParseValue::Tuple(self.parse_value_tuple()?)
+			if self.peek_value_tuple() {
+				Parse::ValueTuple(self.parse_value_tuple()?)
 			} else if self.peek_value_conditional() {
-				ParseValue::Conditional(self.parse_value_conditional()?)
+				Parse::ValueConditional(self.parse_value_conditional()?)
 			} else if self.peek_value_loop() {
-				ParseValue::Loop(self.parse_value_loop()?)
+				Parse::ValueLoop(self.parse_value_loop()?)
 			} else if self.peek_value_block() {
-				ParseValue::Block(self.parse_value_block()?)
+				Parse::ValueBlock(self.parse_value_block()?)
 			} else if self.peek_value_fn_def() {
-				ParseValue::Fn(self.parse_value_fn_def()?)
+				Parse::ValueFn(self.parse_value_fn_def()?)
 			} else {
-				expected!(self, "function evaluation, name, string, tuple, conditional, loop, block, or function definition")
+				match consume!(self) {
+					Token { ty: TokenType::Name { name }, .. } => {
+						gap!(self, stop_at_line);
+						if self.peek_value_tuple() {
+							Parse::ValueFnEval(ParseValueFnEval { name, datum: self.parse_value_tuple()? })
+						} else {
+							Parse::ValueName(name)
+						}
+					},
+					Token { ty: TokenType::String { string }, .. } => Parse::ValueString(string),
+					_ => expected!(self, "function evaluation, name, string, tuple, conditional, loop, block, or function definition")
+				}
 			}
 		})
 	}
@@ -538,7 +490,7 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 					expected!(self, "closing bracket of tuple, or comma or new line to separate tuple entries");
 				}
 			}
-			ParseValueTuple { entries }
+			entries
 		})
 	}
 
@@ -634,13 +586,13 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 
 	fn parse_capture(&mut self) -> Result<ParseCapture, ErrorInParse> {
 		err_context!(self, "capture", {
-			if is_of_type!(self, Name) {
-				let name = consume!(self);
-				ParseCapture::Name(ParseCaptureName { name })
-			} else if self.peek_capture_tuple() {
+			if self.peek_capture_tuple() {
 				ParseCapture::Tuple(self.parse_capture_tuple()?)
 			} else {
-				expected!(self, "name capture or tuple capture")
+				match consume!(self) {
+					Token { ty: TokenType::Name { name }, .. } => ParseCapture::Name(name),
+					_ => expected!(self, "name capture or tuple capture")
+				}
 			}
 		})
 	}
@@ -671,7 +623,7 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 					expected!(self, "closing bracket of tuple, or comma or new line to separate tuple entries");
 				}
 			}
-			ParseCaptureTuple { entries }
+			entries
 		})
 	}
 
@@ -711,9 +663,10 @@ impl<Input: Iterator<Item = Token>> Parser<Input> {
 
 	fn parse_capture_type(&mut self) -> Result<ParseCaptureType, ErrorInParse> {
 		err_context!(self, "capture type", {
-			let name = consume!(self, Name, "type name")?;
-			gap!(self, stop_at_line);
-			ParseCaptureType { name }
+			match consume!(self) {
+				Token { ty: TokenType::Name { name }, .. } => ParseCaptureType::Name(name),
+				_ => expected!(self, "capture type name")
+			}
 		})
 	}
 }
@@ -723,7 +676,7 @@ impl<Input: Iterator<Item = Token>> Iterator for Parser<Input> {
 
 	fn next(&mut self) -> Option<Self::Item> {
 		gap!(self, unstoppable);
-		if self.tokens.at_end() { return None; }
+		self.tokens.peek()?;
 		Some(self.parse_let_declaration())
 	}
 }

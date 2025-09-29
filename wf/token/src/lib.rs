@@ -22,15 +22,15 @@ pub struct Token {
 	pub span: Span
 }
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Default, Clone, PartialEq, Eq, Serialize)]
 pub enum TokenType {
 	#[default]
 	Unexpected,
 
 	Whitespace,
-	Comment { num_hyphens: usize }, // 2 = short comment, 3+ = long comment
-	Name { backticked: bool },
-	String { num_quotes: usize }, // 1 = standard string, 2 = empty string, 3+ = raw string
+	Comment,
+	Name { name: String },
+	String { string: String },
 
 	Throw,
 	Catch,
@@ -74,6 +74,12 @@ pub enum TokenType {
 
 macro_rules! exact {
 	($s:expr, $t:ident) => { ($s.as_bytes(), Self::$t) };
+}
+
+macro_rules! bytes_to_utf8_lossy {
+	($content:expr) => {
+		String::from_utf8($content).unwrap_or_else(|e| String::from_utf8_lossy(e.as_bytes()).to_string())
+	};
 }
 
 impl TokenType {
@@ -130,7 +136,7 @@ impl TokenType {
 			Unexpected => "unexpected",
 
 			Whitespace => "whitespace",
-			Comment { .. } => "comment",
+			Comment => "comment",
 			Name { .. } => "name",
 			String { .. } => "string",
 
@@ -177,7 +183,7 @@ impl TokenType {
 }
 
 pub struct Tokeniser<Input: Iterator<Item = u8>> {
-    bytes: Lookahead<8, u8, Input>,
+    bytes: Lookahead<4, u8, Input>,
 	line: usize,
 	line_index: usize
 }
@@ -249,14 +255,16 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 						if end_hyphens == num_hyphens { break; }
 					} else { end_hyphens = 0; }
 				}
-				ret!(TokenType::Comment { num_hyphens });
+				ret!(TokenType::Comment);
 			}
 
 			// Short comment
 			if num_hyphens == 2 {
 				consume!(2);
-				while let Some(char) = bytes.peek(0) && !matches!(char, b'\n' | b'\r') { consume!(1); }
-				ret!(TokenType::Comment { num_hyphens });
+				while let Some(&char) = bytes.peek(0) && !matches!(char, b'\n' | b'\r') {
+					consume!(1);
+				}
+				ret!(TokenType::Comment);
 			}
 		}
 
@@ -265,13 +273,15 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 			let found_match = expect.iter().enumerate().all(|(offset, &expected)| bytes.peek(offset) == Some(&expected));
 			if found_match {
 				consume!(expect.len());
-				ret!(*token);
+				ret!(token.clone());
 			}
 		}
 
 		// Whitespace
 		while matches!(bytes.peek(0), Some(b' ' | b'\t')) { consume!(1); }
 		if bytes.position() > start_position { ret!(TokenType::Whitespace); }
+
+		let mut content_u8 = vec![];
 
 		// Name
 		{
@@ -280,15 +290,23 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 			let mut can_add_dot = true;
 
 			while let Some(&char) = bytes.peek(0) {
-				if char.is_ascii_alphabetic() || char == b'_' { digit_preceding = false; }
-				else if char.is_ascii_digit() { digit_preceding = true; } 
-				else if digit_preceding && can_add_dot && char == b'.' && bytes.peek(1).map(|x| x.is_ascii_digit()).unwrap_or(false) {
-					(digit_preceding, can_add_dot) = (true, false);
+				if char.is_ascii_alphanumeric() || char == b'_' {
+					digit_preceding = char.is_ascii_digit();
 					consume!(1);
-				} else { break; }
-				consume!(1);
+					content_u8.push(char);
+					continue;
+				} else if digit_preceding && can_add_dot && char == b'.' {
+					if let Some(&next_digit) = bytes.peek(1).filter(|x| x.is_ascii_digit()) {
+						digit_preceding = true; can_add_dot = false;
+						consume!(2);
+						content_u8.push(char);
+						content_u8.push(next_digit);
+						continue;
+					}
+				}
+				break;
 			}
-			if bytes.position() > start_position { ret!(TokenType::Name { backticked: false }); }
+			if bytes.position() > start_position { ret!(TokenType::Name { name: bytes_to_utf8_lossy!(content_u8) }); }
 
 			// Backticked name
 			if start_char == b'`' {
@@ -296,15 +314,16 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 				while let Some(&char) = bytes.peek(0) {
 					consume!(1);
 					if char == b'`' { break; }
+					content_u8.push(char);
 				}
-				ret!(TokenType::Name { backticked: true });
+				ret!(TokenType::Name { name: bytes_to_utf8_lossy!(content_u8) });
 			}
 		}
 
 		// String
 		{
 			let mut num_quotes = 0;
-			while matches!(bytes.peek(num_quotes.min(2)), Some(b'"')) {
+			while let Some(&char) = bytes.peek(num_quotes.min(2)) && matches!(char, b'"') {
 				num_quotes += 1;
 				// Start consuming behind us if we know we're a raw string to keep within the max lookahead.
 				if num_quotes > 2 { consume!(1); }
@@ -313,7 +332,7 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 			// Empty short string
 			if num_quotes == 2 {
 				consume!(2);
-				ret!(TokenType::String { num_quotes });
+				ret!(TokenType::String { string: bytes_to_utf8_lossy!(content_u8) });
 			}
 			
 			// Short string
@@ -324,8 +343,9 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 					consume!(1);
 					if escaped { escaped = false; } 
 					else if char == b'"' { break; }
+					content_u8.push(char);
 				}
-				ret!(TokenType::String { num_quotes });
+				ret!(TokenType::String { string: bytes_to_utf8_lossy!(content_u8) });
 			}
 			
 			// Raw string
@@ -338,8 +358,10 @@ impl<Input: Iterator<Item = u8>> Iterator for Tokeniser<Input> {
 						end_quotes += 1;
 						if end_quotes == num_quotes { break; }
 					} else { end_quotes = 0; }
+					content_u8.push(char);
 				}
-				ret!(TokenType::String { num_quotes });
+				content_u8.truncate(content_u8.len() - end_quotes + 1);
+				ret!(TokenType::String { string: bytes_to_utf8_lossy!(content_u8) });
 			}
 		}
 

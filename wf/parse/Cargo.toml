@@ -7,3 +7,5 @@ edition = { workspace = true }
 wf-lookahead = { workspace = true }
 wf-token = { workspace = true }
 serde = { workspace = true }
+smallvec = { version = "1.15.1", features = ["serde"] }
+
