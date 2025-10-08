@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Memory
-page_number: 17
+page_number: 16
 ---
 
 Wolf uses a straightforward model for managing memory in a compiler-checked way.
