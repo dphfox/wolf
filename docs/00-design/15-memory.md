@@ -37,4 +37,23 @@ replacing them with cheaper options, or evaluating values at compile time.
 
 ## Views
 
-TODO: views and reletting
+TODO: expand on this
+
+Views allow non-local code to directly reference definitions from inside of the
+current block.
+
+<!--wolf-->
+```
+let person = ty [ .name : str, .age : num ]
+
+let get_name = fn [person : @person] person.name
+
+let the_name = (
+	let person = [.name "Steve", .age 27] 
+	let name = get_name [@person]
+	name
+)
+```
+
+Views are only valid while the referenced definition is in scope. In particular,
+this means functions can only return views derived from their inputs.
