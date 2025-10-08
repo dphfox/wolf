@@ -46,14 +46,33 @@ current block.
 ```
 let person = ty [ .name : str, .age : num ]
 
-let get_name = fn [person : @person] person.name
+let get_name = fn [person : view person] person.name
 
 let the_name = (
 	let person = [.name "Steve", .age 27] 
-	let name = get_name [@person]
+	let name = get_name [view person]
 	name
 )
 ```
 
 Views are only valid while the referenced definition is in scope. In particular,
 this means functions can only return views derived from their inputs.
+
+Views can collect together multiple sources.
+
+<!--wolf-->
+```
+let subject = ty [ .name : str, .age : num ]
+let human   = ty [ .catchphrase : str ]
+let dog     = ty [ .howls : bool ]
+
+let steve = view {
+	subject [ .name "Steve", .age 27 ]
+	human   [ .catchphrase "Cheerio!"]
+}
+
+let baxter = view {
+	subject [ .name "Baxter", .age 5 ]
+	dog     [ .howls true ]
+}
+```
