@@ -37,8 +37,8 @@ let [first, second, third] = [1, 2, 3]
 
 ### Explicit names
 
-Explicitly naed data can be accessed by including a dot-prefixed name before the
-name you wish to capture into.
+Explicitly named data can be accessed by including a dot-prefixed name before
+the name you wish to capture into.
 
 <!--wolf-->
 ```

@@ -4,8 +4,7 @@ title: Looping
 page_number: 13
 ---
 
-Looping allows an expression to run repeatedly and capture the output from the
-last iteration.
+Looping allows an expression to run repeatedly until an exit condition is met.
 
 ## Basic use
 

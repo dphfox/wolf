@@ -26,19 +26,19 @@ Any captures in the same block or a nested block can use the type by name.
 -- Custom types in let declarations.
 let steve : person = [
 	.name "Steve"
-	.age 17
+	.age  17
 ]
 
 -- Using custom types in a function.
 let speak = fn [
-	.as self : person
+	.as  self   : person
 	.say phrase : catchphrase
 ] ["Hello, my name is ", self.name, " and I love to say ", phrase]
 ```
 
-## Non-nominal types
+## Structural types
 
-Types in Wolf are not nominal - that is to say, any type definition can be
+Types in Wolf are _structural_ - that is to say, any type definition can be
 swapped for its contents.
 
 For example, since `catchphrase` is defined as `ty str`, we can just pass in a
