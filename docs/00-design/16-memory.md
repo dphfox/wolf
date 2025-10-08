@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Memory
-page_number: 15
+page_number: 17
 ---
 
 Wolf uses a straightforward model for managing memory in a compiler-checked way.
@@ -76,3 +76,24 @@ let baxter = view {
 	dog     [ .howls true ]
 }
 ```
+
+## Functions
+
+By default, functions take views to names that originate from the surrounding
+code.
+
+<!--wolf-->
+```
+-- `message` is of type `str` here
+let message = "Hello"
+let func_1 = fn [] (
+	-- `message` is of type `view str` here
+	let view_of_message = message
+)
+```
+
+This means that functions are subject to the same rules as views by default,
+unless they do not take any views to surrounding names.
+
+For example, if a function uses data that only exists in the current block, it
+can't be returned until that data is moved out to an accessible location.
