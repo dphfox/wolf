@@ -73,5 +73,6 @@ With this understanding, we can recursively assemble any blocks together to form
 any program we want, and it's guaranteed that all allocated memory will be freed
 exactly once, after it is no longer accessible.
 
-This technique can then be used to implement higher level resource management
-primitives like arena allocators while still preserving safety guarantees.
+This technique can then be used in conjunction with language features like
+requests, to implement higher level resource management primitives like arena
+allocators while preserving both ergonomics and safety guarantees.
