@@ -8,8 +8,8 @@ Operations are used to process and transform data in Wolf.
 
 ## Applying a function
 
-Wolf allows you to apply functions to a single tuple of data at a time. This is
-done by prefixing the tuple with the function name.
+Wolf allows you to apply functions to a single tuple of data at a time. 
+This is done by prefixing the tuple with the function name.
 
 <!--wolf-->
 ```
@@ -29,9 +29,7 @@ add [9, 10]
 
 Blocks are declared with parentheses `()`.
 
-They can be included in other expressions; the contents of the block are
-evaluated independently of the other expression, meaning they can change the
-order in which operations are done.
+They can be included in other expressions; the contents of the block are evaluated independently of the other expression, meaning they can change the order in which operations are done.
 
 <!--wolf-->
 ```
@@ -70,9 +68,8 @@ Certain functions in Wolf are important enough to have special notation.
 (0 <= 5 < 21) or (20 >= 5 > -1)
 ```
 
-The table below shows these *operators* and how they relate to each other. Higher 
-priority operators are evaluated before lower priority operators in an
-expression.
+The table below shows these *operators* and how they relate to each other. 
+Higher priority operators are evaluated before lower priority operators in an expression.
 
 Other non-operators are also included to complete the comparison.
 
@@ -111,9 +108,8 @@ Other non-operators are also included to complete the comparison.
 
 ## Integer conversion
 
-Wolf does not implicitly convert between `num` and `int`. Instead, the
-arithmetic operators accept any mix of `int` or `num`, and return `int` if the
-types guarantee the result is an integer.
+Wolf does not implicitly convert between `num` and `int`. 
+Instead, the arithmetic operators accept any mix of `int` or `num`, and return `int` if the types guarantee the result is an integer.
 
 That means:
 

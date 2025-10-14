@@ -1,15 +1,13 @@
 ---
 layout: page
 title: Requests
-page_number: 15
+page_number: 16
 ---
 
-In theory, expressions should only operate on their input data. In practice
-this is difficult, because programs often require access to data sources and
-extra services for processing.
+In theory, expressions should only operate on their input data. 
+In practice this is difficult, because programs often require access to data sources and extra services for processing.
 
-Wolf allows code to request and pass in extra dependencies without polluting
-the main path of computation.
+Wolf allows code to request and pass in extra dependencies without polluting the main path of computation.
 
 ## Basic use
 
@@ -46,8 +44,8 @@ let quadruple_the_number = fn [] double_the_number [] * 2
 let sixteen = prov 4 ( quadruple_the_number [] )
 ```
 
-Wolf checks that all requests are matched with providers at compile time. If a
-request isn't provided, the program won't compile.
+Wolf checks that all requests are matched with providers at compile time.
+If a request isn't provided, the program won't compile.
 
 <!--wolf-->
 ```
@@ -58,8 +56,7 @@ let quadruple_the_number = fn [] double_the_number [] * 2
 let sixteen = quadruple_the_number []
 ```
 
-Providers shadow each other lexically; requests will use the most nested
-provider that satisfies the request.
+Providers shadow each other lexically; requests will use the most nested provider that satisfies the request.
 
 <!--wolf-->
 ```

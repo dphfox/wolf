@@ -8,8 +8,8 @@ Bools in Wolf represent the Boolean "true" and "false" concepts.
 
 ## Basic use
 
-The `true` and `false` names are reserved by Wolf to represent the outcomes of
-a Boolean expression. These are case sensitive.
+The `true` and `false` names are reserved by Wolf to represent the outcomes of a Boolean expression.
+These are case sensitive.
 
 <!--wolf-->
 ```

@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Looping
-page_number: 13
+page_number: 15
 ---
 
 Looping allows an expression to run repeatedly until an exit condition is met.
@@ -24,11 +24,11 @@ let count_up_forever = loop x = 1 (x + 1)
 
 ## Throwing
 
-By default, a loop will never terminate. This means you will need to set an exit
-condition in order for the loop to be useful.
+By default, a loop will never terminate.
+This means you will need to set an exit condition in order for the loop to be useful.
 
-So, loops can be thrown values, just like `catch` blocks can. When this happens,
-the loop terminates, and evaluates to the thrown value.
+So, loops can be thrown values, just like `catch` blocks can. 
+When this happens, the loop terminates, and evaluates to the thrown value.
 
 <!--wolf-->
 ```
@@ -45,8 +45,7 @@ Standard throwing rules apply; throws must be local (non-viral) and type-safe.
 
 ## Multiple data
 
-Using tuple captures, a loop can keep track of multiple named data with every
-iteration.
+Using tuple captures, a loop can keep track of multiple named data with every iteration.
 
 <!--wolf-->
 ```

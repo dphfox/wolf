@@ -31,8 +31,8 @@ Empty tuples are also allowed. Conceptually, they contain no data.
 
 ## Single-value tuples
 
-Wolf can automatically convert between single-value tuples of any depth. This
-includes getting rid of all tuples.
+Wolf can automatically convert between single-value tuples of any depth. 
+This includes getting rid of all tuples.
 
 <!--wolf-->
 ```
@@ -42,13 +42,11 @@ includes getting rid of all tuples.
 [[[2]]]
 ```
 
-This is only done in limited situations where there's a clear conversion to be
-made.
+This is only done in limited situations where there's a clear conversion to be made.
 
 ## Named data
 
-By default, data in tuples is named automatically by position, starting with `0`
-for the first datum, `1` for the second datum, etc.
+By default, data in tuples is named automatically by position, starting with `0` for the first datum, `1` for the second datum, etc.
 
 <!--wolf-->
 ```
@@ -59,8 +57,8 @@ for the first datum, `1` for the second datum, etc.
 ]
 ```
 
-You can explicitly provide names by putting a dot-prefixed name before the
-data. As with all names, backticks are optional.
+You can explicitly provide names by putting a dot-prefixed name before the data.
+As with all names, backticks are optional.
 
 <!--wolf-->
 ```
@@ -83,11 +81,10 @@ Names can't be reused in the same tuple.
 ]
 ```
 
-It's valid to mix explicitly named data with unnamed data. Unnamed data will not 
-consider explicitly named data when assigning automatic names.
+It's valid to mix explicitly named data with unnamed data. 
+Unnamed data will not consider explicitly named data when assigning automatic names.
 
-Be aware that explicitly named data can still have namespace collisions with
-automatically named data.
+Be aware that explicitly named data can still have namespace collisions with automatically named data.
 
 <!--wolf-->
 ```
@@ -104,8 +101,7 @@ automatically named data.
 
 ## Accessing data
 
-You can access a datum with the dot `.` operator, followed by the name of the
-datum to be accessed.
+You can access a datum with the dot `.` operator, followed by the name of the datum to be accessed.
 
 <!--wolf-->
 ```
@@ -121,8 +117,7 @@ datum to be accessed.
 
 ## Flattening
 
-If you're putting a tuple inside of another tuple, you can flatten its contents
-by using an ellipsis `...` instead of a name.
+If you're putting a tuple inside of another tuple, you can flatten its contents by using an ellipsis `...` instead of a name.
 
 <!--wolf-->
 ```

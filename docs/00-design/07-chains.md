@@ -19,11 +19,11 @@ The final expression determines the value of the chain as a whole.
 
 ## Forward passing
 
-The key feature that makes chains useful is forward passing. This is when the
-result of the previous expression is used in the next expression.
+The key feature that makes chains useful is forward passing. 
+This is when the result of the previous expression is used in the next expression.
 
-The underscore `_` name is reserved by Wolf. In a chain, it refers to the result 
-of the previous expression.
+The underscore `_` name is reserved by Wolf. 
+In a chain, it refers to the result of the previous expression.
 
 <!--wolf-->
 ```
@@ -35,8 +35,8 @@ of the previous expression.
 
 In some common cases, Wolf can infer where the first underscore goes.
 
-For these cases, you can use the fat arrow `=>` instead. This tells Wolf to
-insert the first underscore for you.
+For these cases, you can use the fat arrow `=>` instead. 
+This tells Wolf to insert the first underscore for you.
 
 <!--wolf-->
 ```

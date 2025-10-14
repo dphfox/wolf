@@ -4,8 +4,7 @@ title: Captures
 page_number: 9
 ---
 
-Captures describe how to name parts of a datum, so that the parts of the datum
-can be used individually in other computations.
+Captures describe how to name parts of a datum, so that the parts of the datum can be used individually in other computations.
 
 ## Name captures
 
@@ -37,8 +36,7 @@ let [first, second, third] = [1, 2, 3]
 
 ### Explicit names
 
-Explicitly named data can be accessed by including a dot-prefixed name before
-the name you wish to capture into.
+Explicitly named data can be accessed by including a dot-prefixed name before the name you wish to capture into.
 
 <!--wolf-->
 ```
@@ -62,8 +60,7 @@ let [first : num, second : num, third : num] = [1, 2, 3]
 let [.first_name : string, .age : num] = [.first_name "Adam", .age 27]
 ```
 
-Colons can also be used on a whole tuple capture to type the whole tuple at
-once.
+Colons can also be used on a whole tuple capture to type the whole tuple at once.
 
 <!--wolf-->
 ```
@@ -72,8 +69,7 @@ let [first, second, third] : [num, num, num] = [1, 2, 3]
 
 ### Rest-of-tuple capture
 
-Mirroring tuple flattening syntax, the rest of a tuple's data can be captured at
-the end using ellipsis `...`.
+Mirroring tuple flattening syntax, the rest of a tuple's data can be captured at the end using ellipsis `...`.
 
 <!--wolf-->
 ```
@@ -81,8 +77,7 @@ the end using ellipsis `...`.
 let [.first_name, ... rest] = [.first_name "Adam", .age 27]
 ```
 
-Multiple rest-of-tuple captures are not allowed because it would be ambiguous
-how much to capture for each one.
+Multiple rest-of-tuple captures are not allowed because it would be ambiguous how much to capture for each one.
 
 <!--wolf-->
 ```

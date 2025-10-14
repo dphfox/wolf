@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Functions
-page_number: 10
+page_number: 11
 ---
 
 Functions represent an expression done on an unknown datum.
@@ -35,11 +35,9 @@ let five = lerp [.from 0, .to 10, .ratio 0.5]
 
 ## First-class functions
 
-In Wolf, functions are first-class; that is, you can pass functions around like
-values.
+In Wolf, functions are first-class; that is, you can pass functions around like values.
 
-In fact, all functions in Wolf are values; "freestanding" functions are simply
-function values assigned to names with `let`.
+In fact, all functions in Wolf are values; "freestanding" functions are simply function values assigned to names with `let`.
 
 <!--wolf-->
 ```
@@ -56,9 +54,8 @@ let final_price = price_info [
 
 Wolf only uses locally visible information to fill in missing type information.
 
-As a result, functions stored in `let` assignments must always have explicit
-type information; a `let` statement gives no context about how the function will
-be used.
+As a result, functions stored in `let` assignments must always have explicit type information.
+This is because `let` statements give no context about how the function will be used.
 
 <!--wolf-->
 ```
@@ -67,8 +64,7 @@ let multiply_add = fn [x, y, z] x * y + z
 ```
 
 However, functions defined in other places may be able to draw on other context.
-For example, a function "callback" passed into another function can draw on type
-information provided by the outer function.
+For example, a function "callback" passed into another function can draw on type information provided by the outer function.
 
 <!--wolf-->
 ```

@@ -24,8 +24,8 @@ Conventionally, names are written in `snake_case`.
 
 ## Without backticks
 
-Some simple names do not need backticks. Any contiguous span of letters and
-digits is interpreted as a name.
+Some simple names do not need backticks. 
+Any contiguous span of letters and digits is interpreted as a name.
 
 <!--wolf-->
 ```
@@ -40,8 +40,7 @@ In addition, a few extra characters are permitted without backticks:
 - Underscores `_` are allowed anywhere in a name.
 - One decimal point `.` is allowed per name; it must be surrounded by digits.
 
-Any extra characters that don't follow those rules will not be included in the
-name unless backticks are used.
+Any extra characters that don't follow those rules will not be included in the name unless backticks are used.
 
 <!--wolf-->
 ```

@@ -1,14 +1,12 @@
 ---
 layout: page
 title: Conditions
-page_number: 11
+page_number: 12
 ---
 
-Code often needs to do one thing or another, dependent on a condition being true
-or false.
+Code often needs to do one thing or another, dependent on a condition being true or false.
 
-Wolf provides conditional expressions for evaluating one expression or another
-based on the outcome of a condition expression.
+Wolf provides conditional expressions for evaluating one expression or another based on the outcome of a condition expression.
 
 ## Basic use
 
@@ -38,8 +36,7 @@ let get_account_type = fn [age : num] if age < 18 then "Child" else 2
 
 ## Multiple conditions
 
-Conditional expressions can be composed together in order to test more than one
-condition at a time.
+Conditional expressions can be composed together in order to test more than one condition at a time.
 
 <!--wolf-->
 ```

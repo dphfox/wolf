@@ -4,7 +4,8 @@ title: Numbers
 page_number: 2
 ---
 
-All names that look like numbers are reserved by Wolf. Each one refers either to:
+All names that look like numbers are reserved by Wolf. 
+Each one refers either to:
 
 - An exact integer value (of type `int`)
 - The floating point value that minimally diverges from the written digits (of type `num`)
@@ -24,9 +25,8 @@ Names consisting of only digits refer to integer numbers of type `int`.
 
 ## Numbers
 
-A decimal point `.` can be used in the name to delimit an integer and fractional
-part. When a decimal point is present, the type is `num`, even if the fractional
-part is 0.
+A decimal point `.` can be used in the name to delimit an integer and fractional part.
+When a decimal point is present, the type is `num`, even if the fractional part is 0.
 
 <!--wolf-->
 ```
@@ -54,9 +54,9 @@ Underscores `_` are permitted between digits, and will be ignored by Wolf.
 
 An exponent can be added to any number when using backticks.
 
-Use `e` after the main part of the number to delimit the exponent. It must be 
-followed by either `+` or `-` to denote the sign of the exponent. Then, write
-the integer exponent.
+Use `e` after the main part of the number to delimit the exponent. 
+It must be followed by either `+` or `-` to denote the sign of the exponent. 
+Then, write the integer exponent.
 
 Exponents are case sensitive and are only available when using decimal digits.
 
@@ -71,8 +71,7 @@ Exponents are case sensitive and are only available when using decimal digits.
 
 ## Change of base
 
-Numbers starting with `0x` are interpreted using hexadecimal digits instead of
-decimal digits.
+Numbers starting with `0x` are interpreted using hexadecimal digits instead of decimal digits.
 
 Similarly, numbers starting with `0b` are interpreted using binary digits.
 
