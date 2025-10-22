@@ -12,7 +12,8 @@ This is a leaky abstraction as the surrounding application still needs to consid
 
 Consider this hypothetical example of an array of employees, and a function returning a pointer/reference to a "receptionist":
 
-```wf
+<!--wolf-->
+```
 let person = ty [
 	.name : str
 	.age  : num
@@ -37,7 +38,8 @@ let employees = [
 If Wolf had pointers or first-class references, it'd be possible to have a reference to a member of `employees` without _also_ having a reference to `employees` itself.
 For example:
 
-```wf
+<!--wolf-->
+```
 -- This function doesn't know that it will depend on `employees` specifically;
 -- they can't even see the data source they depend on.
 let get_employee_name = fn [employee: ^person] employee.name
@@ -57,7 +59,8 @@ Wolf retains the use of pointers/references, but only as a second-class construc
 
 To rework the above example:
 
-```wf
+<!--wolf-->
+```
 -- The data dependency has been made clear.
 -- A reference to the data source must be directly available, preserving local reasoning.
 let get_employee_name = fn [employees: ^[... person], employee_id: num] (
@@ -69,7 +72,8 @@ let get_employee_name = fn [employees: ^[... person], employee_id: num] (
 In this way, the data source becomes a viral annotation on all code that requires access to it.
 In turn, this allows data sources to be lexically scoped and served via requests.
 
-```wf
+<!--wolf-->
+```
 let employees = ty [... person]
 
 -- No need to explicitly bundle the data source with the input datum.
