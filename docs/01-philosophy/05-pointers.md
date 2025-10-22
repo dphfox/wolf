@@ -10,7 +10,7 @@ However, there are a few notable issues with pointers that motivate Wolf to avoi
 Firstly, pointers are an implicit data dependency which do not need to be declared.
 This is a leaky abstraction as the surrounding application still needs to consider this data dependency, but it is not declared anywhere.
 
-Consider this hypothetical example of an array of employees, and a function returning a pointer/reference to a "receptionist":
+Consider this hypothetical example of an array of employees.
 
 <!--wolf-->
 ```
