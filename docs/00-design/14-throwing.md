@@ -56,9 +56,6 @@ Throws are explicitly _lexically scoped_.
 
 <!--wolf-->
 ```
--- This is not allowed.
-let foo = fn [message : str] throw message
-
 -- `bar` becomes "Hello, world".
 let bar = catch (
 	-- This `throw` will go straight to bar's `catch` immediately.
