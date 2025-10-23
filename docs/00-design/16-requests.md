@@ -16,7 +16,7 @@ Dependencies can be requested in any expression by writing:
 - The `req` keyword.
 - A capture or type name, describing the type of data that should be requested.
 
-Any user of the expression will implicitly also request the dependency.
+Any user of the expression in will implicitly also request the dependency.
 
 <!--wolf-->
 ```
@@ -56,7 +56,7 @@ let quadruple_the_number = fn [] double_the_number [] * 2
 let sixteen = quadruple_the_number []
 ```
 
-Providers shadow each other lexically; requests will use the most nested provider that satisfies the request.
+Providers shadow each other topologically; requests will use the most nested provider that satisfies the request.
 
 <!--wolf-->
 ```
