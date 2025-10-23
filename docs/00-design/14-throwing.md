@@ -41,6 +41,7 @@ let three = catch (
 ```
 
 Throwing is strictly local; you cannot throw to a `catch` block elsewhere in the source code.
+In particular, the call stack of the function is not considered.
 
 <!--wolf-->
 ```
@@ -50,10 +51,24 @@ let foo = fn [message : str] throw message
 let bar = catch ( foo ["Hello world"] )
 ```
 
-All thrown values must evaluate to a type compatible with the `catch` block.
+Even if the whole call stack is locally known, it is not considered at all.
+Throws are explicitly _lexically scoped_.
 
 <!--wolf-->
 ```
 -- This is not allowed.
-let foo = catch ( if true then throw "string" else 5 )
+let foo = fn [message : str] throw message
+
+-- `bar` becomes "Hello, world".
+let bar = catch (
+	-- This `throw` will go straight to bar's `catch` immediately.
+	let foo = fn [message : str] throw message
+
+	-- garb's `catch` block can only be discovered via the call stack, so it's not considered. 
+	let garb = catch (
+		foo ["Hello, world"] -- immediately throws to `bar`
+	)
+	-- This value will never be returned as a result.
+	"Goodbye, world"
+)
 ```
