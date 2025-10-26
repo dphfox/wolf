@@ -1,12 +1,12 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./docs/assets/logo-dark.svg">
-  <img alt="Wolf logo" src="./docs/assets/logo-light.svg">
-</picture>
 
-<br>
-
-# The Wolf Scripting Language
-
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./docs/assets/logo-dark.svg">
+    <img alt="Wolf logo" src="./docs/assets/logo-light.svg">
+  </picture>
+  <img width="1">
+  The Wolf Scripting Language<br>
+</h1>
 Wolf is an expression-based declarative scripting language, built to be:
 
 - **Easy.** Bring your own paradigms, and use them ergonomically.
