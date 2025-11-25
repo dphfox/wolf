@@ -23,7 +23,7 @@ let ten = (
 In some cases, explicit blocks can lead to large amounts of nesting, especially when guarding against some conditions.
 
 <!--wolf-->
-```wolf
+```
 fn perform_transaction [.account_id : num, .item_price : num] (
 	let account = get_account [.id account_id]
 	if !account.exists then throw error [.reason "Account does not exist"]
@@ -45,7 +45,7 @@ To alleviate this, blocks can be implicitly scoped using a colon `:` instead of 
 Implicit blocks run until the end of the first well-defined ancestor block.
 
 <!--wolf-->
-```wolf
+```
 fn perform_transaction [.account_id : num, .item_price : num] (
 	let account = get_account [.id account_id]
 	if !account.exists then error [.reason "Account does not exist"]
