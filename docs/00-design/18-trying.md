@@ -15,7 +15,7 @@ Instead of erroring, `try` statements allow code to explicitly handle data that 
 
 - The `try` keyword.
 - An "attempt" expression that might not type check.
-- The `else` keyword.
+- The `else` keyword. 
 - A default expression to be used when the attempt block does not type check.
 
 <!--wolf-->
@@ -31,7 +31,7 @@ Multiple `try` sections can be added, similarly to an `if` expression, to define
 
 <!--wolf-->
 ```
--- The expressions are attemted in order of appearance.
+-- The expressions are attempted in order of appearance.
 let timeout = 
 	try workspace_config.service.timeout
 	try folder_config.service.timeout
