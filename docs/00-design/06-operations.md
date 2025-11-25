@@ -37,6 +37,8 @@ They can be included in other expressions; the contents of the block are evaluat
 2 * (5 + 3)
 ```
 
+Other kinds of block will be introduced later.
+
 ## Special notation
 
 Certain functions in Wolf are important enough to have special notation.
@@ -56,10 +58,10 @@ Certain functions in Wolf are important enough to have special notation.
 4 /^ 3
 
 -- Equality comparisons.
-1 + 1 = 4 - 2 = 2
+1 + 1 == 4 - 2 == 2
 
 -- Equality comparisons and boolean combination.
-9 = 9 and 10 = 10 or 19 ~= 21
+9 == 9 and 10 == 10 or 19 != 21
 
 -- Single-ended ranges.
 (2 < 5) and (3 <= 3) or (4 > 5) and (6 >= 0)
@@ -77,12 +79,12 @@ Other non-operators are also included to complete the comparison.
 
 | Syntax     | Function                     | Priority  | Notes
 |------------|------------------------------|-----------|-------------
-| `A [B]`    | *(function evaluation)*      | ▲ ▲ ▲ ▲ ▲ ▲ ▲ |
-| `A.B`      | *(accessing named data)*     | ▲ ▲ ▲ ▲ ▲ ▲   |
-| `!A`       | `boolean_not [A]`            | ▲ ▲ ▲ ▲ ▲     |
-| `#A`       | `count A`                    | ▲ ▲ ▲ ▲       |
-| `-A`       | `negate A`                   | ▲ ▲ ▲         | Pick one[^neg]
-| `+A`       | `double_negate A`            | ▲ ▲ ▲         | Pick one[^neg]
+| `A [B]`    | *(function evaluation)*      | ▲ ▲ ▲ ▲ ▲     |
+| `A.B`      | *(accessing named data)*     | ▲ ▲ ▲ ▲       |
+| `!A`       | `invert A`                   | ▲ ▲ ▲         | Pick one[^unary]
+| `-A`       | `negate A`                   | ▲ ▲ ▲         | Pick one[^unary]
+| `+A`       | `double_negate A`            | ▲ ▲ ▲         | Pick one[^unary]
+| `#A`       | `count A`                    | ▲ ▲ ▲         | Pick one[^unary]
 | `A ^ B`    | `exponent [A, B, ...]`       | ▲ ▲           |
 | `A * B`    | `multiply [A, B, ...]`       | ▲             |
 | `A / B`    | `divide [A, B, ...]`         | ▲             |
@@ -91,18 +93,18 @@ Other non-operators are also included to complete the comparison.
 | `A % B`    | `floor_mod [A, B, ...]`      | ▲             |
 | `A + B`    | `add [A, B, ...]`            |               |
 | `A - B`    | `subtract [A, B, ...]`       |               |
-| `A = B`    | `equals [A, B, ...]`         | ▼             |
-| `A != B`   | `not_equals [A, B, ...]`     | ▼             |
 | `A < B`    | `less_than [A, B]`           | ▼             | Must form an order[^ineq]
 | `A > B`    | `more_than [A, B]`           | ▼             | Must form an order[^ineq]
 | `A <= B`   | `less_or_equals [A, B]`      | ▼             | Must form an order[^ineq]
 | `A >= B`   | `more_or_equals [A, B]`      | ▼             | Must form an order[^ineq]
-| `A and B`  | `boolean_and [A, B, ...]`    | ▼ ▼           |
-| `A or B`   | `boolean_or [A, B, ...]`     | ▼ ▼ ▼         |
-| `A -> B`   | *(manual chaining)*          | ▼ ▼ ▼ ▼       |
-| `A => B`   | *(automatic chaining)*       | ▼ ▼ ▼ ▼       |
+| `A == B`   | `equals [A, B, ...]`         | ▼ ▼           |
+| `A != B`   | `invert_equals [A, B, ...]`  | ▼ ▼           |
+| `A and B`  | `and_values [A, B, ...]`     | ▼ ▼ ▼         |
+| `A or B`   | `or_values [A, B, ...]`      | ▼ ▼ ▼ ▼       |
+| `A -> B`   | *(manual chaining)*          | ▼ ▼ ▼ ▼ ▼     |
+| `A => B`   | *(automatic chaining)*       | ▼ ▼ ▼ ▼ ▼     |
 
-[^neg]: `-A` cannot be mixed with `+A` at the same level.
+[^unary]: Unary operators cannot be mixed.
 
 [^ineq]: `<` / `<=` cannot be mixed with `>` / `>=` at the same level.
 
@@ -128,3 +130,5 @@ You can use this behaviour to explicitly convert between `num` and `int`:
 -- Floors the floating-point number towards the smallest integer greater than it.
 2.4 /^ 1
 ```
+
+Note that `num` and `int` may handle overflow, underflow, and division by zero differently to each other.

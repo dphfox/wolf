@@ -1,104 +1,111 @@
-let [*] = image::prelude::*
+let ... = image.prelude
 
-let output_as = mod (
-	let bleed = identity
-	let bleed_opaque = identity
-	let coverage = identity
-	let uv = identity
-	let distance = identity
-)
+let output_as = [
+	.bleed         uni
+	.bleed_opaque  uni
+	.coverage      uni
+	.uv            uni
+	.distance      uni
+]
 
-let main = algo [raw_args / [...str]] (
-	let args = raw_args => cli.parse
-	await print "Loading image from \(args.input)"
+let main = fn [
+	args : [... str]
+] (
+	let args = args => cli.parse []
+	print ["Loading image from \(args.input)"] ->:
 
 	let img =
-		image::open args.input => expect "Failed to open image" =>
-		with_guessed_format => expect "Failed to guess format of image" =>
-		decode => expect "Failed to decode image"
+		image.open [args.input] => expect ["Failed to open image"] =>
+		with_guessed_format [] => expect ["Failed to guess format of image"] =>
+		decode [] => expect ["Failed to decode image"]
 
-	let size = img => size
-	await print "Image size is \(size.0) x \(size.1)"
+	let size = img => size []
+	print ["Image size is \(size.0) x \(size.1)"] ->:
 
-	let var search_radius = max size => log2 => ceil => exp2 => floor_div 2
-	await print "Will use a search radius of \(search_radius)"
+	let search_radius = size => max [] => log2 [] => ceil [] => exp2 [] -> that // 2
+	print ["Will use a search radius of \(search_radius)"] ->:
 
-	let preserve_above = args.preserve_above => ok_or 0
-	await print "Will preserve alpha above \(preserve_above)"
-	await print "Will use \(args.edge_mode) edge behaviour"
+	let preserve_above = try args.preserve_above else 0
+	print ["Will preserve alpha above ", preserve_above] ->:
+	print ["Will use ", args.edge_mode, " edge behaviour"] ->:
 
-	await print "Preparing Voronoi graph for filling..."
+	print ["Preparing Voronoi graph for filling..."] ->:
 
-	let voronoi = voronoi::create [
-		.size size
+	let voronoi = voronoi.create [
+		.size     size
 		.contents fn [pos] (
 			let alpha = img => get pos
 			if alpha > preserve_above (some pos) else (none)
 		)
 	]
 
-	await print "Filling Voronoi graph..."
+	print ["Filling Voronoi graph..."] ->:
 
-	do loop (
-		let @jfa
-		let results: [0, 0] => count_until size => 
-			map fn [x, y] (
-				let index: x * size.0 + y
-				let closest: [
-					voronoi_read => get_closest [mode: args.edge_mode, at: [x, y]]
-					voronoi_read => get_closest [mode: args.edge_mode, at: [x, y - search_radius]]
-					voronoi_read => get_closest [mode: args.edge_mode, at: [x, y + search_radius]]
-					voronoi_read => get_closest [mode: args.edge_mode, at: [x - search_radius, y]]
-					voronoi_read => get_closest [mode: args.edge_mode, at: [x + search_radius, y]]
-					voronoi_read => get_closest [mode: args.edge_mode, at: [x - search_radius, y - search_radius]]
-					voronoi_read => get_closest [mode: args.edge_mode, at: [x - search_radius, y + search_radius]]
-					voronoi_read => get_closest [mode: args.edge_mode, at: [x + search_radius, y - search_radius]]
-					voronoi_read => get_closest [mode: args.edge_mode, at: [x + search_radius, y + search_radius]]
+	let voronoi = loop [search_radius, voronoi_read] = [search_radius, voronoi] (
+		let results = [0, 0] => 
+			count_until [size] => 
+			map [fn [x, y] (
+				let index = x * size.0 + y
+				let closest = [
+					voronoi_read => closest [.mode args.edge_mode, .at [x, y]]
+					voronoi_read => closest [.mode args.edge_mode, .at [x, y - search_radius]]
+					voronoi_read => closest [.mode args.edge_mode, .at [x, y + search_radius]]
+					voronoi_read => closest [.mode args.edge_mode, .at [x - search_radius, y]]
+					voronoi_read => closest [.mode args.edge_mode, .at [x + search_radius, y]]
+					voronoi_read => closest [.mode args.edge_mode, .at [x - search_radius, y - search_radius]]
+					voronoi_read => closest [.mode args.edge_mode, .at [x - search_radius, y + search_radius]]
+					voronoi_read => closest [.mode args.edge_mode, .at [x + search_radius, y - search_radius]]
+					voronoi_read => closest [.mode args.edge_mode, .at [x + search_radius, y + search_radius]]
 				] => 
 				into_stream =>
-				filter_map fn position (
-					if let <some position>: position (
-						let offset: position - [x, y]
-						let distance: offset => magnitude
-						some [position, distance]
-					) else (none)
-				) => 
-				reduce fn [best, candidate] (
-					if candidate.1 < best.1 (candidate) else (best)
-				)
+				filter_map [fn [position] try (
+					let position = position.value
+					let offset = position - [x, y]
+					let distance = offset => magnitude []
+					some [position, distance]
+				) else none] =>
+				reduce [fn [best, candidate] if candidate.1 < best.1 then candidate else best]
 
-				if let <some closest>: closest (
-					some [at: [x, y], value: some closest.0]
-				) else (none)
+				try (some [
+					.at    [x, y]
+					.value some [closest.value]
+				]) else none
+			)]
+		let voronoi_write = voronoi.from_grid [results]
+		if search_radius <= 1 then throw voronoi_write else [search_radius // 2, voronoi_write]
+	)
+
+	if args.output_as : output_as.bleed (
+		print ["Bleeding pixels and preserving alpha..."] ->:
+		for pos in [0, 0] => count_until size (
+			if let <some closest_pos>: voronoi_read => get_closest [mode: args.edge_mode, at: pos] (
+				let rgba = [
+					image => get_pixel closest_pos -> _.[0, 1, 2]...
+					image => get_pixel image_pos -> _.3
+				]
+				image => put_pixel [at: pos, put: rgba]
+			) else (
+				image => put_pixel [at: pos, put: [0, 0, 0, 0]]
 			)
-		
-		for result in results (
-			voronoi_write => set_closest result
-		)
-
-		do [voronoi_read, voronoi_write] = [voronoi_write, voronoi_read]
-
-		if search_radius <= 1 (
-			do break @jfa
-		) else (
-			do search_radius /= 2
 		)
 	)
+	if args.output_as : output_as.bleed_opaque (
+
+	)
+	if args.output_as : output_as.uv (
+
+	)
+	if args.output_as : output_as.coverage (
+
+	)
+	if args.output_as : output_as.distance (
+
+	)
+	else ()
 
 	match args.output_as (
 		if let <output_as.bleed> (
-			do print "Bleeding pixels and preserving alpha..."
-			for pos in [0, 0] => count_until size (
-				if let <some closest_pos>: voronoi_read => get_closest [mode: args.edge_mode, at: pos] (
-					let rgba = [
-						image => get_pixel closest_pos -> _.[0, 1, 2]...
-						image => get_pixel image_pos -> _.3
-					]
-					image => put_pixel [at: pos, put: rgba]
-				) else (
-					image => put_pixel [at: pos, put: [0, 0, 0, 0]]
-				)
-			)
+			
 		)
 		if let <output_as.bleed_opaque> (
 			do print "Bleeding pixels and discarding alpha..."

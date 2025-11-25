@@ -4,7 +4,7 @@ title: Numbers
 page_number: 2
 ---
 
-All names that look like numbers are reserved by Wolf. 
+Names that look like numbers are reserved by Wolf. 
 Each one refers either to:
 
 - An exact integer value (of type `int`)

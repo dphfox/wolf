@@ -33,7 +33,7 @@ When this happens, the loop terminates, and evaluates to the thrown value.
 <!--wolf-->
 ```
 -- Find the largest multiple of two that's less than `limit`.
-let largest_mult = fn [.limit : num] loop n = 2 (
+let largest_mult = fn [.limit ~ num] loop n = 2 (
 	if 2 * n > limit then throw n
 	else n * 2
 )

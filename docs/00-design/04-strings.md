@@ -4,7 +4,7 @@ title: Strings
 page_number: 4
 ---
 
-In Wolf, strings are an array of bytes conventionally representing UTF-8 text with LF line endings.
+In Wolf, strings are an array of bytes representing literal UTF-8/LF text from the source file.
 
 ## String literals
 

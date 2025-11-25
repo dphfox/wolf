@@ -89,13 +89,13 @@ Be aware that explicitly named data can still have namespace collisions with aut
 <!--wolf-->
 ```
 [
-	0         -- named `0`
-	1         -- named `1`
-	.foo "a"  -- named `foo`
-	2,        -- named `2`
-	.bar "b", -- named `bar`
-	3,        -- named `3`
-	4         -- named `4`
+	10         -- named `0`
+	11         -- named `1`
+	.foo "a"   -- named `foo`
+	12,        -- named `2`
+	.bar "b",  -- named `bar`
+	13,        -- named `3`
+	14         -- named `4`
 ]
 ```
 

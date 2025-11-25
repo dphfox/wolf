@@ -8,18 +8,26 @@ The Wolf parser respects a few formatting conventions when parsing source code.
 
 ## File encoding
 
-All Wolf files must be parseable as valid ASCII or UTF-8.
+Files are expected to be ASCII or UTF-8. Other encodings are not supported.
 
-Valid Wolf files may use either CRLF or LF line endings. 
-However, during parsing, all line endings are normalised to LF, ensuring program behaviour is consistent regardless of line ending convention used.
+Valid Wolf files may use either CRLF or LF line endings. CR line endings are not supported.
+
+The choice of encoding has no effect on program execution; it is not detectable.
 
 ## New lines
 
-The only meaningful whitespace in Wolf are new lines.
-When the parser encounters a new line, it will end any in-progress parsing if possible.
-An in-progress parse will only continue if ending the parse would result in incomplete syntax.
+Syntax doesn't run onto new lines unless it is incomplete.
 
-Non-syntax errors are not considered when processing newlines.
+<!--wolf-->
+```
+-- This is interpreted as running onto the next line.
+let foo = 2 -
+5
+
+-- This is interpreted as two statements on different lines.
+let foo = 2
+-5
+```
 
 ## Comments
 

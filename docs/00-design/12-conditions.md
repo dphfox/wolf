@@ -10,7 +10,7 @@ Wolf provides conditional expressions for evaluating one expression or another b
 
 ## Basic use
 
-A conditional expression is made of a few parts:
+A simple conditional expression is made of a few parts:
 
 - The `if` keyword.
 - The condition: an expression that evaluates to a bool.
@@ -36,14 +36,20 @@ let get_account_type = fn [age : num] if age < 18 then "Child" else 2
 
 ## Multiple conditions
 
-Conditional expressions can be composed together in order to test more than one condition at a time.
+Multiple `if` branches can be provided before the `else` branch to test multiple conditions in order of appearance.
 
 <!--wolf-->
-```
+```wolf
 let secret_number = 5
+
+-- These two functions are equivalent.
+let guess = fn [guess : num]
+	if guess > secret_number then "Too high..." else (
+		if guess < secret_number then "Too low..." else "Just right!"
+	)
 
 let guess = fn [guess : num]
 	if guess > secret_number then "Too high..." 
-	else if guess < secret_number then "Too low..." 
+	if guess < secret_number then "Too low..." 
 	else "Just right!"
 ```
