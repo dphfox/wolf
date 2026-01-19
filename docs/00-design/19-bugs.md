@@ -4,7 +4,11 @@ title: Bugs
 page_number: 19
 ---
 
-Wolf ensures that any compiled program can accept 
+Wolf ensures that any compiled program can accept its full domain of values. 
+Where possible, these checks are done at compile-time for best stability.
+
+However, not all checks can be done ahead of time, for example due to hardware variances or unpredictable inputs.
+For these cases, Wolf allows run-time correctness checks to be added.
 
 ## Basic use
 
