@@ -32,4 +32,4 @@ There is explicitly no valid value for the resulting computation, or for any acc
 As a result, bugs invalidate and terminate all other computations which depend on either of these.
 In the common case, this can manifest as a process exit.
 
-Note that the compiler is free to insert or rearrange bug expressions, so long as they are only inserted or moved within regions of the program where evaluating a bug would be inevitable.
+Note that the compiler is free to insert or rearrange bug expressions, so long as they are only inserted or moved within regions of the program where evaluating a bug would eventually occur under the current conditions.
