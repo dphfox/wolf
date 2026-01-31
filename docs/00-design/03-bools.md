@@ -13,11 +13,8 @@ These are case sensitive.
 
 <!--wolf-->
 ```
--- These refer to a true Boolean outcome.
-`true`
+-- These refer to true and false Boolean outcomes.
 true
--- These refer to a false Boolean outcome.
-`false`
 false
 ```
 

@@ -66,14 +66,13 @@ By default, data in tuples is named automatically by position, starting with `0`
 ```
 
 You can explicitly provide names by putting a dot-prefixed name before the data.
-As with all names, backticks are optional.
 
 <!--wolf-->
 ```
 (
-	.`year` 2015 -- named `year`
-	.month  5    -- named `month`
-	.day    15   -- named `day`
+	.year  2015 -- named `year`
+	.month 5    -- named `month`
+	.day   15   -- named `day`
 )
 ```
 
@@ -83,9 +82,9 @@ Names can't be reused in the same tuple.
 ```
 -- This is not allowed.
 (
-	.`0` 2015, 
-	.0   5, 
-	.0   15
+	.0 2015, 
+	.0 5, 
+	.0 15
 )
 ```
 
@@ -114,13 +113,26 @@ You can access a datum with the dot `.` operator, followed by the name of the da
 <!--wolf-->
 ```
 -- Evaluates to 5.
-(3, 5, 7).1
+(3, 5, 7) .1
 
 -- Evaluates to 2015.
-(.year 2015, .month 5, .day 15).year
+(.year 2015, .month 5, .day 15) .year
 
 -- Evaluates to "Bob"
-(.name "Bob", .age 25).`name`
+(.name "Bob", .age 25) .name
+```
+
+Nested accesses are written with spaces.
+This allows dots to be used in names.
+
+<!--wolf-->
+```
+-- These are allowed.
+(.wolf.phfox.net "hello") .wolf.phfox.net
+(.wolf (.phfox (.net "hello"))) .wolf .phfox .net
+
+-- This is not allowed.
+(.wolf (.phfox (.net "hello"))).wolf.phfox.net
 ```
 
 ## Flattening

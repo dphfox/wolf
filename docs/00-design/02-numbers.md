@@ -18,21 +18,21 @@ Names consisting of only digits refer to integer numbers of type `int`.
 
 <!--wolf-->
 ```
--- These both refer to the integer value of 12345
-`12345`
+5
 12345
+42
+1337
 ```
 
 ## Numbers
 
-A decimal point `.` can be used in the name to delimit an integer and fractional part.
-When a decimal point is present, the type is `num`, even if the fractional part is 0.
+A dot `.` can be written after an integer to append a fractional part.
+When a dot is present, the type is `num`, even if the fractional part is 0.
 
 <!--wolf-->
 ```
--- These refer to the floating point value of 0.125
+-- This refers to the floating point value of 0.125
 0.125
-`0.125`
 
 -- The first value is the integer 0. The second value is floating-point 0.
 0
@@ -41,32 +41,13 @@ When a decimal point is present, the type is `num`, even if the fractional part 
 
 ## Underscores
 
-Underscores `_` are permitted between digits, and will be ignored by Wolf.
+Underscores `_` are permitted in integers and numbers, and will be ignored by Wolf.
 
 <!--wolf-->
 ```
--- These both refer to the floating point value of 12345
-1_2_3_4_5
-`12_345`
-```
-
-## Scientific notation
-
-An exponent can be added to any number when using backticks.
-
-Use `e` after the main part of the number to delimit the exponent. 
-It must be followed by either `+` or `-` to denote the sign of the exponent. 
-Then, write the integer exponent.
-
-Exponents are case sensitive and are only available when using decimal digits.
-
-<!--wolf-->
-```
--- These are valid exponents.
-`1.23e+45`
-`1.23e-45`
--- This is not a valid exponent.
-`1.23e45`
+-- These both refer to the floating point value of 123.45
+1_2_3.4_5
+123.45
 ```
 
 ## Change of base
