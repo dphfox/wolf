@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Throwing
-page_number: 14
+page_number: 13
 ---
 
 Sometimes, deeply nested expressions need to exit early from a computation, or pass a value directly back up to a higher computation without further processing.

@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Bugs
-page_number: 19
+page_number: 18
 ---
 
 Wolf ensures that any compiled program can accept its full domain of values. 

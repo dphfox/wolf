@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Looping
-page_number: 15
+page_number: 14
 ---
 
 Looping allows an expression to run repeatedly until an exit condition is met.

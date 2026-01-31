@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Trying
-page_number: 18
+page_number: 17
 ---
 
 Wolf's type system ensures all data processed by a program meets a certain set of restrictions.

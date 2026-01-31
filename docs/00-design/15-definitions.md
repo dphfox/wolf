@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Definitions
-page_number: 16
+page_number: 15
 ---
 
 Wolf allows you to define new types of data composed from existing types of data.
