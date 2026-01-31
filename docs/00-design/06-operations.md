@@ -14,7 +14,7 @@ This is done by prefixing the tuple with the function name.
 <!--wolf-->
 ```
 -- Negates 2.
-negate [2]
+negate(2)
 ```
 
 The tuple can contain multiple data.
@@ -22,22 +22,8 @@ The tuple can contain multiple data.
 <!--wolf-->
 ```
 -- Adds 9 and 10.
-add [9, 10]
+add(9, 10)
 ```
-
-## Blocks
-
-Blocks are declared with parentheses `()`.
-
-They can be included in other expressions; the contents of the block are evaluated independently of the other expression, meaning they can change the order in which operations are done.
-
-<!--wolf-->
-```
--- The block evaluates to 8, then is multiplied by 2.
-2 * (5 + 3)
-```
-
-Other kinds of block will be introduced later.
 
 ## Special notation
 
@@ -79,28 +65,28 @@ Other non-operators are also included to complete the comparison.
 
 | Syntax     | Function                     | Priority  | Notes
 |------------|------------------------------|-----------|-------------
-| `A [B]`    | *(function evaluation)*      | ▲ ▲ ▲ ▲ ▲     |
+| `A(B)`     | *(function evaluation)*      | ▲ ▲ ▲ ▲ ▲     |
 | `A.B`      | *(accessing named data)*     | ▲ ▲ ▲ ▲       |
 | `!A`       | `invert A`                   | ▲ ▲ ▲         | Pick one[^unary]
 | `-A`       | `negate A`                   | ▲ ▲ ▲         | Pick one[^unary]
 | `+A`       | `double_negate A`            | ▲ ▲ ▲         | Pick one[^unary]
 | `#A`       | `count A`                    | ▲ ▲ ▲         | Pick one[^unary]
-| `A ^ B`    | `exponent [A, B, ...]`       | ▲ ▲           |
-| `A * B`    | `multiply [A, B, ...]`       | ▲             |
-| `A / B`    | `divide [A, B, ...]`         | ▲             |
-| `A // B`   | `floor_divide [A, B, ...]`   | ▲             |
-| `A /^ B`   | `ceil_divide [A, B, ...]`    | ▲             |
-| `A % B`    | `floor_mod [A, B, ...]`      | ▲             |
-| `A + B`    | `add [A, B, ...]`            |               |
-| `A - B`    | `subtract [A, B, ...]`       |               |
-| `A < B`    | `less_than [A, B]`           | ▼             | Must form an order[^ineq]
-| `A > B`    | `more_than [A, B]`           | ▼             | Must form an order[^ineq]
-| `A <= B`   | `less_or_equals [A, B]`      | ▼             | Must form an order[^ineq]
-| `A >= B`   | `more_or_equals [A, B]`      | ▼             | Must form an order[^ineq]
-| `A == B`   | `equals [A, B, ...]`         | ▼ ▼           |
-| `A != B`   | `invert_equals [A, B, ...]`  | ▼ ▼           |
-| `A and B`  | `and_values [A, B, ...]`     | ▼ ▼ ▼         |
-| `A or B`   | `or_values [A, B, ...]`      | ▼ ▼ ▼ ▼       |
+| `A ^ B`    | `exponent(A, B, ...)`        | ▲ ▲           |
+| `A * B`    | `multiply(A, B, ...)`        | ▲             |
+| `A / B`    | `divide(A, B, ...)`          | ▲             |
+| `A // B`   | `floor_divide(A, B, ...)`    | ▲             |
+| `A /^ B`   | `ceil_divide(A, B, ...)`     | ▲             |
+| `A % B`    | `floor_mod(A, B, ...)`       | ▲             |
+| `A + B`    | `add(A, B, ...)`             |               |
+| `A - B`    | `subtract(A, B, ...)`        |               |
+| `A < B`    | `less_than(A, B)`            | ▼             | Must form an order[^ineq]
+| `A > B`    | `more_than(A, B)`            | ▼             | Must form an order[^ineq]
+| `A <= B`   | `less_or_equals(A, B)`       | ▼             | Must form an order[^ineq]
+| `A >= B`   | `more_or_equals(A, B)`       | ▼             | Must form an order[^ineq]
+| `A == B`   | `equals(A, B, ...)`          | ▼ ▼           |
+| `A != B`   | `invert_equals(A, B, ...)`   | ▼ ▼           |
+| `A and B`  | `and_values(A, B, ...)`      | ▼ ▼ ▼         |
+| `A or B`   | `or_values(A, B, ...)`       | ▼ ▼ ▼ ▼       |
 | `A -> B`   | *(manual chaining)*          | ▼ ▼ ▼ ▼ ▼     |
 | `A => B`   | *(automatic chaining)*       | ▼ ▼ ▼ ▼ ▼     |
 

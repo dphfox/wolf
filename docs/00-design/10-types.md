@@ -26,8 +26,8 @@ tuples.
 In place of sub-values or sub-captures, sub-types are provided as entries.
 
 ```
-[num. str, bool]
-[.name str, .age num]
+(num, str, bool)
+(.name str, .age num)
 ```
 
 As shorthand for arrays with known quantities of a single type, write the
@@ -35,12 +35,12 @@ quantity as an integer, followed by the type.
 
 ```
 -- These are equivalent.
-[num, num, num]
-[3 num]
+(num, num, num)
+(3 num)
 
 -- These are also equivalent.
-[str, bool, bool]
-[str, 2 bool]
+(str, bool, bool)
+(str, 2 bool)
 ```
 
 ## Rest-of-tuple types
@@ -52,8 +52,8 @@ This is most commonly used to represent dynamically-sized arrays.
 
 ```
 -- Any quantity of strings.
-[... str]
+(... str)
 
 -- A name, an age, and some booleans.
-[.name str, .age num, ... bool]
+(.name str, .age num, ... bool)
 ```

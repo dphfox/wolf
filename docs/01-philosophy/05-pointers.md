@@ -13,32 +13,32 @@ Consider this hypothetical example of an array of employees being created by a f
 
 <!--wolf-->
 ```
-let person = ty [
+let person = ty (
 	.name : str
 	.age  : num
-]
+)
 
-let create_employees = fn [] (
-	let employees = [
-		new person [
+let create_employees = fn () (
+	let employees = (
+		new person (
 			.name "James"
 			.age  35
-		],
-		new person [
+		),
+		new person (
 			.name "Susan"
 			.age  34
-		],
-		new person [
+		),
+		new person (
 			.name "Mary"
 			.age 38
-		]
-	]
+		)
+	)
 
 	^employees -- Pseudocode; return a pointer to the employees
 )
 
-let main = fn [] (
-	let employees = create_employees []
+let main = fn () (
+	let employees = create_employees ()
 )
 ```
 
@@ -63,12 +63,12 @@ Let's annotate why the above example fails:
 
 <!--wolf-->
 ```
-let create_employees = fn [] (
-	-- This data is accessible anywhere in the block of `create_employees`.
-	let employees = [ --- omitted --- ]
+let create_employees = fn () (
+	-- This data is accessible anywhere in the tuple of `create_employees`.
+	let employees = ( --- omitted --- )
 	-- It is valid to create a pointer to this data, because we can see it here.
 	let pointer_to_employees = ^employees
-	-- It is _not_ valid to pass this pointer out of this block, because the
+	-- It is _not_ valid to pass this pointer out of this tuple, because the
 	-- scope of the data ends here.
 	pointer_to_employees
 )
@@ -81,14 +81,14 @@ the data moves to the outer scope alongside the pointer.
 
 <!--wolf-->
 ```
-let create_employees = fn [] (
-	let employees = [ --- omitted --- ]
-	[.data employees, .pointer ^employees] -- This is OK again.
+let create_employees = fn () (
+	let employees = ( --- omitted --- )
+	(.data employees, .pointer ^employees) -- This is OK again.
 )
 
-let main = fn [] (
+let main = fn () (
 	-- The data re-appears here next to the pointer; everything works.
-	let [.data, .pointer] = create_employees []
+	let (.data, .pointer) = create_employees ()
 )
 ```
 
@@ -98,15 +98,15 @@ same.
 
 <!--wolf-->
 ```
-let point_at_someone = fn [employees : ^[... person]] (
+let point_at_someone = fn (employees : ^(... person) (
 	employees.2 -- take the `employees` pointer and derive a new pointer to the third employee
 )
 
-let main = fn [] (
+let main = fn () (
 	-- The data exists in this outer scope.
-	let employees = [ --- omitted --- ]
+	let employees = ( --- omitted --- )
 	-- We create a pointer to the data while it's still in this outer scope.
-	let pointer_to_employee = point_at_someone [^employees]
+	let pointer_to_employee = point_at_someone (^employees)
 )
 ```
 
@@ -115,18 +115,18 @@ This allows for compiler-checked transparent passing of data sources to inner fu
 
 <!--wolf-->
 ```
-let employees = ty ^[... person]
+let employees = ty ^(... person)
 
-let point_at_someone = fn [] (
+let point_at_someone = fn () (
 	-- Request the data for use in the inner scope.
 	let employees = req employees
 	employees.2
 )
 
-let main = fn [] (
+let main = fn () (
 	-- Provide the data in the outer scope.
-	prov new employees ^[ --- omitted --- ] (
-		let pointer_to_employee = point_at_someone []
+	prov new employees ^( --- omitted --- ) (
+		let pointer_to_employee = point_at_someone ()
 	)
 )
 ```

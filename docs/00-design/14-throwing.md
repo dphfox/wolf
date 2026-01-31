@@ -4,21 +4,20 @@ title: Throwing
 page_number: 14
 ---
 
-Sometimes, deeply nested expressions need to exit early from a computation, or pass a value directly back up to a higher block without further processing.
+Sometimes, deeply nested expressions need to exit early from a computation, or pass a value directly back up to a higher computation without further processing.
 
 Wolf implements a non-viral, strictly-typed "throwing" and "catching" mechanism to allow nested expressions to exit early.
 
 ## Catching
 
-A block can be prefixed with `catch`. This indicates that the block will catch any value thrown to it.
-When that happens, the block will evaluate to that thrown value.
+A tuple can be prefixed with `catch`. This indicates that expressions inside of the tuple can override what the `catch` tuple evaluates to by "throwing" values to it.
 
 <!--wolf-->
 ```
 let can_catch = catch (2)
 ```
 
-`catch` does not change what the block returns by default.
+`catch` does not change what the tuple evaluates to by default.
 
 <!--wolf-->
 ```
@@ -29,8 +28,8 @@ let foo = catch (2)
 
 ## Throwing
 
-While inside of a `catch` block, any expression can start with `throw`. 
-This short-circuits the rest of the computation and throws the value to the nearest ancestor `catch` block.
+While inside of a `catch` tuple, any expression can start with `throw`. 
+This short-circuits the rest of the computation and throws the value to the nearest ancestor `catch` tuple.
 
 <!--wolf-->
 ```
@@ -40,15 +39,15 @@ let three = catch (
 )
 ```
 
-Throwing is strictly local; you cannot throw to a `catch` block elsewhere in the source code.
-In particular, the call stack of the function is not considered.
+Throwing is strictly local; you cannot throw to a `catch` tuple elsewhere in the source code.
+In particular, the call stack is not considered.
 
 <!--wolf-->
 ```
 -- This is not allowed.
-let foo = fn [message : str] throw message
+let foo = fn(message : str) throw message
 
-let bar = catch ( foo ["Hello world"] )
+let bar = catch ( foo("Hello world") )
 ```
 
 Even if the whole call stack is locally known, it is not considered at all.
@@ -59,11 +58,11 @@ Throws are explicitly _lexically scoped_.
 -- `bar` becomes "Hello, world".
 let bar = catch (
 	-- This `throw` will go straight to bar's `catch` immediately.
-	let foo = fn [message : str] throw message
+	let foo = fn(message : str) throw message
 
-	-- garb's `catch` block can only be discovered via the call stack, so it's not considered. 
+	-- garb's `catch` tuple can only be discovered via the call stack, so it's not considered. 
 	let garb = catch (
-		foo ["Hello, world"] -- immediately throws to `bar`
+		foo("Hello, world") -- immediately throws to `bar`
 	)
 	-- This value will never be returned as a result.
 	"Goodbye, world"

@@ -23,7 +23,7 @@ All parts of the construct are required.
 
 <!--wolf-->
 ```
-let get_account_type = fn [age : num] if age < 18 then "Child" else "Adult"
+let get_account_type = fn(age : num) if age < 18 then "Child" else "Adult"
 ```
 
 The true and false branches must have a compatible type.
@@ -31,7 +31,7 @@ The true and false branches must have a compatible type.
 <!--wolf-->
 ```
 -- This is not allowed.
-let get_account_type = fn [age : num] if age < 18 then "Child" else 2
+let get_account_type = fn(age : num) if age < 18 then "Child" else 2
 ```
 
 ## Multiple conditions
@@ -43,12 +43,12 @@ Multiple `if` branches can be provided before the `else` branch to test multiple
 let secret_number = 5
 
 -- These two functions are equivalent.
-let guess = fn [guess : num]
+let guess = fn(guess : num)
 	if guess > secret_number then "Too high..." else (
 		if guess < secret_number then "Too low..." else "Just right!"
 	)
 
-let guess = fn [guess : num]
+let guess = fn(guess : num)
 	if guess > secret_number then "Too high..." 
 	if guess < secret_number then "Too low..." 
 	else "Just right!"

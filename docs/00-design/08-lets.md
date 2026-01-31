@@ -4,11 +4,11 @@ title: Lets
 page_number: 8
 ---
 
-Lets allow you to introduce names for the duration of a block.
+Lets allow you to introduce names inside the scope of a tuple.
 
 ## Basic use
 
-Any number of lets can be defined in a block before the final expression.
+Any number of lets can be defined in a tuple.
 
 Each let is formed of a few pieces:
 
@@ -22,19 +22,19 @@ In the simplest case, a let introduces one name.
 <!--wolf-->
 ```
 let four = 4
-let negative_two = negate [2]
+let negative_two = negate(2)
 ```
 
-Once a name is introduced anywhere in the block, it can be used anywhere else in the block.
+Once a name is introduced anywhere in the tuple, it can be used anywhere else in the tuple.
 Order does not matter.
 
 <!--wolf-->
 ```
 -- Notice that `four` and `negative_two` are underneath `negative_eight`.
-let negative_eight = four => multiply [negative_two]
+let negative_eight = four => multiply(negative_two)
 
 let four = 4
-let negative_two = negate [2]
+let negative_two = negate(2)
 ```
 
 Conceptually, you can imagine replacing each name with that's name's expression.
@@ -42,7 +42,7 @@ Conceptually, you can imagine replacing each name with that's name's expression.
 <!--wolf-->
 ```
 -- The compiler sees this.
-let negative_eight = 4 => multiply [negate [2]]
+let negative_eight = 4 => multiply(negate(2))
 ```
 
 ## Restrictions
@@ -52,11 +52,11 @@ Expressions in lets must be resolvable without infinite cycles.
 <!--wolf-->
 ```
 -- This is not allowed.
-let two = four => subtract [2]
-let four = two => add [2]
+let two = four => subtract(2)
+let four = two => add(2)
 ```
 
-Additionally, a name cannot be introduced to the same block more than once, as it is unclear which expression should be used.
+Additionally, a name cannot be introduced to the same tuple more than once, as it is unclear which expression should be used.
 
 <!--wolf-->
 ```
@@ -67,7 +67,7 @@ let cool_number = 42
 
 ## Nesting
 
-Inner blocks can see names declared in outer blocks.
+Inner tuples can see names declared in outer tuples.
 
 <!--wolf-->
 ```
@@ -80,8 +80,8 @@ let five = 5
 
 ## Shadowing
 
-Inner blocks can redefine names from outer blocks; this is called shadowing.
-Expressions in the inner block see the inner value, while expressions in the outer block see the outer value.
+Inner tuples can redefine names from outer tuples; this is called shadowing.
+Expressions in the inner tuple see the inner value, while expressions in the outer tuple see the outer value.
 
 <!--wolf-->
 ```

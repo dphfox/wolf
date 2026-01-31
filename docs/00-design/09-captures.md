@@ -31,7 +31,7 @@ Tuple syntax can be used to deconstruct a tuple datum into a set of names.
 
 <!--wolf-->
 ```
-let [first, second, third] = [1, 2, 3]
+let (first, second, third) = (1, 2, 3)
 ```
 
 ### Explicit names
@@ -40,14 +40,14 @@ Explicitly named data can be accessed by including a dot-prefixed name before th
 
 <!--wolf-->
 ```
-let [.first_name first_name, .age age] = [.first_name "Adam", .age 27]
+let (.first_name first_name, .age age) = (.first_name "Adam", .age 27)
 ```
 
 If the two names are the same, the second name can be omitted.
 
 <!--wolf-->
 ```
-let [.first_name, .age] = [.first_name "Adam", .age 27]
+let (.first_name, .age) = (.first_name "Adam", .age 27)
 ```
 
 ### Tuple typing
@@ -56,15 +56,15 @@ Colons can be used on individul names to specify types.
 
 <!--wolf-->
 ```
-let [first : num, second : num, third : num] = [1, 2, 3]
-let [.first_name : string, .age : num] = [.first_name "Adam", .age 27]
+let (first : num, second : num, third : num) = (1, 2, 3)
+let (.first_name : string, .age : num) = (.first_name "Adam", .age 27)
 ```
 
 Colons can also be used on a whole tuple capture to type the whole tuple at once.
 
 <!--wolf-->
 ```
-let [first, second, third] : [num, num, num] = [1, 2, 3]
+let (first, second, third) : (num, num, num) = (1, 2, 3)
 ```
 
 ### Rest-of-tuple capture
@@ -73,8 +73,8 @@ Mirroring tuple flattening syntax, the rest of a tuple's data can be captured at
 
 <!--wolf-->
 ```
--- `rest` becomes `[.age 27]`.
-let [.first_name, ... rest] = [.first_name "Adam", .age 27]
+-- `rest` becomes `(.age 27)`.
+let (.first_name, ... rest) = (.first_name "Adam", .age 27)
 ```
 
 Multiple rest-of-tuple captures are not allowed because it would be ambiguous how much to capture for each one.
@@ -82,5 +82,5 @@ Multiple rest-of-tuple captures are not allowed because it would be ambiguous ho
 <!--wolf-->
 ```
 -- This is not allowed.
-let [... one, ... two] = [.first_name "Adam", .age 27]
+let (... one, ... two) = (.first_name "Adam", .age 27)
 ```

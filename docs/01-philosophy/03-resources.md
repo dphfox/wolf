@@ -10,17 +10,17 @@ This rule was chosen because it can be explained in one sentence, and ensures us
 Applying this rule leads to a simple variant of region-based memory management.
 
 Consider the common example of memory management. 
-Suppose we define a variable inside of a block, which stores a value that requires allocation.
+Suppose we define a variable inside of a tuple, which stores a value that requires allocation.
 
 <!--wolf-->
 ```
 (
-	let needs_memory = [.name "steve", .age 27]
+	let needs_memory = (.name "steve", .age 27)
 )
 ```
 
 We need to locally know when `needs_memory` will be freed. 
-This is trivially knowable because blocks are lexically scoped; when the block exits, the memory will never be used again. 
+This is trivially knowable because tuples are lexically scoped; when the tuple exits, the memory will never be used again. 
 So, we can locally infer how long `needs_memory` needs to exist. 
 That means we can allocate memory here, knowing that we can handle its destruction.
 
@@ -29,13 +29,13 @@ That means we can allocate memory here, knowing that we can handle its destructi
 -- Pseudocode
 (
 	let local_alloc = allocator
-	let needs_memory = malloc [.name "steve", .age 27] in local_alloc
+	let needs_memory = malloc (.name "steve", .age 27) in local_alloc
 	free local_alloc
 )
 ```
 
-To complicate the example, let's now pass the value out of the block. 
-It is now invalid to free `needs_memory` at the end of the block, because it can now be used after the block exits. 
+To complicate the example, let's now pass the value out of the tuple. 
+It is now invalid to free `needs_memory` at the end of the tuple, because it can now be used after the tuple exits. 
 So, we do not locally know who will destroy it.
 
 <!--wolf-->
@@ -43,28 +43,28 @@ So, we do not locally know who will destroy it.
 -- Pseudocode
 (
 	let local_alloc = allocator
-	let needs_memory = malloc [.name "steve", .age 27] in local_alloc
-	let will_return_this = malloc [.name "baxter", .age 5] in local_alloc
+	let needs_memory = malloc (.name "steve", .age 27) in local_alloc
+	let will_return_this = malloc (.name "baxter", .age 5) in local_alloc
 	free local_alloc -> will_return_this -- invalid
 )
 ```
 
-To solve this, let's reimagine blocks like they're functions, which take in some kind of "return" allocator. 
-This lets us allocate any final values into a separate allocator that won't be freed when the block exits, while keeping all reasoning local.
+To solve this, let's reimagine tuples like they're functions, which take in some kind of "return" allocator. 
+This lets us allocate any final values into a separate allocator that won't be freed when the tuple exits, while keeping all reasoning local.
 
 <!--wolf-->
 ```
 -- Pseudocode
-fn [.return_alloc : allocator] (
+fn (.return_alloc : allocator) (
 	let local_alloc = allocator
-	let needs_memory = malloc [.name "steve", .age 27] in local_alloc
+	let needs_memory = malloc (.name "steve", .age 27) in local_alloc
 	-- Important: use the return allocator here
-	let will_return_this = malloc [.name "baxter", .age 5] in return_alloc
+	let will_return_this = malloc (.name "baxter", .age 5) in return_alloc
 	free local_alloc -> will_return_this -- Now OK
 )
 ```
 
-With this understanding, we can recursively assemble any blocks together to form any program we want.
+With this understanding, we can recursively assemble any tuples together to form any program we want.
 It's guaranteed that all allocated memory will be freed exactly once, after it is no longer accessible.
 
 This technique can then be used to implement higher level resource management primitives like arena allocators while preserving both ergonomics and safety guarantees.

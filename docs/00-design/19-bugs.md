@@ -17,7 +17,7 @@ They indicate that computation cannot proceed because the program has not follow
 
 <!--wolf-->
 ```
-let square_positive_number = fn [input : num]
+let square_positive_number = fn(input : num)
 	if input < 0 then bug
 	if input != input then bug
 	else input * input

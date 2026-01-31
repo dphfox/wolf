@@ -18,19 +18,19 @@ Each function is formed of a few pieces:
 
 <!--wolf-->
 ```
-let multiply_add = fn [x : num, y : num, z : num] x * y + z
+let multiply_add = fn(x : num, y : num, z : num) x * y + z
 
-let lerp = fn [
+let lerp = fn(
 	.from a : num
 	.to b   : num
 	.ratio  : num
-] (
+) (
 	let difference = b - a
 	a + difference * ratio
 )
 
-let four = multiply_add [5, 2, 3]
-let five = lerp [.from 0, .to 10, .ratio 0.5]
+let four = multiply_add(5, 2, 3)
+let five = lerp(.from 0, .to 10, .ratio 0.5)
 ```
 
 ## First-class functions
@@ -44,10 +44,10 @@ In fact, all functions in Wolf are values; "freestanding" functions are simply f
 let base_price = 50
 let price_per_xp_level = 10
 
-let final_price = price_info [
+let final_price = price_info(
 	.item "gem_sword"
-	.dynamic_price fn [.xp_level] base_price + xp_level * price_per_xp_level
-]
+	.dynamic_price fn(.xp_level) base_price + xp_level * price_per_xp_level
+)
 ```
 
 ## Explicit types
@@ -60,7 +60,7 @@ This is because `let` statements give no context about how the function will be 
 <!--wolf-->
 ```
 -- Untyped captures like this are not allowed.
-let multiply_add = fn [x, y, z] x * y + z
+let multiply_add = fn(x, y, z) x * y + z
 ```
 
 However, functions defined in other places may be able to draw on other context.
@@ -70,8 +70,8 @@ For example, a function "callback" passed into another function can draw on type
 ```
 -- Untyped captures like this are allowed, because type information is available
 -- for `.dynamic_price` here.
-let final_price = price_info [
+let final_price = price_info(
 	.item "gem_sword"
-	.dynamic_price fn [.xp_level] base_price + xp_level * price_per_xp_level
-]
+	.dynamic_price fn(.xp_level) base_price + xp_level * price_per_xp_level
+)
 ```

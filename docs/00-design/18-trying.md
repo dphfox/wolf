@@ -16,7 +16,7 @@ Instead of erroring, `try` statements allow code to explicitly handle data that 
 - The `try` keyword.
 - An "attempt" expression that might not type check.
 - The `else` keyword. 
-- A default expression to be used when the attempt block does not type check.
+- A default expression to be used when the attempt expression does not type check.
 
 <!--wolf-->
 ```

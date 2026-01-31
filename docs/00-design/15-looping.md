@@ -14,7 +14,7 @@ A loop is formed of a few parts:
 - A capture to use on every iteration.
 - The assignment operator `=`.
 - The initial value to be captured.
-- The block to be run repeatedly.
+- The tuple to be evaluated repeatedly.
 
 <!--wolf-->
 ```
@@ -27,18 +27,18 @@ let count_up_forever = loop x = 1 (x + 1)
 By default, a loop will never terminate.
 This means you will need to set an exit condition in order for the loop to be useful.
 
-So, loops can be thrown values, just like `catch` blocks can. 
+So, loops can be thrown values, just like `catch` can. 
 When this happens, the loop terminates, and evaluates to the thrown value.
 
 <!--wolf-->
 ```
 -- Find the largest multiple of two that's less than `limit`.
-let largest_mult = fn [.limit ~ num] loop n = 2 (
+let largest_mult = fn(.limit : num) loop n = 2 (
 	if 2 * n > limit then throw n
 	else n * 2
 )
 
-let sixteen = largest_mult [.limit 25]
+let sixteen = largest_mult(.limit 25)
 ```
 
 Standard throwing rules apply; throws must be local (non-viral) and type-safe.
@@ -49,8 +49,8 @@ Using tuple captures, a loop can keep track of multiple named data with every it
 
 <!--wolf-->
 ```
-let sum_of_consecutive = loop [index, total] = [10, 0] (
+let sum_of_consecutive = loop (index, total) = (10, 0) (
 	if index == 0 then throw total
-	else [index - 1, total + index]
+	else (index - 1, total + index)
 )
 ```
