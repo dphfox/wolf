@@ -2,13 +2,11 @@
 layout: page
 ---
 
-Wolf is an expression-based declarative scripting language, built to be:
+Wolf is an experimental mid-level game development language, designed to allow game developers to achieve radically performant code with a simple mental model, a lean compiler, and quick iteration times. _It's a hobby project and nowhere near ready for use, with design and implementation constantly in flux._
 
-- **Easy.** Bring your own paradigms, and use them ergonomically.
-- **Small.** Built from first principles with only a few, well chosen features.
-- **Smart.** Statically analysable, but doesn't require annotations everywhere.
-
-The design and implementation of Wolf are early and highly experimental.
+- **Memory safe** - out parameters, first class pools & generational indices, and contextual allocators enforce a downwards flow of memory that's easy to reason about and lighting fast to allocate or drop.
+- **Thread safe** - inspired by GPU pipelines, language-level thread groups help you cleanly spawn worker pools and enforce read/write restrictions to prevent data races and false sharing.
+= **Procedural** - pipeline chains, function overloading, and implicit parameters give procedural code OOP-style ergonomics and autocomplete without paying the performance tax.
 
 Insipred by
 [Luau](https://luau.org/),
