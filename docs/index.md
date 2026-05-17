@@ -6,7 +6,7 @@ Wolf is an experimental mid-level game development language, designed to allow g
 
 - **Memory safe** - out parameters, first class pools & generational indices, and contextual allocators enforce a downwards flow of memory that's easy to reason about and lighting fast to allocate or drop.
 - **Thread safe** - inspired by GPU pipelines, language-level thread groups help you cleanly spawn worker pools and enforce read/write restrictions to prevent data races and false sharing.
-= **Procedural** - pipeline chains, function overloading, and implicit parameters give procedural code OOP-style ergonomics and autocomplete without paying the performance tax.
+- **Procedural** - pipeline chains, function overloading, and implicit parameters give procedural code OOP-style ergonomics and autocomplete without paying the performance tax.
 
 Insipred by
 [Luau](https://luau.org/),
