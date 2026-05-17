@@ -35,7 +35,7 @@ let (total, total_view) = (
 )
 ```
 
-Once a view has been created, it can be be used to shadow the original declaration via captures.
+Once a view has been created, it can be be used to shadow the original declaration by using view syntax in a capture.
 
 <!--wolf-->
 ```
@@ -49,23 +49,29 @@ let increase = fn(
 	()
 )
 
-let my_total = 0
-let my_count = 0
+-- After this tuple evaluates, the_total = 8, and the_count = 3
+let (the_total, the_count) = (
+	let my_total = 0
+	let my_count = 0
 
-let () = increase(.by 1, .total {my_total}, .count {my_count})
-let () = increase(.by 5, .total {my_total}, .count {my_count})
-let () = increase(.by 2, .total {my_total}, .count {my_count})
-
--- my_total is now 8, my_count is now 3
+	increase(.by 1, .total {my_total}, .count {my_count})
+	increase(.by 5, .total {my_total}, .count {my_count})
+	increase(.by 2, .total {my_total}, .count {my_count})
+	(my_total, my_count)
+)
 ```
 
-Note that this is not the same as _mutation_ - it explicitly creates a new declaration for the viewed value.
+## Shadowing
+
+Note that assigning a value to a view does not _mutate_ the viewed value.
+It explicitly creates a new declaration for the viewed value.
+
+This means you may keep a view to the original value to retain access to it after it has been re-assigned.
 
 <!--wolf-->
 ```
 let bump = fn(.x : {num}) (
 	let {x} = x + 1
-	()
 )
 
 let counter = 0
@@ -76,14 +82,14 @@ This bump() creates a new `counter` declaration and assigns it the new value.
 However, `original_view` still views the previous `counter`.
 This lets you shadow a value without losing access to the old value in the process.
 ----
-let () = bump(original_view) -- `let counter = 0 + 1`
-let () = bump(original_view) -- still `let counter = 0 + 1`
-let () = bump(original_view) -- still `let counter = 0 + 1`
+bump(original_view) -- `let counter = 0 + 1`
+bump(original_view) -- still `let counter = 0 + 1`
+bump(original_view) -- still `let counter = 0 + 1`
 
 ---
 You must create a new view if you want to continue updating the value cumulatively.
 ---
-let () = bump({counter}) -- `let counter = 1 + 1`
-let () = bump({counter}) -- `let counter = 2 + 1`
-let () = bump({counter}) -- `let counter = 3 + 1`
+bump({counter}) -- `let counter = 1 + 1`
+bump({counter}) -- `let counter = 2 + 1`
+bump({counter}) -- `let counter = 3 + 1`
 ```

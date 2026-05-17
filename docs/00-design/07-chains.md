@@ -6,21 +6,11 @@ page_number: 7
 
 Chains allow multiple expressions to be appended together.
 
-## Simple chains
+## Basic use
 
-A chain is written as a series of expressions delimited by arrows `->`.
-The final expression determines the value of the chain as a whole.
+Wolf provides the thin arrow `->` operator, to allow previous expressions to be piped into later expressions.
 
-<!--wolf-->
-```
--- This entire chain evaluates to 8, the result of the final expression.
-2 + 5 -> cos(2) -> max(2, 4, 6, 8)
-```
-
-## Forward passing
-
-Wolf stores the result of the previous expression in at `@`.
-This allows previous expressions to be used in the next expression.
+The thin arrow stores the result of the previous expression in `@`.
 
 <!--wolf-->
 ```
@@ -28,7 +18,7 @@ This allows previous expressions to be used in the next expression.
 2 + 2 -> @ + 10
 ```
 
-## Automatic chaining
+## Fat arrow
 
 If `@` is being passed as `.0` to a function, the fat arrow `=>` can be used to omit it.
 
@@ -46,4 +36,21 @@ You may mix thin arrows and fat arrows in the same chain.
 <!--wolf-->
 ```
 (2, 5) => max -> 10 / @
+```
+
+## Implicit chaining
+
+Tuples with multiple expressions will implicitly chain those expressions with the thin arrow operator.
+
+This form still permits use of `@` to reference the prior expression.
+
+<!--wolf-->
+```
+-- These two expressions are identical
+( 2 + 2 -> @ + 10 )
+
+(
+    2 + 2
+    @ + 10
+)
 ```

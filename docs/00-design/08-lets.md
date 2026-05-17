@@ -85,3 +85,14 @@ let ten = foo * 10 -- sees foo as `1`
 let foo = 5
 let fifty = foo * 10 -- sees foo as `5`
 ```
+
+## Unit tuples
+
+`let` declarations can be made inside of tuples with no expressions; the tuple will resolve to the unit tuple `()`.
+
+<!--wolf-->
+```
+-- These two expressions are identical.
+let unit = ( let foo = 5 )
+let unit = ()
+```
