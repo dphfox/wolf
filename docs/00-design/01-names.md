@@ -10,7 +10,7 @@ something that's available to the program.
 ## Basic use
 
 Any contiguous span of letters and digits is interpreted as a name.
-Underscores and dots can be used between letters and digits.
+Underscores can be used between letters and digits, while dots can only be used in digit strings.
 
 <!--wolf-->
 ```
@@ -21,5 +21,5 @@ ItsVeryCool
 Testing123
 360_degrees
 3.14159
-wolf.phfox.net
+0.0
 ```

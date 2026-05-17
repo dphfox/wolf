@@ -116,23 +116,24 @@ You can access a datum with the dot `.` operator, followed by the name of the da
 (3, 5, 7) .1
 
 -- Evaluates to 2015.
-(.year 2015, .month 5, .day 15) .year
+(.year 2015, .month 5, .day 15).year
 
 -- Evaluates to "Bob"
-(.name "Bob", .age 25) .name
+(.name "Bob", .age 25).name
 ```
 
-Nested accesses are written with spaces.
-This allows dots to be used in names.
+Note that numbers greedily match their dot `.` preferentially; you may use whitespace to disambiguate.
 
 <!--wolf-->
 ```
--- These are allowed.
-(.wolf.phfox.net "hello") .wolf.phfox.net
-(.wolf (.phfox (.net "hello"))) .wolf .phfox .net
+-- This accesses the `.0` datum of `hello`.
+hello.0
 
--- This is not allowed.
-(.wolf (.phfox (.net "hello"))).wolf.phfox.net
+-- This is the number `5.0`.
+5.0
+
+-- This accesses the `.0` datum of `5`.
+5 .0
 ```
 
 ## Flattening

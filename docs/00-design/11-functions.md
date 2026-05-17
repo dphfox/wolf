@@ -39,6 +39,8 @@ In Wolf, functions are first-class; that is, you can pass functions around like 
 
 In fact, all functions in Wolf are values; "freestanding" functions are simply function values assigned to names with `let`.
 
+The values used in a function must be known at compile time, and are baked into the final program.
+
 <!--wolf-->
 ```
 let base_price = 50

@@ -19,23 +19,23 @@ The final expression determines the value of the chain as a whole.
 
 ## Forward passing
 
-Wolf stores the result of the previous expression in `that`.
+Wolf stores the result of the previous expression in at `@`.
 This allows previous expressions to be used in the next expression.
 
 <!--wolf-->
 ```
--- `that` is replaced with 4, so this whole chain evaluates to 14.
-2 + 2 -> that + 10
+-- `@` is replaced with 4, so this whole chain evaluates to 14.
+2 + 2 -> @ + 10
 ```
 
 ## Automatic chaining
 
-If `that` is being passed as `.0` to a function, the fat arrow `=>` can be used to omit it.
+If `@` is being passed as `.0` to a function, the fat arrow `=>` can be used to omit it.
 
 <!--wolf-->
 ```
 -- Manual:
-(2, 5) -> max(that) -> log2(that) -> ceil(that) -> exp2(that)
+(2, 5) -> max(@) -> log2(@) -> ceil(@) -> exp2(@)
 
 -- Automatic:
 (2, 5) => max() => log2() => ceil() => exp2()
@@ -45,5 +45,5 @@ You may mix thin arrows and fat arrows in the same chain.
 
 <!--wolf-->
 ```
-(2, 5) => max -> 10 / that
+(2, 5) => max -> 10 / @
 ```

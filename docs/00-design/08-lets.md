@@ -25,14 +25,17 @@ let four = 4
 let negative_two = negate(2)
 ```
 
-Once a name is introduced anywhere in the tuple, it can be used anywhere else in the tuple.
-Order does not matter.
+Declarations happen top-down; earlier declarations may only be used by later declarations in a block.
 
 <!--wolf-->
 ```
--- Notice that `four` and `negative_two` are underneath `negative_eight`.
+-- This is allowed.
+let four = 4
+let negative_two = negate(2)
 let negative_eight = four => multiply(negative_two)
 
+-- This is not allowed.
+let negative_eight = four => multiply(negative_two)
 let four = 4
 let negative_two = negate(2)
 ```
@@ -43,26 +46,6 @@ Conceptually, you can imagine replacing each name with that's name's expression.
 ```
 -- The compiler sees this.
 let negative_eight = 4 => multiply(negate(2))
-```
-
-## Restrictions
-
-Expressions in lets must be resolvable without infinite cycles.
-
-<!--wolf-->
-```
--- This is not allowed.
-let two = four => subtract(2)
-let four = two => add(2)
-```
-
-Additionally, a name cannot be introduced to the same tuple more than once, as it is unclear which expression should be used.
-
-<!--wolf-->
-```
--- This is not allowed.
-let cool_number = 5
-let cool_number = 42
 ```
 
 ## Nesting
@@ -91,4 +74,14 @@ let fifty = (
 	foo * 10 -- sees foo as `5`
 )
 let ten = foo * 10 -- sees foo as `1`
+```
+
+Shadowing may also be done in the same block, in which case earlier declarations are shadowed by later definitions.
+
+<!--wolf-->
+```
+let foo = 1
+let ten = foo * 10 -- sees foo as `1`
+let foo = 5
+let fifty = foo * 10 -- sees foo as `5`
 ```
